@@ -1,9 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
-namespace Tests;
-
 use Ciareis\Bypass\Bypass;
 use Illuminate\Support\Facades\Http;
 
