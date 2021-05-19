@@ -21,6 +21,15 @@ class Bypass
 
     public function handle(?int $port = null, string $node = 'node')
     {
+        $process = new Process(['which', $node]);
+        $process->run();
+
+        $exists = $process->getOutput();
+
+        if (!$exists) {
+            throw new Exception("Path of node no exists, you need install node");
+        }
+
         while (!$this->started) {
             try {
                 $this->startServer($port, $node);
@@ -38,7 +47,7 @@ class Bypass
 
     protected function startServer(?int $port = null, string $node)
     {
-        $port = $port ?: rand(2048, 65535);
+        $port = $port ?: rand(2048, 60000);
 
         $params = [$node, __DIR__ . DIRECTORY_SEPARATOR . 'server.js', $port];
 
@@ -63,7 +72,7 @@ class Bypass
         );
     }
 
-    public function expect(string $method, string $uri, int $status = 200, ?string $content = null)
+    public function expect(string $method, string $uri, int $status = 200, ?string $body = null)
     {
         $path = $this->url("___start___faker___api");
 
@@ -73,7 +82,7 @@ class Bypass
             ->post($path, [
                 'method' => \strtolower($method),
                 'uri' => $uri,
-                'content' => $content,
+                'content' => $body,
                 'status' => $status,
             ]);
 
@@ -81,20 +90,6 @@ class Bypass
             'body' => $response->body(),
             'status' => $response->status(),
             'http' => $this->url("/start"),
-        ];
-    }
-
-    public function testStatus()
-    {
-        $this->expect("GET", "/start", 200, "resposta qualquer");
-
-        $path = $this->url("/start");
-
-        $response = Http::get($path);
-
-        return [
-            'body' => $response->body(),
-            'status' => $response->status(),
         ];
     }
 

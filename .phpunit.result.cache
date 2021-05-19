@@ -1,0 +1,1 @@
+C:37:"PHPUnit\Runner\DefaultTestResultCache":230:{a:2:{s:7:"defects";a:2:{s:33:"Tests\BypassTest::test_connection";i:4;s:32:"Tests\BypassTest::test_uri_faker";i:3;}s:5:"times";a:2:{s:33:"Tests\BypassTest::test_connection";d:0.009;s:32:"Tests\BypassTest::test_uri_faker";d:0.124;}}}
