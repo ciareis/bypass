@@ -8,17 +8,29 @@ use Ciareis\Bypass\Bypass;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Support\Facades\Http;
 
-class HttpService
+class GithubRepoService
 {
-    public static function http($url)
+    protected $baseUrl = "https://api.github.com";
+
+    public function setBaseUrl(string $url)
     {
+       $this->baseUrl = $url;
+
+        return $this;
+    }
+
+    public function getTotalStargazersByUser(string $username)
+    {
+        $url = "{$this->baseUrl}/users/${username}/repos";
+
         $response = Http::get($url);
 
         if ($response->status() === 500) {
             return "Server unavailable.";
         }
 
-        return json_decode($response->body(), true);
+        return collect($response->json())
+            ->sum('stargazers_count');
     }
 }
 
@@ -29,28 +41,22 @@ class BypassTest extends TestCase
         // prepare
         $bypass = Bypass::open();
 
-        $body = \json_encode([
-            'content' => 'excepeted',
-            'product' => [
-                'id' => 1,
-                'value' => 100
-            ]
-        ]);
+        $body = \json_encode($this->getBody());
 
-        $path = '/url_faker';
+        $path = '/users/emtudo/repos';
 
         $bypass->expect(method: 'get', uri: $path, status: 200, body: $body);
 
         // execute
-        $url = $this->getUrl($bypass, $path);
-        $response = HttpService::http($url);
+        $url = $this->getBaseUrl($bypass, $path);
+        $service = new GithubRepoService();
+        $response = $service->setBaseUrl($this->getBaseUrl($bypass))
+            ->getTotalStargazersByUser("emtudo");
 
-        $data = json_encode($response);
+        $expected = 16;
 
         // asserts
-        $this->assertTrue($data === $body);
-        $this->assertArrayHasKey('content', $response);
-        $this->assertArrayHasKey('product', $response);
+        $this->assertEquals($expected, $response);
     }
 
     public function test_server_unavailable(): void
@@ -58,20 +64,117 @@ class BypassTest extends TestCase
         // prepare
         $bypass = Bypass::open();
 
-        $path = '/url_faker';
+        $path = '/users/emtudo/repos';
 
         $bypass->expect(method: 'get', uri: $path, status: 500);
 
         // execute
-        $url = $this->getUrl($bypass, $path);
-        $response = HttpService::http($url);
+        $service = new GithubRepoService();
+        $response = $service->setBaseUrl($this->getBaseUrl($bypass))
+            ->getTotalStargazersByUser("emtudo");
 
         // asserts
         $this->assertTrue($response === 'Server unavailable.');
     }
 
-    protected function getUrl(Bypass $bypass, string $path = '/')
+    protected function getBaseUrl(Bypass $bypass, $path = null)
     {
         return "http://localhost:{$bypass->getPort()}{$path}";
+    }
+
+    protected function getBody()
+    {
+        return [
+            [
+                "stargazers_count" => 0
+            ],
+            [
+                "stargazers_count" => 3
+            ],
+            [
+                "stargazers_count" => 0,
+            ],
+            [
+                "stargazers_count" => 1,
+            ],
+            [
+                "stargazers_count" => 0,
+            ],
+            [
+                "stargazers_count" => 0,
+            ],
+            [
+                "stargazers_count" => 0,
+            ],
+            [
+                "stargazers_count" => 0,
+            ],
+            [
+                "stargazers_count" => 1,
+            ],
+            [
+                "stargazers_count" => 0,
+            ],
+            [
+                "stargazers_count" => 0,
+            ],
+            [
+                "stargazers_count" => 0,
+            ],
+            [
+                "stargazers_count" => 0,
+            ],
+            [
+                "stargazers_count" => 1,
+            ],
+            [
+                "stargazers_count" => 0,
+            ],
+            [
+                "stargazers_count" => 2,
+            ],
+            [
+                "stargazers_count" => 0,
+            ],
+            [
+                "stargazers_count" => 0,
+            ],
+            [
+                "stargazers_count" => 0,
+            ],
+            [
+                "stargazers_count" => 4,
+            ],
+            [
+                "stargazers_count" => 1,
+            ],
+            [
+                "stargazers_count" => 0,
+            ],
+            [
+                "stargazers_count" => 0,
+            ],
+            [
+                "stargazers_count" => 1,
+            ],
+            [
+                "stargazers_count" => 2,
+            ],
+            [
+                "stargazers_count" => 0,
+            ],
+            [
+                "stargazers_count" => 0,
+            ],
+            [
+                "stargazers_count" => 0,
+            ],
+            [
+                "stargazers_count" => 0,
+            ],
+            [
+                "stargazers_count" => 0,
+            ],
+        ];
     }
 }

@@ -16,15 +16,14 @@ app.post('/___start___faker___api', async (req, res) => {
     const { method, uri, content, status } = body
 
     app[method](uri, async (req, res) => {
-        console.log('entrou na rota')
         res.statusCode = status
-        Promise.resolve("Success").then(function (value) {
-            setTimeout(function () {
-                throw new Error('Derrubar servidor');
-            }, 200)
-        }, function (value) {
-            // not called
-        });
+        // Promise.resolve("Success").then(function (value) {
+        //     setTimeout(function () {
+        //         throw new Error('Derrubar servidor');
+        //     }, 10000)
+        // }, function (value) {
+        //     // not called
+        // });
 
         res.send(content)
 
