@@ -14,7 +14,7 @@ class GithubRepoService
 
     public function setBaseUrl(string $url)
     {
-       $this->baseUrl = $url;
+        $this->baseUrl = $url;
 
         return $this;
     }
@@ -36,7 +36,7 @@ class GithubRepoService
 
 class BypassTest extends TestCase
 {
-    public function test_uri_faker(): void
+    public function test_total_stargazers_by_user(): void
     {
         // prepare
         $bypass = Bypass::open();
