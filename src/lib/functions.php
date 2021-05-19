@@ -1,46 +1,69 @@
 <?php
 
-function cleanSession(): bool
+function writeFile($filename, $content)
 {
-    $session = getSessionName();
-
-    if (isset($_SESSION[$session])) {
-        unset($_SESSION[$session]);
+    /*
+    $content = "";
+    foreach ($assoc_arr as $key => $elem) {
+        $content .= "[" . $key . "]\n";
+        foreach ($elem as $key2 => $elem2) {
+            if (is_array($elem2)) {
+                for ($i = 0; $i < count($elem2); $i++) {
+                    $content .= $key2 . "[] = \"" . $elem2[$i] . "\"\n";
+                }
+            } elseif ($elem2 == "") {
+                $content .= $key2 . " = \n";
+            } else {
+                $content .= $key2 . " = \"" . $elem2 . "\"\n";
+            }
+        }
+    }
+*/
+    if (!file_put_contents($filename, json_encode($content))) {
+        return false;
     }
 
     return true;
 }
 
-function getSessionName()
-{
-    return "session_name_{$_SERVER['SERVER_PORT']}";
-}
-
-function getRoutes()
-{
-    $sessionName = getSessionName();
-
-    return $_SESSION[$sessionName] ?? null;
-}
-
-function getRoute(string $route, ?string $method = null)
-{
-    $sessionName = getSessionName();
-
-    if (!$method) {
-        return $_SESSION[$sessionName][$route] ?? null;
-    }
-
-    return $_SESSION[$sessionName][$route][$method] ?? null;
-}
-
-function setRoute(string $route, string $method, array $value)
+function getFilename($route, $method)
 {
     $sessionName = getSessionName();
 
     $method = strtoupper($method);
+    $route = md5($route);
 
-    $_SESSION[$sessionName][$route][$method] = $value;
+    $file =  "{$sessionName}_{$method}_{$route}.tmp";
+
+    return $file;
+}
+
+function getSessionName()
+{
+    return sys_get_temp_dir() . DIRECTORY_SEPARATOR . "session_name_{$_SERVER['SERVER_PORT']}";
+}
+
+function getRoute(string $route, string $method = null)
+{
+    $file = getFilename($route, $method);
+
+    if (!file_exists($file)) {
+        return;
+    }
+
+    return file_get_contents($file);
+}
+
+function setRoute(string $route, string $method, array $value)
+{
+    $file = getFilename($route, $method);
+
+    $content = [
+        'status' => $value['status'],
+        'content' => $value['content']
+    ];
+
+    writeFile($file, $content);
 }
 
 function currentRoute()

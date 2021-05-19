@@ -16,8 +16,8 @@ test('total stargazers with user', function () {
     // execute
     $service = new GithubRepoPhpPestService();
     $response = $service->setBaseUrl(getBaseUrl($bypass))
-
         ->getTotalStargazersByUser("emtudo");
+
     expect(16)->toEqual($response);
 });
 

@@ -17,16 +17,11 @@ class Bypass
     {
         $process = new self();
 
-        $port = 8080;
-
         return $process->handle($port, $phpPath);
     }
 
     public function handle(?int $port = null, string $phpPath = 'php')
     {
-        $this->port = 8080;
-
-        return $this;
         $process = new Process(['which', $phpPath]);
         $process->run();
 
@@ -101,10 +96,7 @@ class Bypass
         $response = Http::withHeaders([
             'Content-Type' => 'application/json'
         ])
-            ->post($path, $params);
-
-
-            dump(['path' => $path, 'params' => $params]);
+            ->put($path, $params);
 
         return [
             'body' => $response->body(),
