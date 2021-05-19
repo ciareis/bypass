@@ -21,7 +21,7 @@ test('total stargazers with user', function () {
     expect(16)->toEqual($response);
 });
 
-test('server unavailabel', function () {
+test('server unavailable', function () {
     // prepare
     $bypass = Bypass::open();
 
