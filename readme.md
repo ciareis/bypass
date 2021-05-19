@@ -16,7 +16,7 @@ client to it.
 
 ## Install
 ```php
-composer require ciareis/bypass
+composer require --dev ciareis/bypass
 ```
 
 ## Required
