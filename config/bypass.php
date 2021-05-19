@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'node' => 'node', // Path of node
+    'php' => 'php', // Path of php example: /usr/bin/php or c:\php\php.exe
 ];

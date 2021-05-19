@@ -19,13 +19,18 @@ class GithubRepoService
         return $this;
     }
 
-    public function getTotalStargazersByUser(string $username)
+    public function getTotalStargazersByUser(string $username, bool $dd = false)
     {
         $url = "{$this->baseUrl}/users/${username}/repos";
 
         $response = Http::get($url);
 
-        if ($response->status() === 500) {
+        if ($dd) {
+            dump($response->body(), $url);
+            \sleep(30);
+        }
+
+        if ($response->status() === 503) {
             return "Server unavailable.";
         }
 
@@ -47,16 +52,16 @@ class BypassTest extends TestCase
 
         $bypass->expect(method: 'get', uri: $path, status: 200, body: $body);
 
+
+
         // execute
-        $url = $this->getBaseUrl($bypass, $path);
         $service = new GithubRepoService();
         $response = $service->setBaseUrl($this->getBaseUrl($bypass))
-            ->getTotalStargazersByUser("emtudo");
+            ->getTotalStargazersByUser("emtudo", true);
 
-        $expected = 16;
 
         // asserts
-        $this->assertEquals($expected, $response);
+        $this->assertEquals(16, $response);
     }
 
     public function test_server_unavailable(): void
@@ -66,7 +71,7 @@ class BypassTest extends TestCase
 
         $path = '/users/emtudo/repos';
 
-        $bypass->expect(method: 'get', uri: $path, status: 500);
+        $bypass->expect(method: 'get', uri: $path, status: 503);
 
         // execute
         $service = new GithubRepoService();

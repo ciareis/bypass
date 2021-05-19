@@ -11,28 +11,34 @@ class Bypass
     protected $started = false;
     protected $port;
     protected $process;
+    protected $phpPath;
 
-    public static function open(?int $port = null, string $node = 'node')
+    public static function open(?int $port = null, string $phpPath = 'php')
     {
         $process = new self();
 
-        return $process->handle($port, $node);
+        $port = 8080;
+
+        return $process->handle($port, $phpPath);
     }
 
-    public function handle(?int $port = null, string $node = 'node')
+    public function handle(?int $port = null, string $phpPath = 'php')
     {
-        $process = new Process(['which', $node]);
+        $this->port = 8080;
+
+        return $this;
+        $process = new Process(['which', $phpPath]);
         $process->run();
 
         $exists = $process->getOutput();
 
         if (!$exists) {
-            throw new Exception("Path of node no exists, you need install node");
+            throw new Exception("Php not found. Define path please");
         }
 
         while (!$this->started) {
             try {
-                $this->startServer($port, $node);
+                $this->startServer($port, $phpPath);
             } catch (Exception $e) {
             }
         }
@@ -45,11 +51,11 @@ class Bypass
         return $this->port;
     }
 
-    protected function startServer(?int $port = null, string $node)
+    protected function startServer(?int $port = null, string $phpPath)
     {
         $port = $port ?: rand(2048, 60000);
 
-        $params = [$node, __DIR__ . DIRECTORY_SEPARATOR . 'server.js', $port];
+        $params = [$phpPath, '-S', "localhost:{$port}",  __DIR__ . DIRECTORY_SEPARATOR . 'server.php'];
 
         $this->process = new Process($params);
         $this->process->start();
@@ -70,26 +76,39 @@ class Bypass
                 return false;
             }
         );
+
+        Http::withHeaders([
+            'Content-Type' => 'application/json'
+        ])
+            ->post('___api_faker_clear_router', []);
     }
 
     public function expect(string $method, string $uri, int $status = 200, ?string $body = null)
     {
-        $path = $this->url("___start___faker___api");
+        $path = $this->url("___api_faker_add_router");
+
+        if (!\str_starts_with($uri, '/')) {
+            $uri = "/{$uri}";
+        }
+
+        $params = [
+            'method' => \strtoupper($method),
+            'uri' => $uri,
+            'content' => $body,
+            'status' => $status,
+        ];
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json'
         ])
-            ->post($path, [
-                'method' => \strtolower($method),
-                'uri' => $uri,
-                'content' => $body,
-                'status' => $status,
-            ]);
+            ->post($path, $params);
+
+
+            dump(['path' => $path, 'params' => $params]);
 
         return [
             'body' => $response->body(),
             'status' => $response->status(),
-            'http' => $this->url("/start"),
         ];
     }
 

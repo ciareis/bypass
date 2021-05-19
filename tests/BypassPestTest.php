@@ -16,8 +16,8 @@ test('total stargazers with user', function () {
     // execute
     $service = new GithubRepoPhpPestService();
     $response = $service->setBaseUrl(getBaseUrl($bypass))
-        ->getTotalStargazersByUser("emtudo");
 
+        ->getTotalStargazersByUser("emtudo");
     expect(16)->toEqual($response);
 });
 
@@ -27,7 +27,7 @@ test('server unavailable', function () {
 
     $path = '/users/emtudo/repos';
 
-    $bypass->expect(method: 'get', uri: $path, status: 500);
+    $bypass->expect(method: 'get', uri: $path, status: 503);
 
     // execute
     $service = new GithubRepoPhpPestService();
@@ -56,7 +56,7 @@ class GithubRepoPhpPestService
 
         $response = Http::get($url);
 
-        if ($response->status() === 500) {
+        if ($response->status() === 503) {
             return "Server unavailable.";
         }
 
