@@ -19,6 +19,10 @@ client to it.
 composer require ciareis/bypass
 ```
 
+## Required
+
+Require install node
+
 ### Inspired
 
 Code inspired from [https://github.com/PSPDFKit-labs/bypass](https://github.com/PSPDFKit-labs/bypass)
