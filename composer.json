@@ -25,7 +25,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Ciareis\\Bypass\\": "src/Bypass"
+            "Ciareis\\Bypass\\": "src"
         }
     },
     "extra": {
