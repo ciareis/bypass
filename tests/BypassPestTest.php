@@ -37,6 +37,23 @@ test('server unavailable', function () {
     expect('Server unavailable.')->toEqual($response);
 });
 
+test('server down', function () {
+    // prepare
+    $bypass = Bypass::open();
+
+    $path = '/users/emtudo/repos';
+
+    $bypass->expect(method: 'get', uri: $path, status: 503);
+    $bypass->down();
+
+    // execute
+    $service = new GithubRepoPhpPestService();
+    $response = $service->setBaseUrl(getBaseUrl($bypass))
+      ->getTotalStargazersByUser("emtudo");
+
+    expect('Server down.')->toEqual($response);
+});
+
 // Service
 
 class GithubRepoPhpPestService
@@ -54,7 +71,11 @@ class GithubRepoPhpPestService
     {
         $url = "{$this->baseUrl}/users/${username}/repos";
 
-        $response = Http::get($url);
+        try {
+            $response = Http::get($url);
+        } catch (Exception $e) {
+            return "Server down.";
+        }
 
         if ($response->status() === 503) {
             return "Server unavailable.";

@@ -41,6 +41,18 @@ class Bypass
         return $this;
     }
 
+    public function stop()
+    {
+        if ($this->process) {
+            $this->process->stop();
+        }
+    }
+
+    public function down()
+    {
+        $this->stop();
+    }
+
     public function getPort()
     {
         return $this->port;

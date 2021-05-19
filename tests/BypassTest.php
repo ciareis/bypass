@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests;
 
 use Ciareis\Bypass\Bypass;
+use Exception;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Support\Facades\Http;
 
@@ -23,7 +24,11 @@ class GithubRepoService
     {
         $url = "{$this->baseUrl}/users/${username}/repos";
 
-        $response = Http::get($url);
+        try {
+            $response = Http::get($url);
+        } catch (Exception $e) {
+            return "Server down.";
+        }
 
         if ($response->status() === 503) {
             return "Server unavailable.";
@@ -72,6 +77,25 @@ class BypassTest extends TestCase
 
         // asserts
         $this->assertTrue($response === 'Server unavailable.');
+    }
+
+    public function test_server_down(): void
+    {
+        // prepare
+        $bypass = Bypass::open();
+
+        $path = '/users/emtudo/repos';
+
+        $bypass->expect(method: 'get', uri: $path, status: 503);
+        $bypass->down();
+
+        // execute
+        $service = new GithubRepoService();
+        $response = $service->setBaseUrl($this->getBaseUrl($bypass))
+            ->getTotalStargazersByUser("emtudo");
+
+        // asserts
+        $this->assertTrue($response === 'Server down.');
     }
 
     protected function getBaseUrl(Bypass $bypass, $path = null)
