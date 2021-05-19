@@ -14,6 +14,10 @@ class HttpService
     {
         $response = Http::get($url);
 
+        if ($response->status() === 500) {
+            return "Server unavailable.";
+        }
+
         return json_decode($response->body(), true);
     }
 }
@@ -47,6 +51,23 @@ class BypassTest extends TestCase
         $this->assertTrue($data === $body);
         $this->assertArrayHasKey('content', $response);
         $this->assertArrayHasKey('product', $response);
+    }
+
+    public function test_server_unavailable(): void
+    {
+        // prepare
+        $bypass = Bypass::open();
+
+        $path = '/url_faker';
+
+        $bypass->expect(method: 'get', uri: $path, status: 500);
+
+        // execute
+        $url = $this->getUrl($bypass, $path);
+        $response = HttpService::http($url);
+
+        // asserts
+        $this->assertTrue($response === 'Server unavailable.');
     }
 
     protected function getUrl(Bypass $bypass, string $path = '/')
