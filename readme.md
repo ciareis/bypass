@@ -66,7 +66,7 @@ Bypass needs to be informed that a request will be made using the HTTP method `g
 ```php
     $body = '{"games":[{"name":"game 1","points":25},{"name":"game 2","points":10}],"is_active":true}';
     
-    $bypass->expect(method: 'get', uri: '/v1/score/USERNAME', status: 200, body: $body);
+    $bypass->expect(method: 'get', uri: '/v1/score', status: 200, body: $body);
 ```
 
 The method `expect()` accepts the following parameters:
@@ -103,7 +103,7 @@ it('properly returns the score by username', function () {
 
     $body = '{"games":[{"name":"game 1","points":25},{"name":"game 2","points":10}],"is_active":true}';
     
-    $bypass->expect(method: 'get', uri: '/v1/score/', status: 200, body: $body);
+    $bypass->expect(method: 'get', uri: '/v1/score', status: 200, body: $body);
 
     $bypass_port = $bypass->getPort()
     $bypass_url = "http://localhost:{$bypass_port}";
