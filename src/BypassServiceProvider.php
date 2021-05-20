@@ -18,9 +18,9 @@ class BypassServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(Bypass::class, function ($app) {
-            $php = $app['config']['bypass']['php'];
+            $phpPath = $app['config']['bypass']['php_path'];
 
-            return Bypass::open(null, $php);
+            return Bypass::open(null, $phpPath);
         });
     }
 }
