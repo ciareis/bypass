@@ -1,12 +1,14 @@
 # Release Notes
 
-## [0.0.2](https://github.com/ciareis/bypass/archive/refs/tags/0.0.1.zip)
+## [Unreleased](https://github.com/ciareis/bypass/compare/v0.0.2...0.0.x)
 
-Started changelog
-Added Doc and Logo
-Clearer variable name and config
-Improves tests
+## [v0.0.2 (2021-05-21)](https://github.com/ciareis/bypass/archive/refs/tags/0.0.2.zip)
 
-## 0.0.1
+- Started changelog
+- Added Doc and Logo
+- Clearer variable name and config
+- Improves tests
 
-First functional proposal
+## [v0.0.1](https://github.com/ciareis/bypass/archive/refs/tags/0.0.1.zip)
+
+- First functional proposal
