@@ -1,4 +1,5 @@
 <?php
+
 /*
 |--------------------------------------------------------------------------
 | PHPUnit test example
@@ -13,39 +14,9 @@ declare(strict_types=1);
 namespace Tests;
 
 use Ciareis\Bypass\Bypass;
-use Exception;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Support\Facades\Http;
-
-class GithubRepoService
-{
-    protected $baseUrl = "https://api.github.com";
-
-    public function setBaseUrl(string $url)
-    {
-        $this->baseUrl = $url;
-
-        return $this;
-    }
-
-    public function getTotalStargazersByUser(string $username, bool $dd = false)
-    {
-        $url = "{$this->baseUrl}/users/${username}/repos";
-
-        try {
-            $response = Http::get($url);
-        } catch (Exception $e) {
-            return "Server down.";
-        }
-
-        if ($response->status() === 503) {
-            return "Server unavailable.";
-        }
-
-        return collect($response->json())
-            ->sum('stargazers_count');
-    }
-}
+use Tests\Services\GithubRepoService;
 
 class BypassTest extends TestCase
 {

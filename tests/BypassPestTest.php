@@ -1,4 +1,5 @@
 <?php
+
 /*
 |--------------------------------------------------------------------------
 | Pest  example
@@ -10,7 +11,7 @@
 
 use Ciareis\Bypass\Bypass;
 use Illuminate\Support\Facades\Http;
-use Tests\Service\GithubRepoPhpPestService;
+use Tests\Services\GithubRepoService;
 
 it('returns server unavailable', function () {
     // prepare
@@ -21,7 +22,7 @@ it('returns server unavailable', function () {
     $bypass->expect(method: 'get', uri: $path, status: 503);
 
     // execute
-    $service = new GithubRepoPhpPestService();
+    $service = new GithubRepoService();
     $response = $service->setBaseUrl(getBaseUrl($bypass))
       ->getTotalStargazersByUser("emtudo");
 
@@ -38,7 +39,7 @@ it('returns server down', function () {
     $bypass->down();
 
     // execute
-    $service = new GithubRepoPhpPestService();
+    $service = new GithubRepoService();
     $response = $service->setBaseUrl(getBaseUrl($bypass))
       ->getTotalStargazersByUser("emtudo");
 

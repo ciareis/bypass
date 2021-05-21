@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\Service;
+namespace Tests\Services;
 
 use Illuminate\Support\Facades\Http;
 use Exception;
 
-class GithubRepoPhpPestService
+class GithubRepoService
 {
     protected $baseUrl = "https://api.github.com";
 
