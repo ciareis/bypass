@@ -119,7 +119,6 @@ class BypassTest extends TestCase
 
     protected function getBaseUrl(Bypass $bypass, $path = null)
     {
-        dd($bypass->getPort());
         return "http://localhost:{$bypass->getPort()}{$path}";
     }
 
