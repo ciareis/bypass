@@ -1,27 +1,18 @@
 <?php
+/*
+|--------------------------------------------------------------------------
+| Pest  example
+|--------------------------------------------------------------------------
+|
+| You can see Bypass being used in test written with Pest PHP
+|
+*/
 
 use Ciareis\Bypass\Bypass;
 use Illuminate\Support\Facades\Http;
+use Tests\Service\GithubRepoPhpPestService;
 
-test('total stargazers with user', function () {
-    // prepare
-    $bypass = Bypass::open();
-
-    $body = \json_encode(getBody());
-
-    $path = '/users/emtudo/repos';
-
-    $bypass->expect(method: 'get', uri: $path, status: 200, body: $body);
-
-    // execute
-    $service = new GithubRepoPhpPestService();
-    $response = $service->setBaseUrl(getBaseUrl($bypass))
-        ->getTotalStargazersByUser("emtudo");
-
-    expect(16)->toEqual($response);
-});
-
-test('server unavailable', function () {
+it('returns server unavailable', function () {
     // prepare
     $bypass = Bypass::open();
 
@@ -37,7 +28,7 @@ test('server unavailable', function () {
     expect('Server unavailable.')->toEqual($response);
 });
 
-test('server down', function () {
+it('returns server down', function () {
     // prepare
     $bypass = Bypass::open();
 
@@ -54,40 +45,24 @@ test('server down', function () {
     expect('Server down.')->toEqual($response);
 });
 
-// Service
 
-class GithubRepoPhpPestService
-{
-    protected $baseUrl = "https://api.github.com";
+it('returns route not found', function () {
+    // prepare
+    $bypass = Bypass::open();
 
-    public function setBaseUrl(string $url)
-    {
-        $this->baseUrl = $url;
+    $response = Http::get(getBaseUrl($bypass, '/no-route'));
 
-        return $this;
-    }
-
-    public function getTotalStargazersByUser(string $username)
-    {
-        $url = "{$this->baseUrl}/users/${username}/repos";
-
-        try {
-            $response = Http::get($url);
-        } catch (Exception $e) {
-            return "Server down.";
-        }
-
-        if ($response->status() === 503) {
-            return "Server unavailable.";
-        }
-
-        return collect($response->json())
-            ->sum('stargazers_count');
-    }
-}
+    expect(500)->toEqual($response->status());
+    expect('Bypass route not found.')->toEqual($response->body());
+});
 
 
-// helpers
+
+
+// Helpers
+
+
+
 function getBaseUrl(Bypass $bypass, $path = null)
 {
     return "http://localhost:{$bypass->getPort()}{$path}";

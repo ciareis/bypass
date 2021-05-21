@@ -1,4 +1,12 @@
 <?php
+/*
+|--------------------------------------------------------------------------
+| PHPUnit test example
+|--------------------------------------------------------------------------
+|
+| You can see Bypass being used in a PHPUnit test
+|
+*/
 
 declare(strict_types=1);
 
@@ -97,6 +105,17 @@ class BypassTest extends TestCase
         // asserts
         $this->assertTrue($response === 'Server down.');
     }
+
+    public function test_returns_route_not_found(): void
+    {
+        $bypass = Bypass::open();
+
+        $response = Http::get($this->getBaseUrl($bypass, '/no-route'));
+
+        $this->assertEquals(500, $response->status());
+        $this->assertEquals('Bypass route not found.', $response->body());
+    }
+
 
     protected function getBaseUrl(Bypass $bypass, $path = null)
     {
