@@ -51,13 +51,22 @@ Example:
     $bypass = Bypass::open();
 ```
 
+The open() method accept the following parameters:
+
+| Option | Description
+|----|----|
+|**Port**| *(int) $port* - Listening Port |
+|**Php path**| *(str) $phpPath* - PHP installation path |
+
 ### 2. Bypass URL & Port
 
-Bypass will be running at `http://localhost` with a random port number.
+If you have not specified a port, Bypass will be running at `http://localhost` with a random port number.
 
 To retrive the port, use the method:
 
- `$bypass_port = $bypass->getPort()`.
+ ```php
+ $bypass_port = $bypass->getPort(); //for example: 16819
+ ````
 
 ### 3. Tell Bypass what it should expect
 
@@ -73,16 +82,15 @@ The method `expect()` accepts the following parameters:
 
 | Option | Description
 |----|----|
-|**HTTP Method**| Method to expect. (GET/POST/PUT/PATCH/DELETE) |
-|**URI**| URI to be served by Bypass |
-|**Status**| Status to be returned by Bypass
-|**Body**| JSON body that will be served  by Bypass|
-
+|**HTTP Method**| *(string) $method* - Method to expect. (GET/POST/PUT/PATCH/DELETE) |
+|**URI**| *(string) $uri* - URI to be served by Bypass |
+|**Status**| *(int) $status* - Status to be returned by Bypass (default: 200)|
+|**Body**|  *(string) $body*  - body that will be served (optional)|
 
 ### 4. Use your service with the Bypass URL
 
 ```php
-    $bypass_port = $bypass->getPort()
+    $bypass_port = $bypass->getPort();
     $bypass_url = "http://localhost:{$bypass_port}";
     
     $service = new TotalScoreService();
@@ -91,9 +99,21 @@ The method `expect()` accepts the following parameters:
         ->getTotalScoreByUsername("johndoe"); //returns 35
 ```
 
+### 5. Stop or shutdown
+
+Bypass can be stopped or shutdown with the following methods:
+
+To stop:
+`$bypass->stop();`
+
+To shutdown:
+`$bypass->down();`
+
 ### Full test Method
 
-Below you can see a full [PEST PHP](https://pestphp.com) test method:
+We recommned you to check Bypass' folder `tests` to see a working implementation in a TestCase.
+
+Also, you can see below a test example with [PEST PHP](https://pestphp.com).
 
 ```php
 it('properly returns the score by username', function () {
@@ -105,7 +125,7 @@ it('properly returns the score by username', function () {
     
     $bypass->expect(method: 'get', uri: '/v1/score', status: 200, body: $body);
 
-    $bypass_port = $bypass->getPort()
+    $bypass_port = $bypass->getPort();
     $bypass_url = "http://localhost:{$bypass_port}";
     
     $service = new TotalScoreService();
