@@ -137,6 +137,11 @@ it('properly returns the score by username', function () {
 });
 ```
 
+### Exampples
+
+- If you prefer the php unit, you can see [an example here](https://github.com/ciareis/bypass/blob/main/tests/BypassTest.php)
+- If you need more example [access  here](https://github.com/ciareis/bypass/blob/main/tests/BypassPestTest.php)
+
 ## Credits
 
 Developed by Leandro Henrique Reis

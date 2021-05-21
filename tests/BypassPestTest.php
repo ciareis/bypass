@@ -59,9 +59,7 @@ it('returns route not found', function () {
 
 
 
-
 // Helpers
-
 
 
 function getBaseUrl(Bypass $bypass, $path = null)
