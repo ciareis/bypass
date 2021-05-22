@@ -54,14 +54,15 @@ class Bypass
         return $this->port;
     }
 
-    protected function chooseRandomPort(): int {
+    protected function chooseRandomPort(): int
+    {
         $randomPort = 0;
         $sock = socket_create_listen($randomPort);
 
         if ($sock === false) {
             throw new \Exception("Can't open any socket.");
         }
-        
+
         socket_getsockname($sock, $address, $randomPort);
         socket_close($sock);
 
@@ -76,8 +77,6 @@ class Bypass
 
         $this->process = new Process($params);
         $this->process->start();
-
-        // ... do other things
 
         // waits until the given anonymous function returns true
         $this->process->waitUntil(

@@ -1,7 +1,12 @@
 # Release Notes
 
-## [Unreleased](https://github.com/ciareis/bypass/compare/0.0.4...main)
 
+
+## [Unreleased](https://github.com/ciareis/bypass/compare/0.0.5...main)
+
+## [v0.0.5 (2021-05-22)](https://github.com/ciareis/bypass/archive/refs/tags/0.0.5.zip)
+
+- improves random port
 ## [v0.0.4 (2021-05-22)](https://github.com/ciareis/bypass/archive/refs/tags/0.0.4.zip)
 
 - Improves path with PHP_BINARY
