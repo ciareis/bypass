@@ -62,9 +62,7 @@ class BypassTest extends TestCase
     {
         // prepare
         $bypass = Bypass::open();
-
         $path = '/users/emtudo/repos';
-
         $bypass->expect(method: 'get', uri: $path, status: 503);
         $bypass->down();
 
@@ -80,6 +78,8 @@ class BypassTest extends TestCase
     public function test_returns_route_not_found(): void
     {
         $bypass = Bypass::open();
+        $bypass->expect(method: 'get', uri: '/no-route', status: 200);
+        $bypass->stop();
 
         $response = Http::get($this->getBaseUrl($bypass, '/no-route'));
 

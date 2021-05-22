@@ -13,6 +13,8 @@ use Ciareis\Bypass\Bypass;
 use Illuminate\Support\Facades\Http;
 use Tests\Services\GithubRepoService;
 
+uses(Tests\TestCase::class)->in(__DIR__ . "../");
+
 it('returns server unavailable', function () {
     // prepare
     $bypass = Bypass::open();
@@ -50,6 +52,8 @@ it('returns server down', function () {
 it('returns route not found', function () {
     // prepare
     $bypass = Bypass::open();
+    $bypass->expect(method: 'get', uri: '/no-route', status: 200);
+    $bypass->stop();
 
     $response = Http::get(getBaseUrl($bypass, '/no-route'));
 
@@ -58,10 +62,16 @@ it('returns route not found', function () {
 });
 
 
+it('server down', function () {
+    // prepare
+    $bypass = Bypass::open();
+    $bypass->down();
+
+    Http::get(getBaseUrl($bypass, '/no-route'));
+})->throws(\Illuminate\Http\Client\ConnectionException::class);
+
 
 // Helpers
-
-
 function getBaseUrl(Bypass $bypass, $path = null)
 {
     return "http://localhost:{$bypass->getPort()}{$path}";
