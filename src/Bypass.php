@@ -34,14 +34,19 @@ class Bypass
 
     public function stop()
     {
-        if ($this->process) {
-            $this->process->stop();
-        }
+        $url = $this->url("___api_faker_clear_router");
+
+        Http::withHeaders([
+            'Content-Type' => 'application/json'
+        ])
+            ->put($url, []);
     }
 
     public function down()
     {
-        $this->stop();
+        if ($this->process) {
+            $this->process->stop();
+        }
     }
 
     public function getPort()
@@ -65,25 +70,22 @@ class Bypass
             function ($type, $output) use ($port) {
                 $pattern = "/started/";
 
-                if (preg_match($pattern, $output)) {
-                    $this->started = true;
-                    $this->port = $port;
-
-                    return true;
+                if (!preg_match($pattern, $output)) {
+                    return false;
                 }
-                return false;
+                $this->started = true;
+                $this->port = $port;
+
+                return true;
             }
         );
 
-        Http::withHeaders([
-            'Content-Type' => 'application/json'
-        ])
-            ->post('___api_faker_clear_router', []);
+        $this->stop();
     }
 
     public function expect(string $method, string $uri, int $status = 200, ?string $body = null)
     {
-        $path = $this->url("___api_faker_add_router");
+        $url = $this->url("___api_faker_add_router");
 
         if (!\str_starts_with($uri, '/')) {
             $uri = "/{$uri}";
@@ -99,7 +101,7 @@ class Bypass
         $response = Http::withHeaders([
             'Content-Type' => 'application/json'
         ])
-            ->put($path, $params);
+            ->put($url, $params);
 
         return [
             'body' => $response->body(),

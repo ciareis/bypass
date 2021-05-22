@@ -40,7 +40,7 @@ class BypassTest extends TestCase
         $this->assertEquals(16, $response);
     }
 
-    public function test_server_unavailable(): void
+    public function test_returns_server_unavailable(): void
     {
         // prepare
         $bypass = Bypass::open();
@@ -58,13 +58,11 @@ class BypassTest extends TestCase
         $this->assertTrue($response === 'Server unavailable.');
     }
 
-    public function test_server_down(): void
+    public function test_returns_server_down(): void
     {
         // prepare
         $bypass = Bypass::open();
-
         $path = '/users/emtudo/repos';
-
         $bypass->expect(method: 'get', uri: $path, status: 503);
         $bypass->down();
 
@@ -80,6 +78,8 @@ class BypassTest extends TestCase
     public function test_returns_route_not_found(): void
     {
         $bypass = Bypass::open();
+        $bypass->expect(method: 'get', uri: '/no-route', status: 200);
+        $bypass->stop();
 
         $response = Http::get($this->getBaseUrl($bypass, '/no-route'));
 
@@ -87,6 +87,15 @@ class BypassTest extends TestCase
         $this->assertEquals('Bypass route not found.', $response->body());
     }
 
+    public function test_returns_exceptions_when_server_down(): void
+    {
+        $bypass = Bypass::open();
+        $bypass->down();
+
+        $this->expectException(\Illuminate\Http\Client\ConnectionException::class);
+
+        Http::get(getBaseUrl($bypass, '/no-route'));
+    }
 
     protected function getBaseUrl(Bypass $bypass, $path = null)
     {
