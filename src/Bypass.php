@@ -70,13 +70,13 @@ class Bypass
             function ($type, $output) use ($port) {
                 $pattern = "/started/";
 
-                if (preg_match($pattern, $output)) {
-                    $this->started = true;
-                    $this->port = $port;
-
-                    return true;
+                if (!preg_match($pattern, $output)) {
+                    return false;
                 }
-                return false;
+                $this->started = true;
+                $this->port = $port;
+
+                return true;
             }
         );
 
