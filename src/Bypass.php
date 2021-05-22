@@ -54,9 +54,23 @@ class Bypass
         return $this->port;
     }
 
+    protected function chooseRandomPort(): int {
+        $randomPort = 0;
+        $sock = socket_create_listen($randomPort);
+
+        if ($sock === false) {
+            throw new \Exception("Can't open any socket.");
+        }
+        
+        socket_getsockname($sock, $address, $randomPort);
+        socket_close($sock);
+
+        return $randomPort;
+    }
+
     protected function startServer(?int $port = null)
     {
-        $port = $port ?: rand(2048, 60000);
+        $port = $port ?: $this->chooseRandomPort();
 
         $params = [PHP_BINARY, '-S', "localhost:{$port}",  __DIR__ . DIRECTORY_SEPARATOR . 'server.php'];
 
