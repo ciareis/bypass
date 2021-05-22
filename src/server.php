@@ -34,11 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === "PUT" && $_SERVER['REQUEST_URI'] === '/___api
 
 if ($route = currentRoute()) {
     $route = json_decode($route, true);
-    // $file = getFilename();
 
-    // if (file_exists($file)) {
-    //     @unlink($file);
-    // }
     http_response_code($route['status']);
 
     echo $route['content'];

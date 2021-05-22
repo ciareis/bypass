@@ -56,7 +56,6 @@ The open() method accept the following parameters:
 | Option | Description
 |----|----|
 |**Port**| *(int) $port* - Listening Port |
-|**Php path**| *(str) $phpPath* - PHP installation path |
 
 ### 2. Bypass URL & Port
 
