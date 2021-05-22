@@ -2,7 +2,11 @@
 
 
 
-## [Unreleased](https://github.com/ciareis/bypass/compare/0.0.5...main)
+## [Unreleased](https://github.com/ciareis/bypass/compare/0.0.6...main)
+
+## [v0.0.6 (2021-05-22)](https://github.com/ciareis/bypass/archive/refs/tags/0.0.6.zip)
+
+- improves random port
 
 ## [v0.0.5 (2021-05-22)](https://github.com/ciareis/bypass/archive/refs/tags/0.0.5.zip)
 
