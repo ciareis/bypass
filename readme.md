@@ -144,7 +144,10 @@ it('properly returns the score by username', function () {
 
 ## Credits
 
-Developed by Leandro Henrique Reis
+- [Leandro Henrique](https://github.com/emtudo)
+- [All Contributors](../../contributors)
+
+And a special thanks to [Daniel](https://github.com/dansysanalyst)
 
 ### Inspired
 
