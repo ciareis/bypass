@@ -26,6 +26,7 @@ class Bypass
             try {
                 $this->startServer($port);
             } catch (Exception $e) {
+                //
             }
         }
 
@@ -54,24 +55,8 @@ class Bypass
         return $this->port;
     }
 
-    protected function chooseRandomPort(): int {
-        $randomPort = 0;
-        $sock = socket_create_listen($randomPort);
-
-        if ($sock === false) {
-            throw new \Exception("Can't open any socket.");
-        }
-        
-        socket_getsockname($sock, $address, $randomPort);
-        socket_close($sock);
-
-        return $randomPort;
-    }
-
     protected function startServer(?int $port = null)
     {
-        $port = $port ?: $this->chooseRandomPort();
-
         $params = [PHP_BINARY, '-S', "localhost:{$port}",  __DIR__ . DIRECTORY_SEPARATOR . 'server.php'];
 
         $this->process = new Process($params);
@@ -81,14 +66,17 @@ class Bypass
 
         // waits until the given anonymous function returns true
         $this->process->waitUntil(
-            function ($type, $output) use ($port) {
-                $pattern = "/started/";
+            function ($type, $output) {
+                $pattern = '/\(.*?localhost:(?<port>\d+)\) started/';
 
-                if (!preg_match($pattern, $output)) {
+                $matches = [];
+
+                if (!preg_match($pattern, $output, $matches)) {
                     return false;
                 }
+
                 $this->started = true;
-                $this->port = $port;
+                $this->port = $matches['port'];
 
                 return true;
             }
