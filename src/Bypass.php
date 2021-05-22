@@ -62,8 +62,6 @@ class Bypass
         $this->process = new Process($params);
         $this->process->start();
 
-        // ... do other things
-
         // waits until the given anonymous function returns true
         $this->process->waitUntil(
             function ($type, $output) {
