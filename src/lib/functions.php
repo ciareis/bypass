@@ -2,23 +2,6 @@
 
 function writeFile($filename, $content)
 {
-    /*
-    $content = "";
-    foreach ($assoc_arr as $key => $elem) {
-        $content .= "[" . $key . "]\n";
-        foreach ($elem as $key2 => $elem2) {
-            if (is_array($elem2)) {
-                for ($i = 0; $i < count($elem2); $i++) {
-                    $content .= $key2 . "[] = \"" . $elem2[$i] . "\"\n";
-                }
-            } elseif ($elem2 == "") {
-                $content .= $key2 . " = \n";
-            } else {
-                $content .= $key2 . " = \"" . $elem2 . "\"\n";
-            }
-        }
-    }
-*/
     if (!file_put_contents($filename, json_encode($content))) {
         return false;
     }
@@ -33,9 +16,7 @@ function getFilename($route, $method)
     $method = strtoupper($method);
     $route = md5($route);
 
-    $file =  "{$sessionName}_{$method}_{$route}.tmp";
-
-    return $file;
+    return "{$sessionName}_{$method}_{$route}.tmp";
 }
 
 function getSessionName()
@@ -48,7 +29,7 @@ function getRoute(string $route, string $method = null)
     $file = getFilename($route, $method);
 
     if (!file_exists($file)) {
-        return;
+        return "";
     }
 
     return file_get_contents($file);

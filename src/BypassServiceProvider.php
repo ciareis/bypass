@@ -17,10 +17,12 @@ class BypassServiceProvider extends ServiceProvider
 
     public function register()
     {
+        $this->mergeConfigFrom(__DIR__.'/../config/bypass.php', 'bypass');
+        
         $this->app->bind(Bypass::class, function ($app) {
-            $phpPath = $app['config']['bypass']['php_path'];
+            $port = $app['config']['bypass']['port'];
 
-            return Bypass::open(null, $phpPath);
+            return Bypass::open($port);
         });
     }
 }

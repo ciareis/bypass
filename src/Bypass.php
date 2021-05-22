@@ -13,27 +13,18 @@ class Bypass
     protected $process;
     protected $phpPath;
 
-    public static function open(?int $port = null, string $phpPath = 'php')
+    public static function open(?int $port = null)
     {
         $process = new self();
 
-        return $process->handle($port, $phpPath);
+        return $process->handle($port);
     }
 
-    public function handle(?int $port = null, string $phpPath = 'php')
+    public function handle(?int $port = null)
     {
-        $process = new Process(['which', $phpPath]);
-        $process->run();
-
-        $exists = $process->getOutput();
-
-        if (!$exists) {
-            throw new Exception("Php not found. Define path please");
-        }
-
         while (!$this->started) {
             try {
-                $this->startServer($port, $phpPath);
+                $this->startServer($port);
             } catch (Exception $e) {
             }
         }
@@ -58,11 +49,11 @@ class Bypass
         return $this->port;
     }
 
-    protected function startServer(?int $port = null, string $phpPath)
+    protected function startServer(?int $port = null)
     {
         $port = $port ?: rand(2048, 60000);
 
-        $params = [$phpPath, '-S', "localhost:{$port}",  __DIR__ . DIRECTORY_SEPARATOR . 'server.php'];
+        $params = [PHP_BINARY, '-S', "localhost:{$port}",  __DIR__ . DIRECTORY_SEPARATOR . 'server.php'];
 
         $this->process = new Process($params);
         $this->process->start();
