@@ -43,14 +43,17 @@ class Bypass
 
     public function stop()
     {
-        if ($this->process) {
-            $this->process->stop();
-        }
+        Http::withHeaders([
+            'Content-Type' => 'application/json'
+        ])
+            ->post('___api_faker_clear_router', []);
     }
 
     public function down()
     {
-        $this->stop();
+        if ($this->process) {
+            $this->process->stop();
+        }
     }
 
     public function getPort()
