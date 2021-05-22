@@ -1,6 +1,12 @@
 # Release Notes
 
-## [Unreleased](https://github.com/ciareis/bypass/compare/0.0.2...main)
+## [Unreleased](https://github.com/ciareis/bypass/compare/0.0.4...main)
+
+## [v0.0.4 (2021-05-22)](https://github.com/ciareis/bypass/archive/refs/tags/0.0.4.zip)
+
+- Improves path with PHP_BINARY
+- fixed tests and repeat test with phpunit and phppest
+- improves doc
 
 ## [v0.0.3 (2021-05-22)](https://github.com/ciareis/bypass/archive/refs/tags/0.0.3.zip)
 

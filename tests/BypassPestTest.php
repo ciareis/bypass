@@ -13,7 +13,24 @@ use Ciareis\Bypass\Bypass;
 use Illuminate\Support\Facades\Http;
 use Tests\Services\GithubRepoService;
 
-uses(Tests\TestCase::class)->in(__DIR__ . "../");
+it("total stargazers by user", function () {
+    // prepare
+    $bypass = Bypass::open();
+
+    $body = \json_encode(getBody());
+
+    $path = '/users/emtudo/repos';
+
+    $bypass->expect(method: 'get', uri: $path, status: 200, body: $body);
+
+    // execute
+    $service = new GithubRepoService();
+    $response = $service->setBaseUrl(getBaseUrl($bypass))
+        ->getTotalStargazersByUser("emtudo", true);
+
+    // asserts
+    expect(16)->toBe($response);
+});
 
 it('returns server unavailable', function () {
     // prepare
@@ -62,13 +79,13 @@ it('returns route not found', function () {
 });
 
 
-it('server down', function () {
+it('returns exceptions when server down', function () {
     // prepare
     $bypass = Bypass::open();
     $bypass->down();
 
     Http::get(getBaseUrl($bypass, '/no-route'));
-})->throws(\Illuminate\Http\Client\ConnectionException::class);
+})->throws(Illuminate\Http\Client\ConnectionException::class);
 
 
 // Helpers

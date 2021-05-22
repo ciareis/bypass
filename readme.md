@@ -51,7 +51,7 @@ Example:
     $bypass = Bypass::open();
 ```
 
-The open() method accept the following parameters:
+The open() method accept the following parameter:
 
 | Option | Description
 |----|----|
