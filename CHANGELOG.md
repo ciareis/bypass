@@ -2,7 +2,13 @@
 
 
 
-## [Unreleased](https://github.com/ciareis/bypass/compare/v0.0.6...main)
+## [Unreleased](https://github.com/ciareis/bypass/compare/v0.0.7...main)
+
+## [v0.1.0 (2021-05-25)](https://github.com/ciareis/bypass/archive/refs/tags/v0.0.6.zip)
+
+- added route and method at string when route not exists
+- added CI/test to github
+- improves doc
 
 ## [v0.0.6 (2021-05-22)](https://github.com/ciareis/bypass/archive/refs/tags/v0.0.6.zip)
 
