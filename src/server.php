@@ -43,4 +43,6 @@ if ($route = currentRoute()) {
 }
 
 http_response_code(500);
-echo "Bypass route not found.";
+$route = $_SERVER['REQUEST_URI'];
+$method = $_SERVER['REQUEST_METHOD'];
+echo "Bypass route {$route} and method {$method} not found.";

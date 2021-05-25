@@ -84,7 +84,7 @@ class BypassTest extends TestCase
         $response = Http::get($this->getBaseUrl($bypass, '/no-route'));
 
         $this->assertEquals(500, $response->status());
-        $this->assertEquals('Bypass route not found.', $response->body());
+        $this->assertEquals('Bypass route /no-route and method GET not found.', $response->body());
     }
 
     public function test_returns_exceptions_when_server_down(): void

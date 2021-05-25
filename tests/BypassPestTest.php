@@ -75,7 +75,7 @@ it('returns route not found', function () {
     $response = Http::get(getBaseUrl($bypass, '/no-route'));
 
     expect(500)->toEqual($response->status());
-    expect('Bypass route not found.')->toEqual($response->body());
+    expect('Bypass route /no-route and method GET not found.')->toEqual($response->body());
 });
 
 
