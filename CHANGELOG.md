@@ -1,10 +1,13 @@
 # Release Notes
 
 
+## [Unreleased](https://github.com/ciareis/bypass/compare/v0.1.1...main)
 
-## [Unreleased](https://github.com/ciareis/bypass/compare/v0.0.7...main)
+## [v0.1.1 (2021-05-16)](https://github.com/ciareis/bypass/archive/refs/tags/v0.1.0.zip)
 
-## [v0.1.0 (2021-05-25)](https://github.com/ciareis/bypass/archive/refs/tags/v0.0.6.zip)
+- added method getBaseUrl
+
+## [v0.1.0 (2021-05-25)](https://github.com/ciareis/bypass/archive/refs/tags/v0.1.0.zip)
 
 - added route and method at string when route not exists
 - added CI/test to github
