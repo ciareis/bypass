@@ -55,6 +55,11 @@ class Bypass
         return $this->port;
     }
 
+    public function getBaseUrl()
+    {
+        return "http://localhost:{$this->port}";
+    }
+
     protected function startServer(?int $port = null)
     {
         $params = [PHP_BINARY, '-S', "localhost:{$port}",  __DIR__ . DIRECTORY_SEPARATOR . 'server.php'];
