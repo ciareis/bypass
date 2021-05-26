@@ -25,7 +25,7 @@ it("total stargazers by user", function () {
 
     // execute
     $service = new GithubRepoService();
-    $response = $service->setBaseUrl(getBaseUrl($bypass))
+    $response = $service->setBaseUrl($bypass->getBaseUrl())
         ->getTotalStargazersByUser("emtudo", true);
 
     // asserts
@@ -42,7 +42,7 @@ it('returns server unavailable', function () {
 
     // execute
     $service = new GithubRepoService();
-    $response = $service->setBaseUrl(getBaseUrl($bypass))
+    $response = $service->setBaseUrl($bypass->getBaseUrl())
       ->getTotalStargazersByUser("emtudo");
 
     expect('Server unavailable.')->toEqual($response);
@@ -59,7 +59,7 @@ it('returns server down', function () {
 
     // execute
     $service = new GithubRepoService();
-    $response = $service->setBaseUrl(getBaseUrl($bypass))
+    $response = $service->setBaseUrl($bypass->getBaseUrl())
       ->getTotalStargazersByUser("emtudo");
 
     expect('Server down.')->toEqual($response);
@@ -72,7 +72,7 @@ it('returns route not found', function () {
     $bypass->expect(method: 'get', uri: '/no-route', status: 200);
     $bypass->stop();
 
-    $response = Http::get(getBaseUrl($bypass, '/no-route'));
+    $response = Http::get($bypass->getBaseUrl() . '/no-route');
 
     expect(500)->toEqual($response->status());
     expect('Bypass route /no-route and method GET not found.')->toEqual($response->body());
@@ -84,108 +84,101 @@ it('returns exceptions when server down', function () {
     $bypass = Bypass::open();
     $bypass->down();
 
-    Http::get(getBaseUrl($bypass, '/no-route'));
+    Http::get($bypass->getBaseUrl() . '/no-route');
 })->throws(Illuminate\Http\Client\ConnectionException::class);
-
-
-// Helpers
-function getBaseUrl(Bypass $bypass, $path = null)
-{
-    return "http://localhost:{$bypass->getPort()}{$path}";
-}
 
 function getBody()
 {
     return [
-        [
-        "stargazers_count" => 0
-        ],
-        [
-        "stargazers_count" => 3
-        ],
-        [
-        "stargazers_count" => 0,
-        ],
-        [
-        "stargazers_count" => 1,
-        ],
-        [
-        "stargazers_count" => 0,
-        ],
-        [
-        "stargazers_count" => 0,
-        ],
-        [
-        "stargazers_count" => 0,
-        ],
-        [
-        "stargazers_count" => 0,
-        ],
-        [
-        "stargazers_count" => 1,
-        ],
-        [
-        "stargazers_count" => 0,
-        ],
-        [
-        "stargazers_count" => 0,
-        ],
-        [
-        "stargazers_count" => 0,
-        ],
-        [
-        "stargazers_count" => 0,
-        ],
-        [
-        "stargazers_count" => 1,
-        ],
-        [
-        "stargazers_count" => 0,
-        ],
-        [
-        "stargazers_count" => 2,
-        ],
-        [
-        "stargazers_count" => 0,
-        ],
-        [
-        "stargazers_count" => 0,
-        ],
-        [
-        "stargazers_count" => 0,
-        ],
-        [
-        "stargazers_count" => 4,
-        ],
-        [
-        "stargazers_count" => 1,
-        ],
-        [
-        "stargazers_count" => 0,
-        ],
-        [
-        "stargazers_count" => 0,
-        ],
-        [
-        "stargazers_count" => 1,
-        ],
-        [
-        "stargazers_count" => 2,
-        ],
-        [
-        "stargazers_count" => 0,
-        ],
-        [
-        "stargazers_count" => 0,
-        ],
-        [
-        "stargazers_count" => 0,
-        ],
-        [
-        "stargazers_count" => 0,
-        ],
-        [
-        "stargazers_count" => 0,
-        ],
+    [
+    "stargazers_count" => 0
+    ],
+    [
+    "stargazers_count" => 3
+    ],
+    [
+    "stargazers_count" => 0,
+    ],
+    [
+    "stargazers_count" => 1,
+    ],
+    [
+    "stargazers_count" => 0,
+    ],
+    [
+    "stargazers_count" => 0,
+    ],
+    [
+    "stargazers_count" => 0,
+    ],
+    [
+    "stargazers_count" => 0,
+    ],
+    [
+    "stargazers_count" => 1,
+    ],
+    [
+    "stargazers_count" => 0,
+    ],
+    [
+    "stargazers_count" => 0,
+    ],
+    [
+    "stargazers_count" => 0,
+    ],
+    [
+    "stargazers_count" => 0,
+    ],
+    [
+    "stargazers_count" => 1,
+    ],
+    [
+    "stargazers_count" => 0,
+    ],
+    [
+    "stargazers_count" => 2,
+    ],
+    [
+    "stargazers_count" => 0,
+    ],
+    [
+    "stargazers_count" => 0,
+    ],
+    [
+    "stargazers_count" => 0,
+    ],
+    [
+    "stargazers_count" => 4,
+    ],
+    [
+    "stargazers_count" => 1,
+    ],
+    [
+    "stargazers_count" => 0,
+    ],
+    [
+    "stargazers_count" => 0,
+    ],
+    [
+    "stargazers_count" => 1,
+    ],
+    [
+    "stargazers_count" => 2,
+    ],
+    [
+    "stargazers_count" => 0,
+    ],
+    [
+    "stargazers_count" => 0,
+    ],
+    [
+    "stargazers_count" => 0,
+    ],
+    [
+    "stargazers_count" => 0,
+    ],
+    [
+    "stargazers_count" => 0,
+    ],
     ];
 }

@@ -33,7 +33,7 @@ class BypassTest extends TestCase
 
         // execute
         $service = new GithubRepoService();
-        $response = $service->setBaseUrl($this->getBaseUrl($bypass))
+        $response = $service->setBaseUrl($bypass->getBaseUrl())
             ->getTotalStargazersByUser("emtudo", true);
 
         // asserts
@@ -51,7 +51,7 @@ class BypassTest extends TestCase
 
         // execute
         $service = new GithubRepoService();
-        $response = $service->setBaseUrl($this->getBaseUrl($bypass))
+        $response = $service->setBaseUrl($bypass->getBaseUrl())
             ->getTotalStargazersByUser("emtudo");
 
         // asserts
@@ -68,7 +68,7 @@ class BypassTest extends TestCase
 
         // execute
         $service = new GithubRepoService();
-        $response = $service->setBaseUrl($this->getBaseUrl($bypass))
+        $response = $service->setBaseUrl($bypass->getBaseUrl())
             ->getTotalStargazersByUser("emtudo");
 
         // asserts
@@ -81,7 +81,7 @@ class BypassTest extends TestCase
         $bypass->expect(method: 'get', uri: '/no-route', status: 200);
         $bypass->stop();
 
-        $response = Http::get($this->getBaseUrl($bypass, '/no-route'));
+        $response = Http::get($bypass->getBaseUrl() . '/no-route');
 
         $this->assertEquals(500, $response->status());
         $this->assertEquals('Bypass route /no-route and method GET not found.', $response->body());
@@ -94,12 +94,7 @@ class BypassTest extends TestCase
 
         $this->expectException(\Illuminate\Http\Client\ConnectionException::class);
 
-        Http::get(getBaseUrl($bypass, '/no-route'));
-    }
-
-    protected function getBaseUrl(Bypass $bypass, $path = null)
-    {
-        return "http://localhost:{$bypass->getPort()}{$path}";
+        Http::get($bypass->getBaseUrl() . '/no-route');
     }
 
     protected function getBody()

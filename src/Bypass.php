@@ -48,6 +48,8 @@ class Bypass
         if ($this->process) {
             $this->process->stop();
         }
+
+        return $this;
     }
 
     public function getPort()
