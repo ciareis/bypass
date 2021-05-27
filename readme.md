@@ -21,13 +21,16 @@ To install via composer, run:
 composer require --dev ciareis/bypass
 ```
 
-## Usage
+## Getting started
 
-For this demo, lets assume you need to test the service `TotalScoreService` which calculates the total score of multiple games played by an user.
+### Use case
 
-This service consumes the ficticious API `emtudo-games.com/v1/score/USERNAME` which returns a list of games in JSON format.
+For demo purpose:
 
-Example:
+1. Imagine you have a service `TotalScoreService` and you must write a test for it.
+2. This service calculates the total game score of a specific username.
+3. To get the score, it consumes the fictitious API at `emtudo-games.com/v1/score/::USERNAME::` 
+4. The API returns status `200`and a JSON body with a list of games:
 
 ```json
 {
@@ -45,23 +48,34 @@ Example:
 }
 ```
 
-### 1. Start by opening by pass server
+Let's test it with Bypass.
+
+### 1. Start by opening a Bypass server
+
+Bypass will always run at `http://localhost`. To open a server use:
 
 ```php
     $bypass = Bypass::open();
 ```
 
-The open() method accept the following parameter:
+By default, Bypass will be listening to a random port number. 
+If needed, a specific port can be passed as an argument:
 
-| Option | Description
-|----|----|
-|**Port**| *(int) $port* - Listening Port |
+```php
+    // opens Bypass in port 8080
+    $bypass = Bypass::open(8080);
+```
+
 
 ### 2. Bypass URL & Port
 
-If you have not specified a port, Bypass will be running at `http://localhost` with a random port number.
+The URL with Port can be retrieved with the method `getBaseUrl()`:
 
-To retrive the port, use the method:
+ ```php
+ $bypass_url = $bypass->getBaseUrl(); //for example: http://localhost:16819
+ ````
+ 
+If you need to retrieve only the port number, use the method `getPort()`:
 
  ```php
  $bypass_port = $bypass->getPort(); //for example: 16819
@@ -69,11 +83,21 @@ To retrive the port, use the method:
 
 ### 3. Tell Bypass what it should expect
 
-Bypass needs to be informed that a request will be made using the HTTP method `get`, at the URI `/v1/score/USERNAME` and it should return a status `200` with a specific JSON body.
+Bypass needs to be informed of what it will be expecting from the request.
+Based on our demo case, we will need:
+
+- **Method**: the request will be made using the HTTP method `get`
+- **URI**: the request will be at the URI `/v1/score/USERNAME` 
+- **Status number** `200` (OK success) 
+- **Body**: a text body (JSON encoded).
+
+And in our case, the method call will look like this:
 
 ```php
+    //The body containing the API response with games in JSON format
     $body = '{"games":[{"name":"game 1","points":25},{"name":"game 2","points":10}],"is_active":true}';
     
+    //Telling Bypass what it should expect. 
     $bypass->expect(method: 'get', uri: '/v1/score', status: 200, body: $body);
 ```
 
@@ -86,15 +110,18 @@ The method `expect()` accepts the following parameters:
 |**Status**| *(int) $status* - Status to be returned by Bypass (default: 200)|
 |**Body**|  *(string) $body*  - body that will be served (optional)|
 
-### 4. Use your service with the Bypass URL
+### 4. Use the service with the Bypass URL
+
+At this point, you can tell `TotalScoreService` to access the Bypass URL (`localhost:16819/v1/score`) instead of the original URL (`emtudo-games.com/v1/score/`):
 
 ```php
-    $bypass_port = $bypass->getPort();
-    $bypass_url = "http://localhost:{$bypass_port}";
+    $bypass = Bypass::open();
+    $bypass_url = $bypass->getBaseUrl();
     
+
     $service = new TotalScoreService();
-    $response = $service
-        ->setBaseUrl($bypass_url)
+    $response = $serivce
+        ->setBaseUrl($bypass_url) // set the URL to Bypass url
         ->getTotalScoreByUsername("johndoe"); //returns 35
 ```
 
@@ -108,45 +135,71 @@ To stop:
 To shutdown:
 `$bypass->down();`
 
-### Full test Method
+## Examples
 
-We recommned you to check Bypass' folder `tests` to see a working implementation in a TestCase.
+### Quick examples
 
-Also, you can see below a test example with [PEST PHP](https://pestphp.com).
+Click below to see code snippets for [Pest PHP](pestphp.com/) and PHPUnit.
 
+
+<details><summary>Pest PHP</summary>
+	
 ```php
-it('properly returns the score by username', function () {
+it('properly returns the total score by username', function () {
   
     // prepare
     $bypass = Bypass::open();
-
+	
     $body = '{"games":[{"name":"game 1","points":25},{"name":"game 2","points":10}],"is_active":true}';
     
     $bypass->expect(method: 'get', uri: '/v1/score', status: 200, body: $body);
-
-    $bypass_port = $bypass->getPort();
-    $bypass_url = "http://localhost:{$bypass_port}";
     
     $service = new TotalScoreService();
     $response = $service
-        ->setBaseUrl($bypass_url)
+        ->setBaseUrl($bypass->getBaseUrl())
         ->getTotalScoreByUsername("johndoe");
 
     expect(35)->toEqual($response);
 });
 ```
+</details>
 
-### Examples
+<details><summary>PHPUnit</summary>
+	
+```php
+ class BypassTest extends TestCase
+  {
+    public function test_total_score_by_username(): void
+    {
+  
+    // prepare
+    $bypass = Bypass::open();
+	
+    $body = '{"games":[{"name":"game 1","points":25},{"name":"game 2","points":10}],"is_active":true}';
+    
+    $bypass->expect(method: 'get', uri: '/v1/score', status: 200, body: $body);
+    
+    $service = new TotalScoreService();
+    $response = $service
+        ->setBaseUrl($bypass->getBaseUrl())
+        ->getTotalScoreByUsername("johndoe");
 
-- if you prefer to use phpunit, you can see [an example here](https://github.com/ciareis/bypass/blob/main/tests/BypassTest.php)
-- If you need more example [access  here](https://github.com/ciareis/bypass/blob/main/tests/BypassPestTest.php)
+        $this->assertEquals(35, $response);
+    }
+ }
+```
+</details>
+
+
+📚 See Bypass being used in complete tests with [Pest PHP](https://github.com/ciareis/bypass/blob/main/tests/BypassPestTest.php) and [PHPUnit](https://github.com/ciareis/bypass/blob/main/tests/BypassTest.php).
+ 
 
 ## Credits
 
 - [Leandro Henrique](https://github.com/emtudo)
 - [All Contributors](../../contributors)
 
-And a special thanks to [Daniel](https://github.com/dansysanalyst)
+And a special thanks to [@DanSysAnalyst](https://github.com/dansysanalyst)
 
 ### Inspired
 
