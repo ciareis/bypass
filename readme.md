@@ -72,7 +72,7 @@ If needed, a specific port can be passed as an argument:
 The URL with Port can be retrieved with the method `getBaseUrl()`:
 
  ```php
- $bypass_port = $bypass->getBaseUrl(); //for example: http://localhost:16819
+ $bypass_url = $bypass->getBaseUrl(); //for example: http://localhost:16819
  ````
  
 If you need to retrieve only the port number, use the method `getPort()`:
