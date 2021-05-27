@@ -199,7 +199,7 @@ it('properly returns the total score by username', function () {
 - [Leandro Henrique](https://github.com/emtudo)
 - [All Contributors](../../contributors)
 
-And a special thanks to [Daniel](https://github.com/dansysanalyst)
+And a special thanks to [@DanSysAnalyst](https://github.com/dansysanalyst)
 
 ### Inspired
 
