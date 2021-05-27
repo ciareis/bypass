@@ -91,7 +91,7 @@ Based on our demo case, we will need:
 - **Status number** `200` (OK success) 
 - **Body**: a text body (JSON encoded).
 
-And our case will look like:
+And in our case, the method call will look like this:
 
 ```php
     //The body containing the API response with games in JSON format
@@ -112,7 +112,7 @@ The method `expect()` accepts the following parameters:
 
 ### 4. Use the service with the Bypass URL
 
-At this point, you can tell `TotalScoreService` to access the Bypass URL (`localhost:16819/v1/score`), instead of the original URL (`emtudo-games.com/v1/score/`):
+At this point, you can tell `TotalScoreService` to access the Bypass URL (`localhost:16819/v1/score`) instead of the original URL (`emtudo-games.com/v1/score/`):
 
 ```php
     $bypass = Bypass::open();
