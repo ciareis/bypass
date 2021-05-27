@@ -139,7 +139,7 @@ To shutdown:
 
 ### Quick examples
 
-Click below to see code snippets for [Pest PHP](pestphp.com/) and PHPUnit.
+Click below to see code snippets for [Pest PHP](https://pestphp.com) and PHPUnit.
 
 
 <details><summary>Pest PHP</summary>
