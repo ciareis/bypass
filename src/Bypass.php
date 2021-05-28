@@ -90,7 +90,7 @@ class Bypass
         $this->stop();
     }
 
-    public function expect(string $method, string $uri, int $status = 200, ?string $body = null)
+    public function addRoute(string $method, string $uri, int $status = 200, ?string $body = null)
     {
         $url = $this->url("___api_faker_add_router");
 
@@ -114,6 +114,11 @@ class Bypass
             'body' => $response->body(),
             'status' => $response->status(),
         ];
+    }
+
+    public function expect(string $method, string $uri, int $status = 200, ?string $body = null)
+    {
+        return $this->addRoute($method, $uri, $status, $body);
     }
 
     protected function url($path)

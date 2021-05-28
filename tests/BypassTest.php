@@ -55,7 +55,7 @@ class BypassTest extends TestCase
             ->getTotalStargazersByUser("emtudo");
 
         // asserts
-        $this->assertTrue($response === 'Server unavailable.');
+        $this->assertEquals($response, 'Server unavailable.');
     }
 
     public function test_returns_server_down(): void
@@ -72,7 +72,7 @@ class BypassTest extends TestCase
             ->getTotalStargazersByUser("emtudo");
 
         // asserts
-        $this->assertTrue($response === 'Server down.');
+        $this->assertEquals($response, 'Server down.');
     }
 
     public function test_returns_route_not_found(): void

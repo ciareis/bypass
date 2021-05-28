@@ -1,9 +1,14 @@
 # Release Notes
 
 
-## [Unreleased](https://github.com/ciareis/bypass/compare/v0.1.1...main)
+## [Unreleased](https://github.com/ciareis/bypass/compare/v0.1.2...main)
 
-## [v0.1.1 (2021-05-16)](https://github.com/ciareis/bypass/archive/refs/tags/v0.1.0.zip)
+## [v0.1.2 (2021-05-28)](https://github.com/ciareis/bypass/archive/refs/tags/v0.1.2.zip)
+
+- added rename method expect to addRoute
+- improves doc
+
+## [v0.1.1 (2021-05-26)](https://github.com/ciareis/bypass/archive/refs/tags/v0.1.1.zip)
 
 - added method getBaseUrl
 

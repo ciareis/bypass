@@ -98,7 +98,7 @@ And in our case, the method call will look like this:
     $body = '{"games":[{"name":"game 1","points":25},{"name":"game 2","points":10}],"is_active":true}';
     
     //Telling Bypass what it should expect. 
-    $bypass->expect(method: 'get', uri: '/v1/score', status: 200, body: $body);
+    $bypass->addRoute(method: 'get', uri: '/v1/score', status: 200, body: $body);
 ```
 
 The method `expect()` accepts the following parameters:
@@ -152,7 +152,7 @@ it('properly returns the total score by username', function () {
 	
     $body = '{"games":[{"name":"game 1","points":25},{"name":"game 2","points":10}],"is_active":true}';
     
-    $bypass->expect(method: 'get', uri: '/v1/score', status: 200, body: $body);
+    $bypass->addRoute(method: 'get', uri: '/v1/score', status: 200, body: $body);
     
     $service = new TotalScoreService();
     $response = $service
@@ -177,7 +177,7 @@ it('properly returns the total score by username', function () {
 	
     $body = '{"games":[{"name":"game 1","points":25},{"name":"game 2","points":10}],"is_active":true}';
     
-    $bypass->expect(method: 'get', uri: '/v1/score', status: 200, body: $body);
+    $bypass->addRoute(method: 'get', uri: '/v1/score', status: 200, body: $body);
     
     $service = new TotalScoreService();
     $response = $service

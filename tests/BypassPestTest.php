@@ -45,7 +45,7 @@ it('returns server unavailable', function () {
     $response = $service->setBaseUrl($bypass->getBaseUrl())
       ->getTotalStargazersByUser("emtudo");
 
-    expect('Server unavailable.')->toEqual($response);
+    expect($response)->toEqual('Server unavailable.');
 });
 
 it('returns server down', function () {
@@ -75,7 +75,7 @@ it('returns route not found', function () {
     $response = Http::get($bypass->getBaseUrl() . '/no-route');
 
     expect($response->status())->toEqual(500);
-    expect('Bypass route /no-route and method GET not found.')->toEqual($response->body());
+    expect($response->body())->toEqual('Bypass route /no-route and method GET not found.');
 });
 
 
