@@ -159,7 +159,7 @@ it('properly returns the total score by username', function () {
         ->setBaseUrl($bypass->getBaseUrl())
         ->getTotalScoreByUsername("johndoe");
 
-    expect(35)->toEqual($response);
+    expect($response)->toEqual(35);
 });
 ```
 </details>
