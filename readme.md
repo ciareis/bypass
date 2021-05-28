@@ -101,7 +101,7 @@ And in our case, the method call will look like this:
     $bypass->addRoute(method: 'get', uri: '/v1/score', status: 200, body: $body);
 ```
 
-The method `expect()` accepts the following parameters:
+The method `addRoute()` accepts the following parameters:
 
 | Option | Description
 |----|----|
