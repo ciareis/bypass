@@ -37,7 +37,7 @@ class BypassTest extends TestCase
             ->getTotalStargazersByUser("emtudo", true);
 
         // asserts
-        $this->assertEquals(16, $response);
+        $this->assertSame(16, $response);
     }
 
     public function test_returns_server_unavailable(): void
@@ -55,7 +55,7 @@ class BypassTest extends TestCase
             ->getTotalStargazersByUser("emtudo");
 
         // asserts
-        $this->assertEquals($response, 'Server unavailable.');
+        $this->assertSame($response, 'Server unavailable.');
     }
 
     public function test_returns_server_down(): void
@@ -72,7 +72,7 @@ class BypassTest extends TestCase
             ->getTotalStargazersByUser("emtudo");
 
         // asserts
-        $this->assertEquals($response, 'Server down.');
+        $this->assertSame($response, 'Server down.');
     }
 
     public function test_returns_route_not_found(): void
@@ -83,8 +83,8 @@ class BypassTest extends TestCase
 
         $response = Http::get($bypass->getBaseUrl() . '/no-route');
 
-        $this->assertEquals(500, $response->status());
-        $this->assertEquals('Bypass route /no-route and method GET not found.', $response->body());
+        $this->assertSame(500, $response->status());
+        $this->assertSame('Bypass route /no-route and method GET not found.', $response->body());
     }
 
     public function test_returns_exceptions_when_server_down(): void
