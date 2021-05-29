@@ -41,7 +41,8 @@ function setRoute(string $route, string $method, array $value)
 
     $content = [
         'status' => $value['status'],
-        'content' => $value['content']
+        'content' => $value['content'] ?? null,
+        'file' => $value['file'] ?? null
     ];
 
     writeFile($file, $content);

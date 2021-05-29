@@ -1,7 +1,13 @@
 # Release Notes
 
 
-## [Unreleased](https://github.com/ciareis/bypass/compare/v0.1.3...main)
+## [Unreleased](https://github.com/ciareis/bypass/compare/v0.2.0...main)
+
+## [v0.2.0 (2021-05-29)](https://github.com/ciareis/bypass/archive/refs/tags/v0.2.0.zip)
+
+- added addRouteFile
+- deprecated method except, it will removes version 1.0.0
+- refactoring addRoute
 
 ## [v0.1.3 (2021-05-29)](https://github.com/ciareis/bypass/archive/refs/tags/v0.1.3.zip)
 

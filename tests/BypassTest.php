@@ -17,19 +17,39 @@ use Ciareis\Bypass\Bypass;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Support\Facades\Http;
 use Tests\Services\GithubRepoService;
+use Tests\Services\LogoService;
 
 class BypassTest extends TestCase
 {
-    public function test_total_stargazers_by_user(): void
+
+    public function test_returns_logo()
+    {
+         // prepare
+        $bypass = Bypass::open();
+
+        $path = 'docs/img/logo.png';
+
+        $file = file_get_contents("docs/img/logo.png");
+        $bypass->addRouteFile(method: 'get', uri: $path, status: 200, file: $file);
+
+        // execute
+        $service = new LogoService();
+        $response = $service->setBaseUrl($bypass->getBaseUrl())
+        ->getLogo();
+
+        // asserts
+        expect($response)->toEqual($file);
+    }
+
+
+    public function test_returns_total_stargazers_by_user(): void
     {
         // prepare
         $bypass = Bypass::open();
 
-        $body = \json_encode($this->getBody());
-
         $path = '/users/emtudo/repos';
 
-        $bypass->expect(method: 'get', uri: $path, status: 200, body: $body);
+        $bypass->expect(method: 'get', uri: $path, status: 200, body: $this->getBody());
 
         // execute
         $service = new GithubRepoService();
@@ -99,7 +119,7 @@ class BypassTest extends TestCase
 
     protected function getBody()
     {
-        return [
+        return \json_encode([
             [
                 "stargazers_count" => 0
             ],
@@ -190,6 +210,6 @@ class BypassTest extends TestCase
             [
                 "stargazers_count" => 0,
             ],
-        ];
+        ]);
     }
 }

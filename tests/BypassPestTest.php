@@ -12,24 +12,24 @@
 use Ciareis\Bypass\Bypass;
 use Illuminate\Support\Facades\Http;
 use Tests\Services\GithubRepoService;
+use Tests\Services\LogoService;
 
-it("total stargazers by user", function () {
+it("returns logo", function () {
     // prepare
     $bypass = Bypass::open();
 
-    $body = \json_encode(getBody());
+    $path = 'docs/img/logo.png';
 
-    $path = '/users/emtudo/repos';
-
-    $bypass->expect(method: 'get', uri: $path, status: 200, body: $body);
+    $file = file_get_contents("docs/img/logo.png");
+    $bypass->addRouteFile(method: 'get', uri: $path, status: 200, file: $file);
 
     // execute
-    $service = new GithubRepoService();
+    $service = new LogoService();
     $response = $service->setBaseUrl($bypass->getBaseUrl())
-        ->getTotalStargazersByUser("emtudo", true);
+        ->getLogo();
 
     // asserts
-    expect($response)->toBe(16);
+    expect($response)->toEqual($file);
 });
 
 it('returns server unavailable', function () {

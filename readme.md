@@ -1,5 +1,5 @@
 <div align="center">
-	<p><img  src="docs/img/logo.png" alt="PowerGrid Logo"></p>
+	<p><img  src="docs/img/logo.png" alt="Bypass Logo"></p>
 </div>
 
 ------
@@ -66,7 +66,6 @@ If needed, a specific port can be passed as an argument:
     $bypass = Bypass::open(8080);
 ```
 
-
 ### 2. Bypass URL & Port
 
 The URL with Port can be retrieved with the method `getBaseUrl()`:
@@ -108,6 +107,16 @@ The method `addRoute()` accepts the following parameters:
 |**URI**| *(string) $uri* - URI to be served by Bypass |
 |**Status**| *(int) $status* - Status to be returned by Bypass (default: 200)|
 |**Body**|  *(string) $body*  - body that will be served (optional)|
+
+
+The method `addRouteFile()` accepts the following parameters:
+
+| Option | Description
+|----|----|
+|**HTTP Method**| *(string) $method* - Method to expect. (GET/POST/PUT/PATCH/DELETE) |
+|**URI**| *(string) $uri* - URI to be served by Bypass |
+|**Status**| *(int) $status* - Status to be returned by Bypass (default: 200)|
+|**File**|  * (binary) $file*  - binary file |
 
 ### 4. Use the service with the Bypass URL
 

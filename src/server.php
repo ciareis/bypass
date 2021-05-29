@@ -23,7 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === "PUT" && $_SERVER['REQUEST_URI'] === '/___api
 
 
 if ($_SERVER['REQUEST_METHOD'] === "PUT" && $_SERVER['REQUEST_URI'] === '/___api_faker_add_router') {
-    $router = json_decode(file_get_contents("php://input"), true);
+    $inputs = file_get_contents("php://input");
+    $router = json_decode($inputs, true);
 
     setRoute($router['uri'], $router['method'], $router);
     http_response_code(200);
@@ -36,6 +37,12 @@ if ($route = currentRoute()) {
     $route = json_decode($route, true);
 
     http_response_code($route['status']);
+
+    if (($route['file'] !== null)) {
+        echo base64_decode($route['file']);
+
+        exit;
+    }
 
     echo $route['content'];
 

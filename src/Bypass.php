@@ -92,18 +92,37 @@ class Bypass
 
     public function addRoute(string $method, string $uri, int $status = 200, ?string $body = null)
     {
+        return $this->addRouteParams($uri, [
+            'method' => \strtoupper($method),
+            'content' => $body,
+            'status' => $status,
+        ]);
+    }
+
+    public function addRouteFile(string $method, string $uri, int $status = 200, $file = null)
+    {
+        return $this->addRouteParams($uri, [
+            'method' => \strtoupper($method),
+            'file' => base64_encode($file),
+            'status' => $status,
+        ]);
+    }
+
+    // deprecated: It will remove at version v1.0.0
+    public function expect(string $method, string $uri, int $status = 200, ?string $body = null)
+    {
+        return $this->addRoute($method, $uri, $status, $body);
+    }
+
+    private function addRouteParams(string $uri, array $params)
+    {
         $url = $this->url("___api_faker_add_router");
 
         if (!\str_starts_with($uri, '/')) {
             $uri = "/{$uri}";
         }
 
-        $params = [
-            'method' => \strtoupper($method),
-            'uri' => $uri,
-            'content' => $body,
-            'status' => $status,
-        ];
+        $params['uri'] = $uri;
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json'
@@ -114,11 +133,6 @@ class Bypass
             'body' => $response->body(),
             'status' => $response->status(),
         ];
-    }
-
-    public function expect(string $method, string $uri, int $status = 200, ?string $body = null)
-    {
-        return $this->addRoute($method, $uri, $status, $body);
     }
 
     protected function url($path)
