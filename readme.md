@@ -183,7 +183,7 @@ it('properly returns the total score by username', function () {
         ->setBaseUrl($bypass->getBaseUrl())
         ->getTotalScoreByUsername("johndoe");
 
-        $this->assertEquals(35, $response);
+        $this->assertSame(35, $response);
     }
  }
 ```
