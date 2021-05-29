@@ -1,7 +1,12 @@
 # Release Notes
 
 
-## [Unreleased](https://github.com/ciareis/bypass/compare/v0.2.0...main)
+## [Unreleased](https://github.com/ciareis/bypass/compare/v0.3.0...main)
+
+## [v0.3.0 (2021-05-29)](https://github.com/ciareis/bypass/archive/refs/tags/v0.3.0.zip)
+
+- added assertRoute, it returns an exception if the defined routes are not called for the expected number of times.
+- added times params, default is 1
 
 ## [v0.2.0 (2021-05-29)](https://github.com/ciareis/bypass/archive/refs/tags/v0.2.0.zip)
 

@@ -14,23 +14,35 @@ use Illuminate\Support\Facades\Http;
 use Tests\Services\GithubRepoService;
 use Tests\Services\LogoService;
 
-it("returns logo", function () {
+it("total stargazers by user", function () {
     // prepare
     $bypass = Bypass::open();
 
-    $path = 'docs/img/logo.png';
+    $body = \json_encode(getBody());
 
-    $file = file_get_contents("docs/img/logo.png");
-    $bypass->addRouteFile(method: 'get', uri: $path, status: 200, file: $file);
+    $path = '/users/emtudo/repos';
+
+    $bypass->expect(method: 'get', uri: $path, status: 200, body: $body);
 
     // execute
-    $service = new LogoService();
+    $service = new GithubRepoService();
     $response = $service->setBaseUrl($bypass->getBaseUrl())
-        ->getLogo();
+        ->getTotalStargazersByUser("emtudo", true);
 
     // asserts
-    expect($response)->toEqual($file);
+    expect($response)->toBe(16);
 });
+
+it('returns route not called exception', function () {
+    // prepare
+    $bypass = Bypass::open();
+
+    $path = '/users/emtudo/repos';
+
+    $bypass->expect(method: 'get', uri: $path, status: 503);
+    $bypass->assertRoutes();
+})->throws(\Ciareis\Bypass\RouteNotCalledException::class);
+
 
 it('returns server unavailable', function () {
     // prepare
@@ -78,6 +90,23 @@ it('returns route not found', function () {
     expect($response->body())->toEqual('Bypass route /no-route and method GET not found.');
 });
 
+it("returns logo", function () {
+    // prepare
+    $bypass = Bypass::open();
+
+    $path = 'docs/img/logo.png';
+
+    $file = file_get_contents("docs/img/logo.png");
+    $bypass->addRouteFile(method: 'get', uri: $path, status: 200, file: $file);
+
+    // execute
+    $service = new LogoService();
+    $response = $service->setBaseUrl($bypass->getBaseUrl())
+        ->getLogo();
+
+    // asserts
+    expect($response)->toEqual($file);
+});
 
 it('returns exceptions when server down', function () {
     // prepare

@@ -21,27 +21,6 @@ use Tests\Services\LogoService;
 
 class BypassTest extends TestCase
 {
-
-    public function test_returns_logo()
-    {
-         // prepare
-        $bypass = Bypass::open();
-
-        $path = 'docs/img/logo.png';
-
-        $file = file_get_contents("docs/img/logo.png");
-        $bypass->addRouteFile(method: 'get', uri: $path, status: 200, file: $file);
-
-        // execute
-        $service = new LogoService();
-        $response = $service->setBaseUrl($bypass->getBaseUrl())
-        ->getLogo();
-
-        // asserts
-        expect($response)->toEqual($file);
-    }
-
-
     public function test_returns_total_stargazers_by_user(): void
     {
         // prepare
@@ -107,6 +86,19 @@ class BypassTest extends TestCase
         $this->assertSame('Bypass route /no-route and method GET not found.', $response->body());
     }
 
+
+    public function test_returns_route_not_called_exception(): void
+    {
+        $bypass = Bypass::open();
+
+        $path = '/users/emtudo/repos';
+
+        $bypass->expect(method: 'get', uri: $path, status: 503);
+        $this->expectException(\Ciareis\Bypass\RouteNotCalledException::class);
+
+        $bypass->assertRoutes();
+    }
+
     public function test_returns_exceptions_when_server_down(): void
     {
         $bypass = Bypass::open();
@@ -115,6 +107,25 @@ class BypassTest extends TestCase
         $this->expectException(\Illuminate\Http\Client\ConnectionException::class);
 
         Http::get($bypass->getBaseUrl() . '/no-route');
+    }
+
+    public function test_returns_logo()
+    {
+         // prepare
+        $bypass = Bypass::open();
+
+        $path = 'docs/img/logo.png';
+
+        $file = file_get_contents("docs/img/logo.png");
+        $bypass->addRouteFile(method: 'get', uri: $path, status: 200, file: $file);
+
+        // execute
+        $service = new LogoService();
+        $response = $service->setBaseUrl($bypass->getBaseUrl())
+        ->getLogo();
+
+        // asserts
+        expect($response)->toEqual($file);
     }
 
     protected function getBody()

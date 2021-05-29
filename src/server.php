@@ -2,6 +2,16 @@
 
 include_once("lib/functions.php");
 
+if ($_SERVER['REQUEST_METHOD'] === "GET" && $_SERVER['PHP_SELF'] === '/___api_faker_router_index') {
+    $route = getRoute($_GET['route'], $_GET['method']);
+    $route = json_decode($route, true);
+
+    echo $route['count'];
+
+    exit;
+}
+
+
 if ($_SERVER['REQUEST_METHOD'] === "PUT" && $_SERVER['REQUEST_URI'] === '/___api_faker_clear_router') {
     $sessionName = getSessionName();
     $dir = dirname($sessionName);
@@ -37,6 +47,7 @@ if ($route = currentRoute()) {
     $route = json_decode($route, true);
 
     http_response_code($route['status']);
+    setRoute($route['uri'], $route['method'], $route);
 
     if (($route['file'] !== null)) {
         echo base64_decode($route['file']);

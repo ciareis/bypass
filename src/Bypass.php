@@ -2,16 +2,14 @@
 
 namespace Ciareis\Bypass;
 
-use Exception;
 use Illuminate\Support\Facades\Http;
 use Symfony\Component\Process\Process;
 
 class Bypass
 {
-    protected $started = false;
     protected $port;
     protected $process;
-    protected $phpPath;
+    protected $routes = [];
 
     public static function open(?int $port = null)
     {
@@ -20,22 +18,9 @@ class Bypass
         return $process->handle($port);
     }
 
-    public function handle(?int $port = null)
-    {
-        while (!$this->started) {
-            try {
-                $this->startServer($port);
-            } catch (Exception $e) {
-                //
-            }
-        }
-
-        return $this;
-    }
-
     public function stop()
     {
-        $url = $this->url("___api_faker_clear_router");
+        $url = $this->getBaseUrl("___api_faker_clear_router");
 
         Http::withHeaders([
             'Content-Type' => 'application/json'
@@ -57,12 +42,16 @@ class Bypass
         return $this->port;
     }
 
-    public function getBaseUrl()
+    public function getBaseUrl(?string $path = null)
     {
-        return "http://localhost:{$this->port}";
+        if ($path && !str_starts_with($path, '/')) {
+            $path = "/" . $path;
+        }
+
+        return "http://localhost:{$this->port}{$path}";
     }
 
-    protected function startServer(?int $port = null)
+    public function handle(?int $port = null)
     {
         $params = [PHP_BINARY, '-S', "localhost:{$port}",  __DIR__ . DIRECTORY_SEPARATOR . 'server.php'];
 
@@ -80,7 +69,6 @@ class Bypass
                     return false;
                 }
 
-                $this->started = true;
                 $this->port = $matches['port'];
 
                 return true;
@@ -88,41 +76,68 @@ class Bypass
         );
 
         $this->stop();
+
+        return $this;
     }
 
-    public function addRoute(string $method, string $uri, int $status = 200, ?string $body = null)
+    public function addRoute(string $method, string $uri, int $status = 200, ?string $body = null, int $times = 1)
     {
         return $this->addRouteParams($uri, [
             'method' => \strtoupper($method),
             'content' => $body,
             'status' => $status,
-        ]);
+        ], $times);
     }
 
-    public function addRouteFile(string $method, string $uri, int $status = 200, $file = null)
+    public function addRouteFile(string $method, string $uri, int $status = 200, string $file = null, int $times = 1)
     {
         return $this->addRouteParams($uri, [
             'method' => \strtoupper($method),
             'file' => base64_encode($file),
             'status' => $status,
-        ]);
+        ], $times);
     }
 
-    // deprecated: It will remove at version v1.0.0
+    public function assertRoutes()
+    {
+        $url = $this->getBaseUrl("___api_faker_router_index");
+        $routes = [];
+        foreach ($this->routes as $route) {
+            $uri = $route['uri'];
+            $method = $route['method'];
+            $path = "{$url}?route={$uri}&method={$method}";
+
+            $response = Http::get($path);
+
+            $routes[$route['uri']] = $response->body();
+
+            if ($response->json() !== $route['times'] + 1) {
+                throw new RouteNotCalledException("Route {$uri} and method {$method}");
+            }
+        }
+    }
+
+    // @todo deprecated: It will remove at version v1.0.0
     public function expect(string $method, string $uri, int $status = 200, ?string $body = null)
     {
         return $this->addRoute($method, $uri, $status, $body);
     }
 
-    private function addRouteParams(string $uri, array $params)
+    private function addRouteParams(string $uri, array $params, int $times = 1)
     {
-        $url = $this->url("___api_faker_add_router");
+        $url = $this->getBaseUrl("___api_faker_add_router");
 
         if (!\str_starts_with($uri, '/')) {
             $uri = "/{$uri}";
         }
 
         $params['uri'] = $uri;
+
+        $this->routes[] = [
+            'uri' => $uri,
+            'method' => $params['method'],
+            'times' => $times,
+        ];
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json'
@@ -133,14 +148,5 @@ class Bypass
             'body' => $response->body(),
             'status' => $response->status(),
         ];
-    }
-
-    protected function url($path)
-    {
-        if (!str_starts_with($path, '/')) {
-            $path = "/" . $path;
-        }
-
-        return "http://localhost:{$this->port}{$path}";
     }
 }

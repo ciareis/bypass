@@ -40,9 +40,12 @@ function setRoute(string $route, string $method, array $value)
     $file = getFilename($route, $method);
 
     $content = [
+        'uri' => $route,
+        'method' => $method,
         'status' => $value['status'],
         'content' => $value['content'] ?? null,
-        'file' => $value['file'] ?? null
+        'file' => $value['file'] ?? null,
+        'count' => isset($value['count']) ? $value['count'] + 1 : 0
     ];
 
     writeFile($file, $content);

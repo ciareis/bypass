@@ -107,6 +107,7 @@ The method `addRoute()` accepts the following parameters:
 |**URI**| *(string) $uri* - URI to be served by Bypass |
 |**Status**| *(int) $status* - Status to be returned by Bypass (default: 200)|
 |**Body**|  *(string) $body*  - body that will be served (optional)|
+|**Times**|  * (int) $time*  - Define times route is called (default: 1) |
 
 
 The method `addRouteFile()` accepts the following parameters:
@@ -117,6 +118,10 @@ The method `addRouteFile()` accepts the following parameters:
 |**URI**| *(string) $uri* - URI to be served by Bypass |
 |**Status**| *(int) $status* - Status to be returned by Bypass (default: 200)|
 |**File**|  * (binary) $file*  - binary file |
+|**Times**|  * (int) $time*  - Define times route is called (default: 1) |
+
+The method `assertRoute()` returns an exception if the defined routes are not called for the expected number of times.
+
 
 ### 4. Use the service with the Bypass URL
 
