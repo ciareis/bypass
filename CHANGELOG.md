@@ -1,7 +1,13 @@
 # Release Notes
 
 
-## [Unreleased](https://github.com/ciareis/bypass/compare/v0.1.2...main)
+## [Unreleased](https://github.com/ciareis/bypass/compare/v0.1.3...main)
+
+## [v0.1.3 (2021-05-29)](https://github.com/ciareis/bypass/archive/refs/tags/v0.1.3.zip)
+
+- improves doc
+- remove laravel 5.5 depends
+- improves tests with assertSame
 
 ## [v0.1.2 (2021-05-28)](https://github.com/ciareis/bypass/archive/refs/tags/v0.1.2.zip)
 
