@@ -81,23 +81,22 @@ If you need to retrieve only the port number, use the method `getPort()`:
  $bypass_port = $bypass->getPort(); //for example: 16819
  ````
 
-### 3. Tell Bypass what it should expect
+### 3. Add a route
 
-Bypass needs to be informed of what it will be expecting from the request.
-Based on our demo case, we will need:
+Now, let's create a route to be accessed by the `TotalScoreService` service using the following options:
 
 - **Method**: the request will be made using the HTTP method `get`
 - **URI**: the request will be at the URI `/v1/score/USERNAME` 
 - **Status number** `200` (OK success) 
 - **Body**: a text body (JSON encoded).
 
-And in our case, the method call will look like this:
+And the code will like this:
 
 ```php
     //The body containing the API response with games in JSON format
     $body = '{"games":[{"name":"game 1","points":25},{"name":"game 2","points":10}],"is_active":true}';
     
-    //Telling Bypass what it should expect. 
+    //Bypass route 
     $bypass->addRoute(method: 'get', uri: '/v1/score', status: 200, body: $body);
 ```
 
