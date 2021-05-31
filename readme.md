@@ -11,6 +11,9 @@
 ------
  # Bypass for PHP
 
+For documentation in Portguese: [click here
+🇧🇷](https://github.com/ciareis/bypass/blob/main/README_pt-BR.md)
+
 `Bypass` for PHP provides a quick way to create a custom instead of an actual HTTP server to return prebaked responses to client requests. This is most useful in tests, when you want to create a mock HTTP server and test how your HTTP client handles different types of responses from the server.
 
 ## Requirements
