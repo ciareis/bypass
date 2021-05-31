@@ -2,6 +2,12 @@
 	<p><img  src="docs/img/logo.png" alt="Bypass Logo"></p>
 </div>
 
+[![PHP Composer](https://github.com/ciareis/bypass/actions/workflows/php.yml/badge.svg?branch=main)](https://github.com/ciareis/bypass/actions/workflows/php.yml)
+[![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/ciareis/bypass)](https://packagist.org/packages/ciareis/bypass)
+[![Packagist Downloads](https://img.shields.io/packagist/dt/ciareis/bypass)](https://packagist.org/packages/ciareis/bypass)
+[![Packagist License](https://img.shields.io/packagist/l/ciareis/bypass)](https://github.com/ciareis/bypass/blob/main/LICENSE.md)
+[![Last Updated](https://img.shields.io/github/last-commit/ciareis/bypass.svg)](https://github.com/ciareis/bypass/commits/main)
+
 ------
  
  
