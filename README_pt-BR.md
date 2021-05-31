@@ -11,7 +11,7 @@
 ------ 
 # Bypass para PHP
 
-Para documentação em inglês: [🇺🇸](https://github.com/ciareis/bypass/blob/main/readme.md)
+Para documentação em inglês: [clique aqui 🇺🇸](https://github.com/ciareis/bypass/blob/main/readme.md)
 
 `Bypass` para PHP fornece uma maneira rápida para você criar um servidor HTTP personalizado, a ser utilizado no lugar de um servidor HTTP real, de modo que você tenha respostas pré-formuladas como retorno as requisições lançadas pelos clientes a ele conectados. Esta facilidade é mais útil em um ambiente de testes, onde você poderá ter a necessidade de criar um servidor HTTP simulado(Mock) para testar o seu cliente HTTP, verificando como ele irá lidar com diferentes tipos de respostas vindas do servidor.
 
