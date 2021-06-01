@@ -369,7 +369,7 @@ it('properly gets the logo', function () {
 - [Leandro Henrique](https://github.com/emtudo)
 - [All Contributors](../../contributors)
 
-And a special thanks to [@DanSysAnalyst](https://github.com/dansysanalyst) for the documentation
+And a special thanks to [@DanSysAnalyst](https://github.com/dansysanalyst)
 
 ### Inspired
 
