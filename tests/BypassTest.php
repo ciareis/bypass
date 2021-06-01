@@ -111,7 +111,7 @@ class BypassTest extends TestCase
 
     public function test_returns_logo()
     {
-         // prepare
+        // prepare
         $bypass = Bypass::open();
 
         $path = 'docs/img/logo.png';
@@ -122,7 +122,7 @@ class BypassTest extends TestCase
         // execute
         $service = new LogoService();
         $response = $service->setBaseUrl($bypass->getBaseUrl())
-        ->getLogo();
+            ->getLogo();
 
         // asserts
         expect($response)->toEqual($file);
