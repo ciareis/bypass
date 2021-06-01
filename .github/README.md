@@ -168,7 +168,9 @@ The method `addFileRoute()` accepts the following parameters:
 
 You might need to assert that a route was called at least one or multiple times.
 
-The method `assertRoute()` will return a `RouteNotCalledException` if a route was called as many times as defined in the `$time` parameter.
+The method `assertRoute()` will return a `RouteNotCalledException` if a route was NOT called as many times as defined in the `$time` parameter.
+
+If you need to assert that a route is not called by your service, set the parameter `$time = 0`;
 
  ```php
 //Defines a route which must be called two times
