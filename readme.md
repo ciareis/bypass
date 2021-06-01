@@ -175,7 +175,7 @@ You might need to assert that a route was called at least one or multiple times.
 
 The method `assertRoute()` will return a `RouteNotCalledException` if a route was NOT called as many times as defined in the `$times` parameter.
 
-If you need to assert that a route is NOT being called by your service, set the parameter `$times = 0`;
+If you need to assert that a route is NOT being called by your service, set the parameter `$times = 0`
 
  ```php
 //Json body
