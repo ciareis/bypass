@@ -97,7 +97,7 @@ it("properly gets the logo", function () {
     $path = 'docs/img/logo.png';
 
     $file = file_get_contents("docs/img/logo.png");
-    $bypass->addFileRoute(method: 'get', uri: $path, status: 200, file: $file);
+    $bypass->addRouteFile(method: 'get', uri: $path, file: $file);
 
     // execute
     $service = new LogoService();

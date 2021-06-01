@@ -117,7 +117,7 @@ class BypassTest extends TestCase
         $path = 'docs/img/logo.png';
 
         $file = file_get_contents("docs/img/logo.png");
-        $bypass->addFileRoute(method: 'get', uri: $path, status: 200, file: $file);
+        $bypass->addRouteFile(method: 'get', uri: $path, file: $file);
 
         // execute
         $service = new LogoService();
@@ -128,7 +128,7 @@ class BypassTest extends TestCase
         $this->assertSame($response, $file);
     }
 
-    protected function getBody()
+    protected function getBody(): bool|string
     {
         return \json_encode([
             [
