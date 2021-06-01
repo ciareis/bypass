@@ -109,23 +109,23 @@ class BypassTest extends TestCase
         Http::get($bypass->getBaseUrl() . '/no-route');
     }
 
-    public function test_returns_logo()
+    public function test_gets_logo()
     {
-         // prepare
+        // prepare
         $bypass = Bypass::open();
 
         $path = 'docs/img/logo.png';
 
         $file = file_get_contents("docs/img/logo.png");
-        $bypass->addRouteFile(method: 'get', uri: $path, status: 200, file: $file);
+        $bypass->addFileRoute(method: 'get', uri: $path, status: 200, file: $file);
 
         // execute
         $service = new LogoService();
         $response = $service->setBaseUrl($bypass->getBaseUrl())
-        ->getLogo();
+            ->getLogo();
 
         // asserts
-        expect($response)->toEqual($file);
+        $this->assertSame($response, $file);
     }
 
     protected function getBody()

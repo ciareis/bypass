@@ -90,14 +90,14 @@ it('returns route not found', function () {
     expect($response->body())->toEqual('Bypass route /no-route and method GET not found.');
 });
 
-it("returns logo", function () {
+it("properly gets the logo", function () {
     // prepare
     $bypass = Bypass::open();
 
     $path = 'docs/img/logo.png';
 
     $file = file_get_contents("docs/img/logo.png");
-    $bypass->addRouteFile(method: 'get', uri: $path, status: 200, file: $file);
+    $bypass->addFileRoute(method: 'get', uri: $path, status: 200, file: $file);
 
     // execute
     $service = new LogoService();

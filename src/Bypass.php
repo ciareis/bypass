@@ -89,7 +89,7 @@ class Bypass
         ], $times);
     }
 
-    public function addRouteFile(string $method, string $uri, int $status = 200, string $file = null, int $times = 1)
+    public function addFileRoute(string $method, string $uri, int $status = 200, string $file = null, int $times = 1)
     {
         return $this->addRouteParams($uri, [
             'method' => \strtoupper($method),
@@ -118,9 +118,9 @@ class Bypass
     }
 
     // @todo deprecated: It will remove at version v1.0.0
-    public function expect(string $method, string $uri, int $status = 200, ?string $body = null)
+    public function expect(string $method, string $uri, int $status = 200, ?string $body = null, $times = 1)
     {
-        return $this->addRoute($method, $uri, $status, $body);
+        return $this->addRoute($method, $uri, $status, $body, $times);
     }
 
     private function addRouteParams(string $uri, array $params, int $times = 1)
