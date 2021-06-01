@@ -209,7 +209,7 @@ To get the score is obtained making external request to a fictitious API at `emt
 {
   "games": [
     {
-      "id": 2,
+      "id": 1,
       "points": 25
     },
     {
