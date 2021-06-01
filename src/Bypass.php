@@ -118,7 +118,7 @@ class Bypass
     }
 
     // @todo deprecated: It will remove at version v1.0.0
-    public function expect(string $method, string $uri, int $status = 200, ?string $body = null, $times = 1)
+    public function expect(string $method, string $uri, int $status = 200, ?string $body = null, int $times = 1)
     {
         return $this->addRoute($method, $uri, $status, $body, $times);
     }
