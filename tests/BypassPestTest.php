@@ -90,7 +90,7 @@ it('returns route not found', function () {
     expect($response->body())->toEqual('Bypass route /no-route and method GET not found.');
 });
 
-it("returns logo", function () {
+it("properly gets the logo", function () {
     // prepare
     $bypass = Bypass::open();
 
@@ -101,8 +101,7 @@ it("returns logo", function () {
 
     // execute
     $service = new LogoService();
-    $response = $service->setBaseUrl($bypass->getBaseUrl())
-        ->getLogo();
+    $response = $service->setBaseUrl($bypass->getBaseUrl())->getLogo();
 
     // asserts
     expect($response)->toEqual($file);
