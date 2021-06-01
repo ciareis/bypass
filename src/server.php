@@ -14,18 +14,9 @@ if ($_SERVER['REQUEST_METHOD'] === "GET" && $_SERVER['PHP_SELF'] === '/___api_fa
 
 if ($_SERVER['REQUEST_METHOD'] === "PUT" && $_SERVER['REQUEST_URI'] === '/___api_faker_clear_router') {
     $sessionName = getSessionName();
-    $dir = dirname($sessionName);
-    $basename = basename($sessionName);
 
-    if ($handle = opendir($dir)) {
-        while (false !== ($entry = readdir($handle))) {
-            $file = $entry;
-            if (str_starts_with($entry, $basename)) {
-                @unlink($dir . DIRECTORY_SEPARATOR . $entry);
-            }
-        }
-
-        closedir($handle);
+    foreach (glob($sessionName . "_*.tmp") as $file) {
+        @unlink($file);
     }
     echo "ok.";
     exit;
