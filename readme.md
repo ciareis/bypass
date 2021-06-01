@@ -141,9 +141,43 @@ At this point, you can tell `TotalScoreService` to access the Bypass URL (`local
     
 
     $service = new TotalScoreService();
-    $response = $serivce
+    $response = $service
         ->setBaseUrl($bypass_url) // set the URL to Bypass url
         ->getTotalScoreByUsername("johndoe"); //returns 35
+```
+
+Example of TotalScoreService:
+
+```php
+class TotalScoreService
+{
+    protected string $baseUrl = "emtudo-games.com/v1";
+
+    public function setBaseUrl(string $url): static
+    {
+        $this->baseUrl = $url;
+
+        return $this;
+    }
+    
+    public function getTotalScoreByUsername(string $username)
+    {        
+        $url = "{$this->baseUrl}/score/{$username}";
+
+        try {
+            $response = Http::get($url);
+        } catch (Exception $e) {
+            return "Server down.";
+        }
+
+        if ($response->status() === 503) {
+            return "Server unavailable.";
+        }
+
+        return collect($response->json())
+            ->sum('score'); 
+    }
+}
 ```
 
 ### 5. Stop or shutdown

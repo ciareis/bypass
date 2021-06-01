@@ -7,9 +7,9 @@ use Exception;
 
 class GithubRepoService
 {
-    protected $baseUrl = "https://api.github.com";
+    protected string $baseUrl = "https://api.github.com";
 
-    public function setBaseUrl(string $url)
+    public function setBaseUrl(string $url): static
     {
         $this->baseUrl = $url;
 

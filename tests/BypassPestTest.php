@@ -22,12 +22,12 @@ it("total stargazers by user", function () {
 
     $path = '/users/emtudo/repos';
 
-    $bypass->expect(method: 'get', uri: $path, status: 200, body: $body);
+    $bypass->expect(method: 'get', uri: $path, body: $body);
 
     // execute
     $service = new GithubRepoService();
     $response = $service->setBaseUrl($bypass->getBaseUrl())
-        ->getTotalStargazersByUser("emtudo", true);
+        ->getTotalStargazersByUser("emtudo");
 
     // asserts
     expect($response)->toBe(16);

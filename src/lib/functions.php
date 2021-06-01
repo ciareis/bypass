@@ -1,6 +1,6 @@
 <?php
 
-function writeFile($filename, $content)
+function writeFile($filename, $content): bool
 {
     if (!file_put_contents($filename, json_encode($content))) {
         return false;
@@ -9,7 +9,7 @@ function writeFile($filename, $content)
     return true;
 }
 
-function getFilename($route, $method)
+function getFilename($route, $method): string
 {
     $sessionName = getSessionName();
 
@@ -19,12 +19,12 @@ function getFilename($route, $method)
     return "{$sessionName}_{$method}_{$route}.tmp";
 }
 
-function getSessionName()
+function getSessionName(): string
 {
     return sys_get_temp_dir() . DIRECTORY_SEPARATOR . "session_name_{$_SERVER['SERVER_PORT']}";
 }
 
-function getRoute(string $route, string $method = null)
+function getRoute(string $route, string $method = null): bool|string
 {
     $file = getFilename($route, $method);
 
@@ -51,7 +51,7 @@ function setRoute(string $route, string $method, array $value)
     writeFile($file, $content);
 }
 
-function currentRoute()
+function currentRoute(): bool|string
 {
     return getRoute($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
 }

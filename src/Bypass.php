@@ -3,15 +3,16 @@
 namespace Ciareis\Bypass;
 
 use Illuminate\Support\Facades\Http;
+use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\Process\Process;
 
 class Bypass
 {
-    protected $port;
-    protected $process;
-    protected $routes = [];
+    protected int $port;
+    protected Process $process;
+    protected array $routes = [];
 
-    public static function open(?int $port = null)
+    public static function open(?int $port = null): static
     {
         $process = new self();
 
@@ -28,7 +29,7 @@ class Bypass
             ->put($url, []);
     }
 
-    public function down()
+    public function down(): static
     {
         if ($this->process) {
             $this->process->stop();
@@ -37,12 +38,12 @@ class Bypass
         return $this;
     }
 
-    public function getPort()
+    public function getPort(): int
     {
         return $this->port;
     }
 
-    public function getBaseUrl(?string $path = null)
+    public function getBaseUrl(?string $path = null): string
     {
         if ($path && !str_starts_with($path, '/')) {
             $path = "/" . $path;
@@ -51,7 +52,7 @@ class Bypass
         return "http://localhost:{$this->port}{$path}";
     }
 
-    public function handle(?int $port = null)
+    public function handle(?int $port = null): static
     {
         $params = [PHP_BINARY, '-S', "localhost:{$port}",  __DIR__ . DIRECTORY_SEPARATOR . 'server.php'];
 
@@ -80,7 +81,7 @@ class Bypass
         return $this;
     }
 
-    public function addRoute(string $method, string $uri, int $status = 200, ?string $body = null, int $times = 1)
+    public function addRoute(string $method, string $uri, int $status = 200, ?string $body = null, int $times = 1): array
     {
         return $this->addRouteParams($uri, [
             'method' => \strtoupper($method),
@@ -89,7 +90,7 @@ class Bypass
         ], $times);
     }
 
-    public function addRouteFile(string $method, string $uri, int $status = 200, string $file = null, int $times = 1)
+    public function addRouteFile(string $method, string $uri, int $status = 200, string $file = null, int $times = 1): array
     {
         return $this->addRouteParams($uri, [
             'method' => \strtoupper($method),
@@ -118,12 +119,12 @@ class Bypass
     }
 
     // @todo deprecated: It will remove at version v1.0.0
-    public function expect(string $method, string $uri, int $status = 200, ?string $body = null)
+    public function expect(string $method, string $uri, int $status = 200, ?string $body = null): array
     {
         return $this->addRoute($method, $uri, $status, $body);
     }
 
-    private function addRouteParams(string $uri, array $params, int $times = 1)
+    private function addRouteParams(string $uri, array $params, int $times = 1): array
     {
         $url = $this->getBaseUrl("___api_faker_add_router");
 

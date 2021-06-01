@@ -28,7 +28,7 @@ class BypassTest extends TestCase
 
         $path = '/users/emtudo/repos';
 
-        $bypass->expect(method: 'get', uri: $path, status: 200, body: $this->getBody());
+        $bypass->expect(method: 'get', uri: $path, body: $this->getBody());
 
         // execute
         $service = new GithubRepoService();
