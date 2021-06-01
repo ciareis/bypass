@@ -3,7 +3,6 @@
 namespace Ciareis\Bypass;
 
 use Illuminate\Support\Facades\Http;
-use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\Process\Process;
 
 class Bypass
