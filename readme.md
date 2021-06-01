@@ -3,7 +3,7 @@
     <h1>Bypass for PHP</h1>
     </p>
 </div>
-      
+
 <p align="center">
   <a href="#about">About</a> |
   <a href="#installation">Installation</a> |
