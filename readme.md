@@ -196,40 +196,6 @@ $bypass->assertRoutes();
 //Your test assertions here...
 ````
 
-Example of TotalScoreService:
-
-```php
-class TotalScoreService
-{
-    protected string $baseUrl = "emtudo-games.com/v1";
-
-    public function setBaseUrl(string $url): static
-    {
-        $this->baseUrl = $url;
-
-        return $this;
-    }
-    
-    public function getTotalScoreByUsername(string $username)
-    {        
-        $url = "{$this->baseUrl}/score/{$username}";
-
-        try {
-            $response = Http::get($url);
-        } catch (Exception $e) {
-            return "Server down.";
-        }
-
-        if ($response->status() === 503) {
-            return "Server unavailable.";
-        }
-
-        return collect($response->json())
-            ->sum('score'); 
-    }
-}
-```
-
 ### 5. Stop or shutdown
 
 Bypass can be stopped or shutdown with the following methods:
@@ -289,6 +255,40 @@ expect($response)->toBe(35);
 
 //PHPUnit verify that response is 35
 $this->assertSame($response, 35);
+```
+
+Example of TotalScoreService:
+
+```php
+class TotalScoreService
+{
+    protected string $baseUrl = "emtudo-games.com/v1";
+
+    public function setBaseUrl(string $url): static
+    {
+        $this->baseUrl = $url;
+
+        return $this;
+    }
+    
+    public function getTotalScoreByUsername(string $username)
+    {        
+        $url = "{$this->baseUrl}/score/{$username}";
+
+        try {
+            $response = Http::get($url);
+        } catch (Exception $e) {
+            return "Server down.";
+        }
+
+        if ($response->status() === 503) {
+            return "Server unavailable.";
+        }
+
+        return collect($response->json())
+            ->sum('score'); 
+    }
+}
 ```
 
 ### Quick Test Examples
