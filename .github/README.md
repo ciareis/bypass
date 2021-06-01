@@ -121,7 +121,8 @@ $bypass->addRoute(method: 'get', uri: '/v1/demo', status: 200, body: '{"name": "
 $service = new DemoService();
 
 //Consumes the service using the Bypass URL
-$response = $service->setBaseUrl($bypass->getBaseUrl())->getTotal();
+$response = $service->setBaseUrl($bypass->getBaseUrl())
+    ->getTotal();
 
 //Test Assertions...
 ```
@@ -149,7 +150,8 @@ $bypass->addFileRoute(method: 'get', uri: '/v1/myfile', status: 200, file: $demo
 $service = new DemoService();
 
 //Consumes the service using the Bypass URL
-$response = $service->setBaseUrl($bypass->getBaseUrl())->getPdf();
+$response = $service->setBaseUrl($bypass->getBaseUrl())
+    ->getPdf();
 
 //Test Assertions...
 ```
@@ -180,7 +182,8 @@ $bypass->addRoute(method: 'get', uri: '/v1/demo', status: 200, body: '{"name": "
 $service = new DemoService();
 
 //Consumes the service using the Bypass URL
-$response = $service->setBaseUrl($bypass->getBaseUrl())->getTotal();
+$response = $service->setBaseUrl($bypass->getBaseUrl())
+    ->getTotal();
 
 $bypass->assertRoutes();
 
@@ -288,7 +291,8 @@ it('properly gets the logo', function () {
 
     //Instantiates and consumes the service using the Bypass URL
     $service = new LogoService();
-    $response = $service->setBaseUrl($bypass->getBaseUrl())->getLogo();
+    $response = $service->setBaseUrl($bypass->getBaseUrl())
+        ->getLogo();
 
     // asserts
     expect($response)->toEqual($file);
@@ -339,7 +343,8 @@ it('properly gets the logo', function () {
 
         //Instantiates and consumes the service using the Bypass URL
         $service = new LogoService();
-        $response = $service->setBaseUrl($bypass->getBaseUrl())->getLogo();
+        $response = $service->setBaseUrl($bypass->getBaseUrl())
+            ->getLogo();
 
         $this->assertSame($response, $file);
      }
