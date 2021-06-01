@@ -117,7 +117,7 @@ class BypassTest extends TestCase
         $path = 'docs/img/logo.png';
 
         $file = file_get_contents("docs/img/logo.png");
-        $bypass->addRouteFile(method: 'get', uri: $path, status: 200, file: $file);
+        $bypass->addFileRoute(method: 'get', uri: $path, status: 200, file: $file);
 
         // execute
         $service = new LogoService();
@@ -125,7 +125,7 @@ class BypassTest extends TestCase
             ->getLogo();
 
         // asserts
-        expect($response)->toEqual($file);
+        $this->assertSame($response, $file);
     }
 
     protected function getBody()
