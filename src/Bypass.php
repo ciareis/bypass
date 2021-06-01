@@ -26,6 +26,8 @@ class Bypass
             'Content-Type' => 'application/json'
         ])
             ->put($url, []);
+
+        return $this;
     }
 
     public function down()
