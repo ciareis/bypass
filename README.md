@@ -49,11 +49,12 @@
 ## About
 
 <table>
-    <tr>
-        <td>
-            Bypass for PHP provides a quick way to create a custom HTTP Server to return predefined responses to client requests.<br><br>This is useful in tests when your application make requests to external services, and you need to simulate different situations like returning specific data or unexpected server errors.
-        </td>
-    </tr>
+  <tr>
+    <td>
+      <p>Bypass for PHP provides a quick way to create a custom HTTP Server to return predefined responses to client requests.</p>
+      <p>This is useful in tests when your application make requests to external services, and you need to simulate different situations like returning specific data or unexpected server errors.</p>
+    </td>
+  </tr>
 </table>
 
 ------
@@ -248,7 +249,7 @@ $bypass = Bypass::open();
 $bypassUrl = $bypass->getBaseUrl();
 
 //Json body
-$body = '{"games":[{"id":1,"points":25},{"id": 2,"points":10}],"is_active":true}';
+$body = '{"games":[{"name":"game 1","points":25},{"name":"game 2","points":10}],"is_active":true}';
 
 //Defines a route
 $bypass->addRoute(method: 'get', uri: '/v1/score', status: 200, body: $body);
@@ -281,7 +282,7 @@ it('properly returns the total score by username', function () {
   $bypass = Bypass::open();
 
   //Json body
-  $body = '{"games":[{"id":1,"points":25},{"id": 2,"points":10}],"is_active":true}';
+  $body = '{"games":[{"name":"game 1","points":25},{"name":"game 2","points":10}],"is_active":true}';
 
   //Defines a route
   $bypass->addRoute(method: 'get', uri: '/v1/score', status: 200, body: $body);
@@ -327,7 +328,6 @@ class BypassTest extends TestCase
 {
   public function test_total_score_by_username(): void
   {
-
     //Opens a new Bypass server
     $bypass = Bypass::open();
     
