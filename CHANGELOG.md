@@ -4,7 +4,7 @@
 ## [Unreleased](https://github.com/ciareis/bypass/compare/v0.4.0...main)
 
 
-## [v0.4.0 (2021-06-29)](https://github.com/ciareis/bypass/archive/refs/tags/v0.4.0.zip)
+## [v0.4.0 (2021-06-03)](https://github.com/ciareis/bypass/archive/refs/tags/v0.4.0.zip)
 
 - Improves doc
 - Rename addRouteFile method to AddFileRoute
