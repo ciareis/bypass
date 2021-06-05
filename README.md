@@ -249,10 +249,10 @@ $bypass = Bypass::open();
 $bypassUrl = $bypass->getBaseUrl();
 
 //Json body
-$body = '{"games":[{"name":"game 1","points":25},{"name":"game 2","points":10}],"is_active":true}';
+$body = '{"games":[{"id":1, "name":"game 1","points":25},{"id":2, "name":"game 2","points":10}],"is_active":true}';
 
 //Defines a route
-$bypass->addRoute(method: 'get', uri: '/v1/score', status: 200, body: $body);
+$bypass->addRoute(method: 'get', uri: '/v1/score/johndoe', status: 200, body: $body);
     
 //Instantiates a TotalScoreService
 $service = new TotalScoreService();
@@ -260,7 +260,7 @@ $service = new TotalScoreService();
 //Consumes the service using the Bypass URL
 $response = $serivce
   ->setBaseUrl($bypassUrl) // set the URL to the Bypass URL
-  ->getTotalScoreByUsername("johndoe"); //returns 35
+  ->getTotalScoreByUsername('johndoe'); //returns 35
 
 //Pest PHP verify that response is 35
 expect($response)->toBe(35);
@@ -282,16 +282,16 @@ it('properly returns the total score by username', function () {
   $bypass = Bypass::open();
 
   //Json body
-  $body = '{"games":[{"name":"game 1","points":25},{"name":"game 2","points":10}],"is_active":true}';
+  $body = '{"games":[{"id":1, "name":"game 1","points":25},{"id":2, "name":"game 2","points":10}],"is_active":true}';
 
   //Defines a route
-  $bypass->addRoute(method: 'get', uri: '/v1/score', status: 200, body: $body);
+  $bypass->addRoute(method: 'get', uri: '/v1/score/johndoe', status: 200, body: $body);
 
   //Instantiates and consumes the service using the Bypass URL
   $service = new TotalScoreService();
   $response = $service
     ->setBaseUrl($bypass->getBaseUrl())
-    ->getTotalScoreByUsername("johndoe");
+    ->getTotalScoreByUsername('johndoe');
 
   //Verifies that response is 35
   expect($response)->toBe(35);
@@ -332,16 +332,16 @@ class BypassTest extends TestCase
     $bypass = Bypass::open();
     
     //Json body
-    $body = '{"games":[{"name":"game 1","points":25},{"name":"game 2","points":10}],"is_active":true}';
+    $body = '{"games":[{"id":1,"name":"game 1","points":25},{"id":2,"name":"game 2","points":10}],"is_active":true}';
 
     //Defines a route
-    $bypass->addRoute(method: 'get', uri: '/v1/score', status: 200, body: $body);
+    $bypass->addRoute(method: 'get', uri: '/v1/score/johndoe', status: 200, body: $body);
 
     //Instantiates and consumes the service using the Bypass URL
     $service = new TotalScoreService();
     $response = $service
       ->setBaseUrl($bypass->getBaseUrl())
-      ->getTotalScoreByUsername("johndoe");
+      ->getTotalScoreByUsername('johndoe');
     
     //Verifies that response is 35 
     $this->assertSame(35, $response);
