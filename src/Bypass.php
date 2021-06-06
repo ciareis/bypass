@@ -113,9 +113,10 @@ class Bypass
 
             $routes[$route['uri']] = $response->body();
 
-            if ($response->json() !== $route['times'] + 1) {
-                throw new RouteNotCalledException("Route {$uri} and method {$method}");
+            if ($response->json() === $route['times']) {
+                continue;
             }
+            throw new RouteNotCalledException("Route {$uri} and method {$method}");
         }
     }
 
