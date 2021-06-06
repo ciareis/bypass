@@ -210,7 +210,9 @@ $bypass->assertRoutes();
 
 ### 5. Interromper ou encerrar
 
-O Bypass pode ser interrompido ou encerrado com os seguintes métodos:
+O Bypass vai encerrar seu próprio servidor uma vez que seu teste termine de ser executado.
+
+O servidor do Bypass pode ser interrompido ou encerrado a qualquer momento com os seguintes métodos:
 
 Para interromper:
 `$bypass->stop();`
