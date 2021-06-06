@@ -210,7 +210,9 @@ $bypass->assertRoutes();
 
 ### 5. Stop or shutdown
 
-Bypass can be stopped or shutdown with the following methods:
+Bypass will automatically stop its server once your test is done running.
+
+The Bypass server can be stopped or shutdown at any point with the following methods:
 
 To stop:
 `$bypass->stop();`
