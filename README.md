@@ -81,7 +81,7 @@ composer require --dev ciareis/bypass
     - [Standard Route](#31-standard-route)
     - [File Route](#32-file-route)
 - [Assert Route](#4-asserting-route-calling)
-- [Stop or shutdown](#5-stop-or-shutdown)
+- [Stop or shut down](#5-stop-or-shut-down)
 
 📝 Note: If you wish to view full codes, head to the [Examples](#examples) section.
 
