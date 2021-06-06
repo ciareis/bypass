@@ -113,10 +113,13 @@ class Bypass
 
             $routes[$route['uri']] = $response->body();
 
-            if ($response->json() === $route['times']) {
+            $currentTimes = $response->json();
+            $expectedTimes = $route['times'];
+            if ($currentTimes === $expectedTimes) {
                 continue;
             }
-            throw new RouteNotCalledException("Route {$uri} and method {$method}");
+
+            throw new RouteNotCalledException("Bypass expected route '{$uri}' with method '{$method}' to be called {$expectedTimes} times(s). Found {$currentTimes} calls(s) instead.");
         }
     }
 

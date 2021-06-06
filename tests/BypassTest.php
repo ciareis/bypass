@@ -93,7 +93,7 @@ class BypassTest extends TestCase
 
         $path = '/users/emtudo/repos';
 
-        $bypass->expect(method: 'get', uri: $path, status: 503);
+        $bypass->expect(method: 'get', uri: $path, status: 503, times: 1);
         $this->expectException(\Ciareis\Bypass\RouteNotCalledException::class);
 
         $bypass->assertRoutes();
