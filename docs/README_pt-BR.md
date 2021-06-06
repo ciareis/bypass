@@ -185,7 +185,7 @@ O método `addFileRoute()` aceita os seguintes parâmetros:
 
 Você pode necessitar de verificar se uma rota foi acessada uma ou mais vezes.
 
-O método `assertRoute()` retorna um `RouteNotCalledException` no caso de uma rota não ter sido acessada por tantas vezes quanto forão definidas no parâmetro `$times`.
+O método `assertRoutes()` retorna um `RouteNotCalledException` no caso de uma rota não ter sido acessada por tantas vezes quanto forão definidas no parâmetro `$times`.
 
 Se você precisa garantir que uma rota não está sendo acessada pelo seu serviço, defina o parâmetro como zero `$times = 0`.
 
