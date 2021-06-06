@@ -376,7 +376,7 @@ class BypassTest extends TestCase
 
 ### Exemplos de Testes
 
-📚 Veja exemplos completos de utilização do Bypass em testes com [Pest PHP](https://github.com/ciareis/bypass/blob/main/tests/BypassPestTest.php) e [PHPUnit](https://github.com/ciareis/bypass/blob/main/tests/BypassTest.php).
+📚 Veja exemplos completos de utilização do Bypass em testes com [Pest PHP](https://github.com/ciareis/bypass/blob/main/tests/BypassPestTest.php) e [PHPUnit](https://github.com/ciareis/bypass/blob/main/tests/BypassTest.php) para o exemplo de serviço [GithubRepoService](https://github.com/ciareis/bypass/blob/main/tests/Services/GithubRepoService.php).
 
 ## Créditos
 
