@@ -1,8 +1,11 @@
 # Release Notes
 
+## [Unreleased](https://github.com/ciareis/bypass/compare/v0.4.1...main)
 
-## [Unreleased](https://github.com/ciareis/bypass/compare/v0.4.0...main)
+## [v0.4.1 (2021-06-06)](https://github.com/ciareis/bypass/archive/refs/tags/v0.4.1.zip)
 
+- Fix assertRoutes
+- Improves doc
 
 ## [v0.4.0 (2021-06-03)](https://github.com/ciareis/bypass/archive/refs/tags/v0.4.0.zip)
 
