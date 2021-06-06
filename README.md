@@ -81,7 +81,7 @@ composer require --dev ciareis/bypass
     - [Standard Route](#31-standard-route)
     - [File Route](#32-file-route)
 - [Assert Route](#4-asserting-route-calling)
-- [Stop or shutdown](#5-stop-or-shutdown)
+- [Stop or shut down](#5-stop-or-shut-down)
 
 📝 Note: If you wish to view full codes, head to the [Examples](#examples) section.
 
@@ -208,14 +208,16 @@ $bypass->assertRoutes();
 //Your test assertions here...
 ```
 
-### 5. Stop or shutdown
+### 5. Stop or shut down
 
-Bypass can be stopped or shutdown with the following methods:
+Bypass will automatically stop its server once your test is done running.
+
+The Bypass server can be stopped or shut down at any point with the following methods:
 
 To stop:
 `$bypass->stop();`
 
-To shutdown:
+To shut down:
 `$bypass->down();`
 
 ## Examples
@@ -249,10 +251,10 @@ $bypass = Bypass::open();
 $bypassUrl = $bypass->getBaseUrl();
 
 //Json body
-$body = '{"games":[{"name":"game 1","points":25},{"name":"game 2","points":10}],"is_active":true}';
+$body = '{"games":[{"id":1, "name":"game 1","points":25},{"id":2, "name":"game 2","points":10}],"is_active":true}';
 
 //Defines a route
-$bypass->addRoute(method: 'get', uri: '/v1/score', status: 200, body: $body);
+$bypass->addRoute(method: 'get', uri: '/v1/score/johndoe', status: 200, body: $body);
     
 //Instantiates a TotalScoreService
 $service = new TotalScoreService();
@@ -260,7 +262,7 @@ $service = new TotalScoreService();
 //Consumes the service using the Bypass URL
 $response = $serivce
   ->setBaseUrl($bypassUrl) // set the URL to the Bypass URL
-  ->getTotalScoreByUsername("johndoe"); //returns 35
+  ->getTotalScoreByUsername('johndoe'); //returns 35
 
 //Pest PHP verify that response is 35
 expect($response)->toBe(35);
@@ -282,16 +284,16 @@ it('properly returns the total score by username', function () {
   $bypass = Bypass::open();
 
   //Json body
-  $body = '{"games":[{"name":"game 1","points":25},{"name":"game 2","points":10}],"is_active":true}';
+  $body = '{"games":[{"id":1, "name":"game 1","points":25},{"id":2, "name":"game 2","points":10}],"is_active":true}';
 
   //Defines a route
-  $bypass->addRoute(method: 'get', uri: '/v1/score', status: 200, body: $body);
+  $bypass->addRoute(method: 'get', uri: '/v1/score/johndoe', status: 200, body: $body);
 
   //Instantiates and consumes the service using the Bypass URL
   $service = new TotalScoreService();
   $response = $service
     ->setBaseUrl($bypass->getBaseUrl())
-    ->getTotalScoreByUsername("johndoe");
+    ->getTotalScoreByUsername('johndoe');
 
   //Verifies that response is 35
   expect($response)->toBe(35);
@@ -332,16 +334,16 @@ class BypassTest extends TestCase
     $bypass = Bypass::open();
     
     //Json body
-    $body = '{"games":[{"name":"game 1","points":25},{"name":"game 2","points":10}],"is_active":true}';
+    $body = '{"games":[{"id":1,"name":"game 1","points":25},{"id":2,"name":"game 2","points":10}],"is_active":true}';
 
     //Defines a route
-    $bypass->addRoute(method: 'get', uri: '/v1/score', status: 200, body: $body);
+    $bypass->addRoute(method: 'get', uri: '/v1/score/johndoe', status: 200, body: $body);
 
     //Instantiates and consumes the service using the Bypass URL
     $service = new TotalScoreService();
     $response = $service
       ->setBaseUrl($bypass->getBaseUrl())
-      ->getTotalScoreByUsername("johndoe");
+      ->getTotalScoreByUsername('johndoe');
     
     //Verifies that response is 35 
     $this->assertSame(35, $response);
@@ -373,7 +375,8 @@ class BypassTest extends TestCase
 
 ### Test Examples
 
-📚 See Bypass being used in complete tests with [Pest PHP](https://github.com/ciareis/bypass/blob/main/tests/BypassPestTest.php) and [PHPUnit](https://github.com/ciareis/bypass/blob/main/tests/BypassTest.php).
+📚 See Bypass being used in complete tests with [Pest PHP](https://github.com/ciareis/bypass/blob/main/tests/BypassPestTest.php) and [PHPUnit](https://github.com/ciareis/bypass/blob/main/tests/BypassTest.php) for the [GithubRepoService](https://github.com/ciareis/bypass/blob/main/tests/Services/GithubRepoService.php) demo service.
+
 
 ## Credits
 

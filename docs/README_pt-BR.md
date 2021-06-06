@@ -210,7 +210,9 @@ $bypass->assertRoutes();
 
 ### 5. Interromper ou encerrar
 
-O Bypass pode ser interrompido ou encerrado com os seguintes métodos:
+O Bypass vai encerrar seu próprio servidor uma vez que seu teste termine de ser executado.
+
+O servidor do Bypass pode ser interrompido ou encerrado a qualquer momento com os seguintes métodos:
 
 Para interromper:
 `$bypass->stop();`
@@ -249,10 +251,10 @@ $bypass = Bypass::open();
 $bypassUrl = $bypass->getBaseUrl();
 
 //Corpo de texto em formato JSON
-$body = '{"games":[{"name":"game 1","points":25},{"name":"game 2","points":10}],"is_active":true}';
+$body = '{"games":[{"id":1,"name":"game 1","points":25},{"id":2,"name":"game 2","points":10}],"is_active":true}';
 
 //Definição de rota a ser acessada pelo serviço
-$bypass->addRoute(method: 'get', uri: '/v1/score', status: 200, body: $body);
+$bypass->addRoute(method: 'get', uri: '/v1/score/johndoe', status: 200, body: $body);
     
 //Instânciando TotalScoreService
 $service = new TotalScoreService();
@@ -260,7 +262,7 @@ $service = new TotalScoreService();
 //Consumindo o serviço utilizando a URL retornada pelo Bypass Server
 $response = $service
     ->setBaseUrl($bypassUrl) //Define o URL a ser usado pelo serviço
-    ->getTotalScoreByUsername("johndoe"); //retorna 35
+    ->getTotalScoreByUsername('johndoe'); //retorna 35
 
 //Verificando se a resposta é 35 com Pest PHP
 expect($response)->toBe(35);
@@ -282,16 +284,16 @@ it('properly returns the total score by username', function () {
     $bypass = Bypass::open();
 
     //Corpo de texto em formato JSON
-    $body = '{"games":[{"name":"game 1","points":25},{"name":"game 2","points":10}],"is_active":true}';
+    $body = '{"games":[{"id":1,"name":"game 1","points":25},{"id":2,"name":"game 2","points":10}],"is_active":true}';
 
     //Definição de rota a ser acessada pelo serviço
-    $bypass->addRoute(method: 'get', uri: '/v1/score', status: 200, body: $body);
+    $bypass->addRoute(method: 'get', uri: '/v1/score/johndoe', status: 200, body: $body);
 
     //Instânciando e consumindo o serviço utilizando a URL retornada pelo Bypass Server
     $service = new TotalScoreService();
     $response = $service
         ->setBaseUrl($bypass->getBaseUrl())
-        ->getTotalScoreByUsername("johndoe");
+        ->getTotalScoreByUsername('johndoe');
 
     //Verifica se a resposta é 35
     expect($response)->toBe(35);
@@ -332,16 +334,16 @@ class BypassTest extends TestCase
         $bypass = Bypass::open();
         
         //Corpo de texto em formato JSON
-        $body = '{"games":[{"name":"game 1","points":25},{"name":"game 2","points":10}],"is_active":true}';
+        $body = '{"games":[{"id":1,"name":"game 1","points":25},{"id":2,"name":"game 2","points":10}],"is_active":true}';
 
         //Definição de rota a ser acessada pelo serviço
-        $bypass->addRoute(method: 'get', uri: '/v1/score', status: 200, body: $body);
+        $bypass->addRoute(method: 'get', uri: '/v1/score/johndoe', status: 200, body: $body);
 
         //Instânciando e consumindo o serviço utilizando a URL retornada pelo Bypass Server
         $service = new TotalScoreService();
         $response = $service
             ->setBaseUrl($bypass->getBaseUrl())
-            ->getTotalScoreByUsername("johndoe");
+            ->getTotalScoreByUsername('johndoe');
         
         //Verifica se a resposta é 35 
         $this->assertSame(35, $response);
@@ -374,7 +376,7 @@ class BypassTest extends TestCase
 
 ### Exemplos de Testes
 
-📚 Veja exemplos completos de utilização do Bypass em testes com [Pest PHP](https://github.com/ciareis/bypass/blob/main/tests/BypassPestTest.php) e [PHPUnit](https://github.com/ciareis/bypass/blob/main/tests/BypassTest.php).
+📚 Veja exemplos completos de utilização do Bypass em testes com [Pest PHP](https://github.com/ciareis/bypass/blob/main/tests/BypassPestTest.php) e [PHPUnit](https://github.com/ciareis/bypass/blob/main/tests/BypassTest.php) para o exemplo de serviço [GithubRepoService](https://github.com/ciareis/bypass/blob/main/tests/Services/GithubRepoService.php).
 
 ## Créditos
 
