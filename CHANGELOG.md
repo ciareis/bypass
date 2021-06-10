@@ -2,6 +2,11 @@
 
 ## [Unreleased](https://github.com/ciareis/bypass/compare/v0.4.1...main)
 
+## [v0.4.2 (2021-06-10)](https://github.com/ciareis/bypass/archive/refs/tags/v0.4.2.zip)
+
+- added chain to methods
+- added return type
+
 ## [v0.4.1 (2021-06-06)](https://github.com/ciareis/bypass/archive/refs/tags/v0.4.1.zip)
 
 - Fix assertRoutes
