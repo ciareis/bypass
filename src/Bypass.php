@@ -11,14 +11,14 @@ class Bypass
     protected $process;
     protected $routes = [];
 
-    public static function open(?int $port = null)
+    public static function open(?int $port = null): self
     {
         $process = new self();
 
         return $process->handle($port);
     }
 
-    public function stop()
+    public function stop(): self
     {
         $url = $this->getBaseUrl("___api_faker_clear_router");
 
@@ -30,7 +30,7 @@ class Bypass
         return $this;
     }
 
-    public function down()
+    public function down(): self
     {
         if ($this->process) {
             $this->process->stop();
@@ -39,12 +39,12 @@ class Bypass
         return $this;
     }
 
-    public function getPort()
+    public function getPort(): int
     {
         return $this->port;
     }
 
-    public function getBaseUrl(?string $path = null)
+    public function getBaseUrl(?string $path = null): string
     {
         if ($path && !str_starts_with($path, '/')) {
             $path = "/" . $path;
@@ -53,7 +53,7 @@ class Bypass
         return "http://localhost:{$this->port}{$path}";
     }
 
-    public function handle(?int $port = null)
+    public function handle(?int $port = null): self
     {
         $params = [PHP_BINARY, '-S', "localhost:{$port}",  __DIR__ . DIRECTORY_SEPARATOR . 'server.php'];
 
@@ -82,25 +82,29 @@ class Bypass
         return $this;
     }
 
-    public function addRoute(string $method, string $uri, int $status = 200, ?string $body = null, int $times = 1)
+    public function addRoute(string $method, string $uri, int $status = 200, ?string $body = null, int $times = 1): self
     {
-        return $this->addRouteParams($uri, [
+        $this->addRouteParams($uri, [
             'method' => \strtoupper($method),
             'content' => $body,
             'status' => $status,
         ], $times);
+
+        return $this;
     }
 
-    public function addFileRoute(string $method, string $uri, int $status = 200, string $file = null, int $times = 1)
+    public function addFileRoute(string $method, string $uri, int $status = 200, string $file = null, int $times = 1): self
     {
-        return $this->addRouteParams($uri, [
+        $this->addRouteParams($uri, [
             'method' => \strtoupper($method),
             'file' => base64_encode($file),
             'status' => $status,
         ], $times);
+
+        return $this;
     }
 
-    public function assertRoutes()
+    public function assertRoutes(): void
     {
         $url = $this->getBaseUrl("___api_faker_router_index");
         $routes = [];
@@ -124,12 +128,12 @@ class Bypass
     }
 
     // @todo deprecated: It will remove at version v1.0.0
-    public function expect(string $method, string $uri, int $status = 200, ?string $body = null, int $times = 1)
+    public function expect(string $method, string $uri, int $status = 200, ?string $body = null, int $times = 1): self
     {
         return $this->addRoute($method, $uri, $status, $body, $times);
     }
 
-    private function addRouteParams(string $uri, array $params, int $times = 1)
+    private function addRouteParams(string $uri, array $params, int $times = 1): array
     {
         $url = $this->getBaseUrl("___api_faker_add_router");
 
