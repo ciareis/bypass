@@ -82,8 +82,10 @@ class Bypass
         return $this;
     }
 
-    public function addRoute(string $method, string $uri, int $status = 200, ?string $body = null, int $times = 1): self
+    public function addRoute(string $method, string $uri, int $status = 200, string|array $body = null, int $times = 1): self
     {
+        $body = is_array($body) ? json_encode($body) : $body;
+
         $this->addRouteParams($uri, [
             'method' => \strtoupper($method),
             'content' => $body,
@@ -128,7 +130,7 @@ class Bypass
     }
 
     // @todo deprecated: It will remove at version v1.0.0
-    public function expect(string $method, string $uri, int $status = 200, ?string $body = null, int $times = 1): self
+    public function expect(string $method, string $uri, int $status = 200, string|array $body = null, int $times = 1): self
     {
         return $this->addRoute($method, $uri, $status, $body, $times);
     }
