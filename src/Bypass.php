@@ -18,14 +18,31 @@ class Bypass
         return $process->handle($port);
     }
 
+    public static function serve(...$routes): self
+    {
+        $bypass = self::open();
+
+        $routes = is_array($routes[0])
+            ? $routes[0]
+            : $routes;
+        foreach ($routes as $route) {
+            if (!$route instanceof Route) {
+                continue;
+            }
+            $bypass->addRoute(...$route->toArray());
+        }
+
+        return $bypass;
+    }
+
     public function stop(): self
     {
         $url = $this->getBaseUrl("___api_faker_clear_router");
 
         Http::withHeaders([
-            'Content-Type' => 'application/json'
+        'Content-Type' => 'application/json'
         ])
-            ->put($url, []);
+        ->put($url, []);
 
         return $this;
     }
@@ -85,9 +102,9 @@ class Bypass
     public function addRoute(string $method, string $uri, int $status = 200, ?string $body = null, int $times = 1): self
     {
         $this->addRouteParams($uri, [
-            'method' => \strtoupper($method),
-            'content' => $body,
-            'status' => $status,
+        'method' => \strtoupper($method),
+        'content' => $body,
+        'status' => $status,
         ], $times);
 
         return $this;
@@ -96,12 +113,17 @@ class Bypass
     public function addFileRoute(string $method, string $uri, int $status = 200, string $file = null, int $times = 1): self
     {
         $this->addRouteParams($uri, [
-            'method' => \strtoupper($method),
-            'file' => base64_encode($file),
-            'status' => $status,
+        'method' => \strtoupper($method),
+        'file' => base64_encode($file),
+        'status' => $status,
         ], $times);
 
         return $this;
+    }
+
+    public function getRoutes(): array
+    {
+        return $this->routes;
     }
 
     public function assertRoutes(): void
@@ -144,19 +166,19 @@ class Bypass
         $params['uri'] = $uri;
 
         $this->routes[] = [
-            'uri' => $uri,
-            'method' => $params['method'],
-            'times' => $times,
+        'uri' => $uri,
+        'method' => $params['method'],
+        'times' => $times,
         ];
 
         $response = Http::withHeaders([
-            'Content-Type' => 'application/json'
+        'Content-Type' => 'application/json'
         ])
-            ->put($url, $params);
+        ->put($url, $params);
 
         return [
-            'body' => $response->body(),
-            'status' => $response->status(),
+        'body' => $response->body(),
+        'status' => $response->status(),
         ];
     }
 }
