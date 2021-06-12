@@ -14,11 +14,9 @@ use Illuminate\Support\Facades\Http;
 use Tests\Services\GithubRepoService;
 use Tests\Services\LogoService;
 
-it("total stargazers by user", function () {
+it("total stargazers by user", function ($body) {
     // prepare
     $bypass = Bypass::open();
-
-    $body = \json_encode(getBody());
 
     $path = '/users/emtudo/repos';
 
@@ -31,7 +29,10 @@ it("total stargazers by user", function () {
 
     // asserts
     expect($response)->toBe(16);
-});
+})->with([
+    json_encode(getBody()),
+    [getBody()],
+]);
 
 it('returns route not called exception', function () {
     // prepare
