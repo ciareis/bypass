@@ -1,6 +1,11 @@
 # Release Notes
 
-## [Unreleased](https://github.com/ciareis/bypass/compare/v0.5.0...main)
+## [Unreleased](https://github.com/ciareis/bypass/compare/v0.5.1...main)
+
+## [v0.5.1 (2021-06-12)](https://github.com/ciareis/bypass/archive/refs/tags/v0.5.1.zip)
+
+- added toString
+- a letter refactoring 
 
 ## [v0.5.0 (2021-06-12)](https://github.com/ciareis/bypass/archive/refs/tags/v0.5.0.zip)
 
