@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Tests;
 
 use Ciareis\Bypass\Bypass;
+use Ciareis\Bypass\Route;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Support\Facades\Http;
 use Tests\Services\GithubRepoService;
@@ -24,11 +25,17 @@ class BypassPhpUnitTest extends TestCase
     public function test_returns_total_stargazers_by_user(): void
     {
         // prepare
-        $bypass = Bypass::open();
-
         $path = '/users/emtudo/repos';
 
-        $bypass->expect(method: 'get', uri: $path, status: 200, body: $this->getBody());
+        $bypass = Bypass::open();
+        $bypass->addRoute(method: 'get', uri: $path, status: 200, body: $this->getBody());
+
+        /*
+        Alternative option
+        $bypass = Bypass::serve(
+            Route::ok($path, body: $this->getBody())
+        );
+        */
 
         // execute
         $service = new GithubRepoService();
@@ -46,11 +53,11 @@ class BypassPhpUnitTest extends TestCase
 
         $path = '/users/emtudo/repos';
 
-        $bypass->expect(method: 'get', uri: $path, status: 503);
+        $bypass->addRoute(method: 'get', uri: $path, status: 503);
 
         // execute
         $service = new GithubRepoService();
-        $response = $service->setBaseUrl($bypass->getBaseUrl())
+        $response = $service->setBaseUrl((string) $bypass)
             ->getTotalStargazersByUser("emtudo");
 
         // asserts
@@ -62,12 +69,12 @@ class BypassPhpUnitTest extends TestCase
         // prepare
         $bypass = Bypass::open();
         $path = '/users/emtudo/repos';
-        $bypass->expect(method: 'get', uri: $path, status: 503);
+        $bypass->addRoute(method: 'get', uri: $path, status: 503);
         $bypass->down();
 
         // execute
         $service = new GithubRepoService();
-        $response = $service->setBaseUrl($bypass->getBaseUrl())
+        $response = $service->setBaseUrl((string) $bypass)
             ->getTotalStargazersByUser("emtudo");
 
         // asserts
@@ -77,15 +84,14 @@ class BypassPhpUnitTest extends TestCase
     public function test_returns_route_not_found(): void
     {
         $bypass = Bypass::open();
-        $bypass->expect(method: 'get', uri: '/no-route', status: 200);
+        $bypass->addRoute(method: 'get', uri: '/no-route', status: 200);
         $bypass->stop();
 
-        $response = Http::get($bypass->getBaseUrl() . '/no-route');
+        $response = Http::get($bypass->getBaseUrl('/no-route'));
 
         $this->assertSame(500, $response->status());
         $this->assertSame('Bypass route /no-route and method GET not found.', $response->body());
     }
-
 
     public function test_returns_route_not_called_exception(): void
     {
@@ -93,7 +99,7 @@ class BypassPhpUnitTest extends TestCase
 
         $path = '/users/emtudo/repos';
 
-        $bypass->expect(method: 'get', uri: $path, status: 503, times: 1);
+        $bypass->addRoute(method: 'get', uri: $path, status: 503, times: 1);
         $this->expectException(\Ciareis\Bypass\RouteNotCalledException::class);
 
         $bypass->assertRoutes();
@@ -106,18 +112,17 @@ class BypassPhpUnitTest extends TestCase
 
         $this->expectException(\Illuminate\Http\Client\ConnectionException::class);
 
-        Http::get($bypass->getBaseUrl() . '/no-route');
+        Http::get($bypass->getBaseUrl('/no-route'));
     }
 
     public function test_gets_logo()
     {
         // prepare
-        $bypass = Bypass::open();
-
         $path = 'docs/img/logo.png';
-
-        $file = file_get_contents("docs/img/logo.png");
-        $bypass->addFileRoute(method: 'get', uri: $path, status: 200, file: $file);
+        $file = file_get_contents($path);
+        $bypass = Bypass::serve(
+            Route::getFile($path, $file)
+        );
 
         // execute
         $service = new LogoService();

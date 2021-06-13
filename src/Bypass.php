@@ -18,9 +18,14 @@ class Bypass
         return $process->handle($port);
     }
 
+    public static function up(?int $port = null): self
+    {
+        return static::open($port);
+    }
+
     public static function serve(...$routes): self
     {
-        $bypass = self::open();
+        $bypass = static::up();
 
         $routes = is_array($routes[0])
             ? $routes[0]
@@ -58,6 +63,7 @@ class Bypass
     {
         if ($this->process) {
             $this->process->stop();
+            $this->process = null;
         }
 
         return $this;
@@ -165,6 +171,9 @@ class Bypass
 
     protected function addRouteParams(string $uri, array $params, int $times = 1): array
     {
+        if (!$this->port || !$this->process) {
+            $this->handle();
+        }
         $url = $this->getBaseUrl("___api_faker_add_router");
 
         if (!\str_starts_with($uri, '/')) {
@@ -188,5 +197,10 @@ class Bypass
             'body' => $response->body(),
             'status' => $response->status(),
         ];
+    }
+
+    public function __toString()
+    {
+        return $this->getBaseUrl();
     }
 }

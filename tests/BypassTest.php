@@ -11,4 +11,6 @@ it("returns bypass with Bypass::serve", function () {
 
     expect($bypass)->toBeInstanceOf(Bypass::class);
     expect($bypass->getRoutes())->toHaveCount(2);
+    expect($bypass->getPort())->toBeInt();
+    expect((string) $bypass)->toEqual($bypass->getBaseUrl());
 });
