@@ -1,6 +1,11 @@
 # Release Notes
 
-## [Unreleased](https://github.com/ciareis/bypass/compare/v0.4.2...main)
+## [Unreleased](https://github.com/ciareis/bypass/compare/v0.5.0...main)
+
+## [v0.5.0 (2021-06-12)](https://github.com/ciareis/bypass/archive/refs/tags/v0.5.0.zip)
+
+- added Bypass::serve with helpers route
+- addRoute now accept string and array in body 
 
 ## [v0.4.2 (2021-06-10)](https://github.com/ciareis/bypass/archive/refs/tags/v0.4.2.zip)
 
