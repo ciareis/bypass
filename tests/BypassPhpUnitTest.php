@@ -26,16 +26,13 @@ class BypassPhpUnitTest extends TestCase
     {
         // prepare
         $path = '/users/emtudo/repos';
-
-        $bypass = Bypass::open();
-        $bypass->addRoute(method: 'get', uri: $path, status: 200, body: $this->getBody());
-
-        /*
-        Alternative option
         $bypass = Bypass::serve(
             Route::ok($path, body: $this->getBody())
         );
-        */
+
+        // Alternative option
+        // $bypass = Bypass::open();
+        // $bypass->addRoute(method: 'get', uri: $path, status: 200, body: $this->getBody());
 
         // execute
         $service = new GithubRepoService();
