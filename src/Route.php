@@ -8,70 +8,89 @@ class Route
         public string $method,
         public string $uri,
         public int $status,
-        public ?string $body = null,
+        public null|string|array $body = null,
         public int $times = 1
     ) {
     }
 
-    public static function ok(string $uri, ?string $body = null, string $method = "GET", int $times = 1)
+    public static function ok(string $uri, null|string|array $body = null, string $method = "GET", int $times = 1)
     {
         return new static(method: $method, uri: $uri, body: $body, status: 200, times: $times);
     }
 
-    public static function created(string $uri, ?string $body = null, int $times = 1)
-    {
-        return new static(method: "POST", uri: $uri, body: $body, status: 201, times: $times);
-    }
-
-    public static function badRequest(string $uri, ?string $body = null, string $method = 'POST', int $times = 1)
+    public static function badRequest(string $uri, null|string|array $body = null, string $method = 'POST', int $times = 1)
     {
         return new static(method: $method, uri: $uri, body: $body, status: 400, times: $times);
     }
 
-    public static function validationFailed(string $uri, ?string $body = null, string $method = 'POST', int $times = 1)
-    {
-        return new static(method: $method, uri: $uri, body: $body, status: 422, times: $times);
-    }
-
-    public static function notFound(string $uri, ?string $body = null, string $method = 'GET', int $times = 1)
-    {
-        return new static(method: $method, uri: $uri, body: $body, status: 404, times: $times);
-    }
-
-    public static function serverError(string $uri, ?string $body = null, string $method = 'GET', int $times = 1)
-    {
-        return new static(method: $method, uri: $uri, body: $body, status: 500, times: $times);
-    }
-
-    public static function unauthorized(string $uri, ?string $body = null, string $method = 'GET', int $times = 1)
+    public static function unauthorized(string $uri, null|string|array $body = null, string $method = 'GET', int $times = 1)
     {
         return new static(method: $method, uri: $uri, body: $body, status: 401, times: $times);
     }
 
-    public static function forbidden(string $uri, ?string $body = null, string $method = 'GET', int $times = 1)
+    public static function forbidden(string $uri, null|string|array $body = null, string $method = 'GET', int $times = 1)
     {
         return new static(method: $method, uri: $uri, body: $body, status: 403, times: $times);
     }
 
-    public static function delete(string $uri, ?string $body = null, int $status = 200, int $times = 1)
+    public static function created(string $uri, null|string|array $body = null, int $times = 1)
+    {
+        return new static(method: "POST", uri: $uri, body: $body, status: 201, times: $times);
+    }
+
+    public static function notFound(string $uri, null|string|array $body = null, string $method = 'GET', int $times = 1)
+    {
+        return new static(method: $method, uri: $uri, body: $body, status: 404, times: $times);
+    }
+
+    public static function notAllow(string $uri, null|string|array $body = null, string $method = 'GET', int $times = 1)
+    {
+        return new static(method: $method, uri: $uri, body: $body, status: 405, times: $times);
+    }
+
+    public static function serverError(string $uri, null|string|array $body = null, string $method = 'GET', int $times = 1)
+    {
+        return new static(method: $method, uri: $uri, body: $body, status: 500, times: $times);
+    }
+
+    public static function validationFailed(string $uri, null|string|array $body = null, string $method = 'POST', int $times = 1)
+    {
+        return new static(method: $method, uri: $uri, body: $body, status: 422, times: $times);
+    }
+
+    public static function file(string $uri, string $file, string $method = 'GET', int $status = 200, int $times = 1)
+    {
+        return new RouteFile(method: $method, uri: $uri, file: $file, status: $status, times: $times);
+    }
+
+    public static function get(string $uri, null|string|array $body = null, int $status = 200, int $times = 1)
+    {
+        return new static(method: "GET", uri: $uri, body: $body, status: $status, times: $times);
+    }
+
+    public static function getFile(string $uri, string $file, int $status = 200, int $times = 1)
+    {
+        return new RouteFile(method: "GET", uri: $uri, file: $file, status: $status, times: $times);
+    }
+
+    public static function post(string $uri, null|string|array $body = null, int $status = 200, int $times = 1)
+    {
+        return new static(method: "POST", uri: $uri, body: $body, status: $status, times: $times);
+    }
+
+    public static function put(string $uri, null|string|array $body = null, int $status = 200, int $times = 1)
+    {
+        return new static(method: "PUT", uri: $uri, body: $body, status: $status, times: $times);
+    }
+
+    public static function delete(string $uri, null|string|array $body = null, int $status = 200, int $times = 1)
     {
         return new static(method: "DELETE", uri: $uri, body: $body, status: $status, times: $times);
     }
 
-    public static function get()
+    public static function patch(string $uri, null|string|array $body = null, int $status = 200, int $times = 1)
     {
-    }
-
-    public static function post()
-    {
-    }
-
-    public static function put()
-    {
-    }
-
-    public static function patch()
-    {
+        return new static(method: "PATCH", uri: $uri, body: $body, status: $status, times: $times);
     }
 
     public function toArray()

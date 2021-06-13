@@ -26,10 +26,17 @@ class Bypass
             ? $routes[0]
             : $routes;
         foreach ($routes as $route) {
-            if (!$route instanceof Route) {
+            if ($route instanceof Route) {
+                $bypass->addRoute(...$route->toArray());
                 continue;
             }
-            $bypass->addRoute(...$route->toArray());
+            if ($route instanceof RouteFile) {
+                $bypass->addFileRoute(...$route->toArray());
+                continue;
+            }
+            if (is_array($route)) {
+                $bypass->addRoute(...$route);
+            }
         }
 
         return $bypass;
@@ -40,7 +47,7 @@ class Bypass
         $url = $this->getBaseUrl("___api_faker_clear_router");
 
         Http::withHeaders([
-        'Content-Type' => 'application/json'
+            'Content-Type' => 'application/json'
         ])
         ->put($url, []);
 
@@ -99,14 +106,14 @@ class Bypass
         return $this;
     }
 
-    public function addRoute(string $method, string $uri, int $status = 200, string|array $body = null, int $times = 1): self
+    public function addRoute(string $method, string $uri, int $status = 200, null|string|array $body = null, int $times = 1): self
     {
         $body = is_array($body) ? json_encode($body) : $body;
 
         $this->addRouteParams($uri, [
-        'method' => \strtoupper($method),
-        'content' => $body,
-        'status' => $status,
+            'method' => \strtoupper($method),
+            'content' => $body,
+            'status' => $status,
         ], $times);
 
         return $this;
@@ -115,9 +122,9 @@ class Bypass
     public function addFileRoute(string $method, string $uri, int $status = 200, string $file = null, int $times = 1): self
     {
         $this->addRouteParams($uri, [
-        'method' => \strtoupper($method),
-        'file' => base64_encode($file),
-        'status' => $status,
+            'method' => \strtoupper($method),
+            'file' => base64_encode($file),
+            'status' => $status,
         ], $times);
 
         return $this;
@@ -151,13 +158,12 @@ class Bypass
         }
     }
 
-    // @todo deprecated: It will remove at version v1.0.0
-    public function expect(string $method, string $uri, int $status = 200, string|array $body = null, int $times = 1): self
+    public function expect(string $method, string $uri, int $status = 200, null|string|array $body = null, int $times = 1): self
     {
         return $this->addRoute($method, $uri, $status, $body, $times);
     }
 
-    private function addRouteParams(string $uri, array $params, int $times = 1): array
+    protected function addRouteParams(string $uri, array $params, int $times = 1): array
     {
         $url = $this->getBaseUrl("___api_faker_add_router");
 
@@ -168,19 +174,19 @@ class Bypass
         $params['uri'] = $uri;
 
         $this->routes[] = [
-        'uri' => $uri,
-        'method' => $params['method'],
-        'times' => $times,
+            'uri' => $uri,
+            'method' => $params['method'],
+            'times' => $times,
         ];
 
         $response = Http::withHeaders([
-        'Content-Type' => 'application/json'
+            'Content-Type' => 'application/json'
         ])
         ->put($url, $params);
 
         return [
-        'body' => $response->body(),
-        'status' => $response->status(),
+            'body' => $response->body(),
+            'status' => $response->status(),
         ];
     }
 }

@@ -149,7 +149,7 @@ The method `addRoute()` accepts the following parameters:
 | **HTTP Method** | `int $method` | [HTTP Request Method](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html) (GET/POST/PUT/PATCH/DELETE) |
 | **URI** | `string $uri` | URI to be served by Bypass |
 | **Status** | `int $status` | [HTTP Status Code](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html)  to be returned by Bypass (default: 200) |
-| **Body** | `string $body` | Body to be served by Bypass (optional) |
+| **Body** | `string|array $body` | Body to be served by Bypass (optional) |
 | **Times** | `int $times` | How many times the route should be called (default: 1) |
 
 #### 3.2 File Route
@@ -178,7 +178,7 @@ The method `addFileRoute()` accepts the following parameters:
 | **HTTP Method** | `int $method` | [HTTP Request Method](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html) (GET/POST/PUT/PATCH/DELETE) |
 | **URI** | `string $uri` | URI to be served by Bypass |
 | **Status** | `int $status` | [HTTP Status Code](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html)  to be returned by Bypass (default: 200) |
-| **Body** | `string $body` | Binary file to be served by Bypass |
+| **File** | `string $file` | Binary file to be served by Bypass |
 | **Times** | `int $times` | How many times the route should be called (default: 1) |
 
 ### 4. Asserting Route Calling
@@ -375,7 +375,7 @@ class BypassTest extends TestCase
 
 ### Test Examples
 
-📚 See Bypass being used in complete tests with [Pest PHP](https://github.com/ciareis/bypass/blob/main/tests/BypassPestTest.php) and [PHPUnit](https://github.com/ciareis/bypass/blob/main/tests/BypassTest.php) for the [GithubRepoService](https://github.com/ciareis/bypass/blob/main/tests/Services/GithubRepoService.php) demo service.
+📚 See Bypass being used in complete tests with [Pest PHP](https://github.com/ciareis/bypass/blob/main/tests/BypassPestTest.php) and [PHPUnit](https://github.com/ciareis/bypass/blob/main/tests/BypassPhpUnitTest.php) for the [GithubRepoService](https://github.com/ciareis/bypass/blob/main/tests/Services/GithubRepoService.php) demo service.
 
 
 ## Credits
