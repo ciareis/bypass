@@ -149,7 +149,7 @@ O método `addRoute()` aceita os seguintes parâmetros:
 | **HTTP Method** | `int $method` | [Método de Requisição HTTP](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html) (GET/POST/PUT/PATCH/DELETE) |
 | **URI** | `string $uri` | URI a ser servido pelo Bypass |
 | **Status** | `int $status` | [Código de Status HTTP](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) a ser retornado pelo Bypass (default: 200) |
-| **Body** | `string $body` | Corpo de texto (JSON) a ser servido pelo Bypass (opicional) |
+| **Body** | `string\|array $body` | Corpo de texto (JSON) a ser servido pelo Bypass (opicional) |
 | **Times** | `int $times` | Quantidade de vezes em que a rota deve ser acessada (padrão: 1) |
 
 #### 3.2 Rota de Arquivo
