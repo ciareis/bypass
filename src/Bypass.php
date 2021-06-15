@@ -13,7 +13,7 @@ class Bypass
 
     public static function open(?int $port = null): self
     {
-        $process = new self();
+        $process = new static();
 
         return $process->handle($port);
     }
