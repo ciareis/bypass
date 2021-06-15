@@ -1,6 +1,11 @@
 # Release Notes
 
-## [Unreleased](https://github.com/ciareis/bypass/compare/v0.5.1...main)
+## [Unreleased](https://github.com/ciareis/bypass/compare/v0.6.0...main)
+
+## [v0.6.0 (2021-06-15)](https://github.com/ciareis/bypass/archive/refs/tags/v0.6.0.zip)
+
+- broken Route::delete, it returns 204 for default
+- bypass return new static
 
 ## [v0.5.1 (2021-06-12)](https://github.com/ciareis/bypass/archive/refs/tags/v0.5.1.zip)
 
