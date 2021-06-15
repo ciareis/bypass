@@ -83,7 +83,7 @@ class Route
         return new static(method: "PUT", uri: $uri, body: $body, status: $status, times: $times);
     }
 
-    public static function delete(string $uri, null|string|array $body = null, int $status = 200, int $times = 1)
+    public static function delete(string $uri, null|string|array $body = null, int $status = 204, int $times = 1)
     {
         return new static(method: "DELETE", uri: $uri, body: $body, status: $status, times: $times);
     }
