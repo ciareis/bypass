@@ -1,6 +1,11 @@
 # Release Notes
 
-## [Unreleased](https://github.com/ciareis/bypass/compare/v0.6.0...main)
+## [Unreleased](https://github.com/ciareis/bypass/compare/v0.7.0...main)
+
+## [v0.7.0 (2021-06-17)](https://github.com/ciareis/bypass/archive/refs/tags/v0.7.0.zip)
+
+- change Route::notAllow to Route::notAllowed
+- added tests to route::*
 
 ## [v0.6.0 (2021-06-15)](https://github.com/ciareis/bypass/archive/refs/tags/v0.6.0.zip)
 
