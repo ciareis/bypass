@@ -43,7 +43,7 @@ class Route
         return new static(method: $method, uri: $uri, body: $body, status: 404, times: $times);
     }
 
-    public static function notAllow(string $uri, null|string|array $body = null, string $method = 'GET', int $times = 1)
+    public static function notAllowed(string $uri, null|string|array $body = null, string $method = 'GET', int $times = 1)
     {
         return new static(method: $method, uri: $uri, body: $body, status: 405, times: $times);
     }
