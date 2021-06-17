@@ -54,12 +54,12 @@ test('Route::badRequest returns 400 + body', function () {
     $uri = '/v1/users?filter=foo';
 
     $bypass = bypass::serve(
-        Route::badRequest(uri: $uri, body: ['error' => 'Filter parameter foo is not allowed.'], method: 'GET')
+        Route::badRequest(uri: $uri, body: ['error' => 'Filter parameter foo does not exist.'], method: 'GET')
     );
 
     $response = Http::get($bypass . $uri);
     expect($response->json())
-        ->error->toBe('Filter parameter foo is not allowed.');
+        ->error->toBe('Filter parameter foo does not exist.');
     
     $response->throw();
 })->throws(RequestException::class, 'HTTP request returned status code 400');
