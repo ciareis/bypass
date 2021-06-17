@@ -48,6 +48,11 @@ class Route
         return new static(method: $method, uri: $uri, body: $body, status: 405, times: $times);
     }
 
+    public static function tooMany(string $uri, null|string|array $body = null, string $method = 'GET', int $times = 1)
+    {
+        return new static(method: $method, uri: $uri, body: $body, status: 429, times: $times);
+    }
+
     public static function serverError(string $uri, null|string|array $body = null, string $method = 'GET', int $times = 1)
     {
         return new static(method: $method, uri: $uri, body: $body, status: 500, times: $times);
