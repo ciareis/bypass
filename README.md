@@ -128,7 +128,7 @@ When running your tests, you will inform Bypass routes to Application or Service
 
 ```php
 //Json body
-$body = '{"name": "John Smith", "total": 1250}';
+$body = '{"username": "john", "name": "John Smith", "total": 1250}';
 
 //Route retuning the JSON body with HTTP Status 200
 $bypass->addRoute(method: 'GET', uri: '/v1/demo/john', status: 200, body: $body);
@@ -196,7 +196,7 @@ Example:
 
 //Create and serve routes
 $bypass = Bypass::serve(
-  Route::ok(uri: '/v1/demo/john', body: ['name' => 'John Smith', 'total' => 1250]), //method GET, status 200
+  Route::ok(uri: '/v1/demo/john', body: ['username' => 'john', 'name' => 'John Smith', 'total' => 1250]), //method GET, status 200
   Route::notFound(uri: '/v1/demo/wally') //method GET, status 404
 );
 
@@ -259,7 +259,7 @@ If you need to assert that a route is NOT being called by your service, set the 
 
 ```php
 //Json body
-$body = '{"name": "John Smith", "total": 1250}';
+$body = '{"username": "john", "name": "John Smith", "total": 1250}';
 
 //Defines a route which must be called two times
 $bypass->addRoute(method: 'GET', uri: '/v1/demo/john', status: 200, body: $body, times: 2);
