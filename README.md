@@ -215,9 +215,9 @@ $responseNotFound = $service->getTotalByUser('wally'); //404 - Not found
 
 In the example above Bypasss serves two routes: A URL accessible by method `GET` returning a JSON body with status `200`, and a second route URL accessible by method `GET` and returning status `404`.
 
-#### Available Route Helpers with `Bypass::serve()`
+#### Route Helpers
 
-| Route Helper              | Default Method | Default Status | Body                     | Common usage                      |
+| Route Helper              | Default Method | HTTP Status    | Body                     | Common usage                      |
 | :------------------------ | :------------- | :------------- | :----------------------- | :-------------------------------- |
 | **Route::ok()**           | GET            | 200            | optional (string\|array) | Request was successful            |
 | **Route::created()**      | POST           | 201            | optional (string\|array) | Response to a POST request which resulted in a creation |
