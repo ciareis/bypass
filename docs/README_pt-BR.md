@@ -44,7 +44,7 @@
     </a>
 </p>
 
-------
+-------
 
 ## Sobre
 
@@ -57,7 +57,7 @@
     </tr>
 </table>
 
-------
+-------
 
 ## Instalação
 
@@ -69,7 +69,7 @@ Para instalar o Bypass através do [composer](https://getcomposer.org), execute 
 composer require --dev ciareis/bypass
 ```
 
-------
+-------
 
 ## Escrevendo Testes
 
@@ -80,6 +80,8 @@ composer require --dev ciareis/bypass
 - [Rotas](#3-rotas)
     - [Rota Padrão](#31-rota-padrão)
     - [Rota de Arquivo](#32-rota-de-arquivo)
+    - [Método serve() do Bypass](#33-método-serve-do-bypass)
+        - [Assistentes para Rotas](#assistentes-para-rotas)
 - [Verificando se Rotas foram Chamadas](#4-verificando-se-rotas-foram-chamadas)
 - [Parar ou Encerrar](#5-interromper-ou-encerrar)
 
@@ -148,8 +150,8 @@ O método `addRoute()` aceita os seguintes parâmetros:
 | :-------- | :------- | :------------------------- |
 | **HTTP Method** | `int $method` | [Método de Requisição HTTP](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html) (GET/POST/PUT/PATCH/DELETE) |
 | **URI** | `string $uri` | URI a ser servido pelo Bypass |
-| **Status** | `int $status` | [Código de Status HTTP](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) a ser retornado pelo Bypass (default: 200) |
-| **Body** | `string\|array $body` | Corpo de texto (JSON) a ser servido pelo Bypass (opicional) |
+| **Status** | `int $status` | [Código de Status HTTP](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) a ser retornado pelo Bypass (padrão: 200) |
+| **Body** | `string\|array $body` | Corpo de texto (JSON) a ser servido pelo Bypass (opcional) |
 | **Times** | `int $times` | Quantidade de vezes em que a rota deve ser acessada (padrão: 1) |
 
 #### 3.2 Rota de Arquivo
@@ -177,9 +179,75 @@ O método `addFileRoute()` aceita os seguintes parâmetros:
 | :-------- | :------- | :------------------------- |
 | **HTTP Method** | `int $method` | [Método de Requisição HTTP](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html) (GET/POST/PUT/PATCH/DELETE) |
 | **URI** | `string $uri` | URI a ser servido pelo Bypass |
-| **Status** | `int $status` | [Código de Status HTTP](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) a ser retornado pelo Bypass (default: 200) |
+| **Status** | `int $status` | [Código de Status HTTP](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) a ser retornado pelo Bypass (padrão: 200) |
 | **File** | `binary $file` | Arquivo binário a ser servidor pelo Bypass |
-| **Times** | `int $times` | Quantidade de vezes em que a rota deve ser acessada (default: 1) |
+| **Times** | `int $times` | Quantidade de vezes em que a rota deve ser acessada (padrão: 1) |
+
+#### 3.3 Método Serve() do Bypass
+
+O Bypass vem com uma variedade de atalhos convenientes para as requisições HTTP mais utilizadas.
+
+Esses atalhos são chamados de "Métodos Assistentes para Rotas", porém para simplificar vamos chama-los apenas de "Assistentes para Rotas". Eles são servidos em uma porta aleatória e de forma automatica ao utilizarmos: `Bypass::serve()`.
+
+Ao servirmos as rotas por meio dos assistentes, não necessitamos de chamar `Bypass::open()`.
+
+Exemplo:
+
+```php
+//Criando as rotas na inicialização do servidor
+$bypass = Bypass::serve(
+    Route::ok(uri: '/v1/demo/john', body: ['username' => 'john', 'name' => 'John Smith', 'total' => 1250]), //método GET, código HTTP 200
+    Route::notFound(uri: '/v1/demo/wally') //método GET, código HTTP 404
+);
+
+//Instânciando a classe DemoService
+$service = new DemoService();
+$service->setBaseUrl($bypass->getBaseUrl());
+
+//Consumindo o serviço utilizando a rota "OK (200)"
+$responseOk = $service->getTotalByUser('john'); //200 - OK com total => 1250
+
+//Consumindo o serviço utilizando a rota "Not Found (404)"
+$responseNotFound = $service->getTotalByUser('wally'); //404 - Recurso não encontrado
+
+//Suas asserções/verificações de teste ficam aqui...
+```
+
+No exemplo acima, o Bypass está servindo duas rotas: Uma rota acessível pelo método HTTP `GET` retornando um JSON com o código HTTP `200`, e uma segunda rota sendo acessível também pelo método `GET` só que retornando apemas um código HTTP `404`.
+
+#### Assistentes para Rotas
+
+| Método Assistente         | Método HTTP    | Codigo HTTP    | Retorno                  | Uso comum                         |
+| :------------------------ | :------------- | :------------- | :----------------------- | :-------------------------------- |
+| **Route::ok()**           | GET            | 200            | opcional (string\|array) | Requisição foi bem sucedida       |
+| **Route::created()**      | POST           | 201            | opcional (string\|array) | Resposta a uma requisição em que resultou uma criação |
+| **Route::badRequest()**   | POST           | 400            | opcional (string\|array) | Algo incorreto na requisição  (ex: parâmetro errado)  |
+| **Route::unauthorized()** | GET            | 401            | opcional (string\|array) | Não autenticado                   |
+| **Route::forbidden()**    | GET            | 403            | opcional (string\|array) | Autenticado, porém tentando acessar um recurso restrito (sem permissão) |
+| **Route::notFound()**     | GET            | 404            | opcional (string\|array) | URL ou recurso não existem        |
+| **Route::notAllowed()**   | GET            | 405            | opcional (string\|array) | Método não permitido              |
+| **Route::validationFailed()** | POST       | 422            | opcional (string\|array) | Os dados enviados não satisfazem as regras de validação |
+| **Route::tooMany()**      | GET            | 429            | opcional (string\|array) | Requisição rejeitada devido a limitações do servidor    |
+| **Route::serverError()**  | GET            | 500            | opcional (string\|array) | Geralmente indica que algum erro aconteceu no lado do servidor  |
+
+Você também pode personalizar os assistentes de rotas de acordo com as suas necessidades, passando os seguintes parâmetros:
+
+| Parâmetro       | Tipo             | Descrição                                                                                                           |
+| :-------------- | :--------------- | :------------------------------------------------------------------------------------------------------------------ |
+| **URI**         | `string $uri`    | URI a ser servido pelo Bypass                                                                                          |
+| **Body**        | `string\|array $body` | Corpo de texto (JSON) a ser servido pelo Bypass (opcional)                                                                              |
+| **HTTP Method** | `string $method` | [Método de Requisição HTTP](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html) (GET/POST/PUT/PATCH/DELETE)           |
+| **Times**       | `int $times`     | Quantidade de vezes em que a rota deve ser acessada (padrão: 1)                                                              |
+
+No exemplo abaixo, você pode ver o assistente `Route::badRequest` usando o método `GET` ao invés do método `POST`.
+
+```php
+Bypass::serve(
+    Route::badRequest(uri: '/v1/users?filter=foo', body: ['error' => 'O parâmetro filter de valor foo não existe.'], method: 'GET')
+);
+```
+
+📝 Nota: Rotas personalizadas podem ser criadas usando uma [Rota Padrão](#31-rota-padrão) no caso de você necessitar de algo mais específico, não coberto pelos assistentes de rotas.
 
 ### 4. Verificando se Rotas Foram Chamadas
 
