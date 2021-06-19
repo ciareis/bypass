@@ -129,7 +129,7 @@ Ao executar seus testes, você informará as rotas do Bypass para o seu aplicati
 
 ```php
 //Corpo de texto em formato JSON
-$body = '{"name": "John", "total": 1250}';
+$body = '{"username": "john", "name": "John Smith", "total": 1250}';
 
 //Define uma rota que deverá retornar um corpo de texto (JSON) e o código HTTP 200
 $bypass->addRoute(method: 'get', uri: '/v1/demo', status: 200, body: $body);
@@ -259,7 +259,7 @@ Se você precisa garantir que uma rota não está sendo acessada pelo seu servi�
 
 ```php
 //Corpo de texto em formato JSON
-$body = '{"name": "John", "total": 1250}';
+$body = '{"username": "john", "name": "John Smith", "total": 1250}';
 
 //Define uma rota que deve ser acessada duas vezes
 $bypass->addRoute(method: 'get', uri: '/v1/demo', status: 200, body: $body, times: 2);
