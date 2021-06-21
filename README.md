@@ -44,7 +44,7 @@
     </a>
 </p>
 
-------
+-------
 
 ## About
 
@@ -57,7 +57,7 @@
   </tr>
 </table>
 
-------
+-------
 
 ## Installation
 
@@ -69,23 +69,24 @@ To install via [composer](https://getcomposer.org), run the following command:
 composer require --dev ciareis/bypass
 ```
 
-------
+-------
 
 ## Writing Tests
 
 ### Content
 
-- [Open Bypass](#1-open-a-bypass-service)
-- [Retrieve Bypass URL](#2-bypass-url-and-port)
+- [Open Bypass Server](#1-open-a-bypass-server)
+- [Bypass URL and Port](#2-bypass-url-and-port)
 - [Routes](#3-routes)
     - [Standard Route](#31-standard-route)
     - [File Route](#32-file-route)
+    - [Bypass Serve and Route Helpers](#33-bypass-serve-and-route-helpers)
 - [Assert Route](#4-asserting-route-calling)
 - [Stop or shut down](#5-stop-or-shut-down)
 
 📝 Note: If you wish to view full codes, head to the [Examples](#examples) section.
 
-### 1. Open a Bypass Service
+### 1. Open a Bypass Server
 
 To write a test, first open a Bypass server:
 
@@ -127,30 +128,30 @@ When running your tests, you will inform Bypass routes to Application or Service
 
 ```php
 //Json body
-$body = '{"name": "John", "total": 1250}';
+$body = '{"username": "john", "name": "John Smith", "total": 1250}';
 
 //Route retuning the JSON body with HTTP Status 200
-$bypass->addRoute(method: 'get', uri: '/v1/demo', status: 200, body: $body);
+$bypass->addRoute(method: 'GET', uri: '/v1/demo/john', status: 200, body: $body);
 
 //Instantiates a DemoService class
 $service = new DemoService();
 
 //Consumes the service using the Bypass URL
 $response = $service->setBaseUrl($bypass->getBaseUrl())
-  ->getTotal();
+  ->getTotalByUser('john');
 
 //Your test assertions here...
 ```
 
 The method `addRoute()` accepts the following parameters:
 
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| **HTTP Method** | `int $method` | [HTTP Request Method](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html) (GET/POST/PUT/PATCH/DELETE) |
-| **URI** | `string $uri` | URI to be served by Bypass |
-| **Status** | `int $status` | [HTTP Status Code](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html)  to be returned by Bypass (default: 200) |
-| **Body** | `string\|array $body` | Body to be served by Bypass (optional) |
-| **Times** | `int $times` | How many times the route should be called (default: 1) |
+| Parameter       | Type                  | Description                                                                                                         |
+| :-------------- | :-------------------- | :------------------------------------------------------------------------------------------------------------------ |
+| **HTTP Method** | `string $method`      | [HTTP Request Method](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html) (GET/POST/PUT/PATCH/DELETE)           |
+| **URI**         | `string $uri`         | URI to be served by Bypass                                                                                          |
+| **Status**      | `int $status`         | [HTTP Status Code](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) to be returned by Bypass (default: 200) |
+| **Body**        | `string\|array $body` | Body to be served by Bypass (optional)                                                                              |
+| **Times**       | `int $times`          | How many times the route should be called (default: 1)                                                              |
 
 #### 3.2 File Route
 
@@ -159,7 +160,7 @@ The method `addRoute()` accepts the following parameters:
 $demoFile = \file_get_contents('storage/pdfs/demo.pdf');
 
 //File Route returning a binary file with HTTP Status 200
-$bypass->addFileRoute(method: 'get', uri: '/v1/myfile', status: 200, file: $demoFile);
+$bypass->addFileRoute(method: 'GET', uri: '/v1/myfile', status: 200, file: $demoFile);
 
 //Instantiates a DemoService class
 $service = new DemoService();
@@ -173,17 +174,84 @@ $response = $service->setBaseUrl($bypass->getBaseUrl())
 
 The method `addFileRoute()` accepts the following parameters:
 
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| **HTTP Method** | `int $method` | [HTTP Request Method](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html) (GET/POST/PUT/PATCH/DELETE) |
-| **URI** | `string $uri` | URI to be served by Bypass |
-| **Status** | `int $status` | [HTTP Status Code](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html)  to be returned by Bypass (default: 200) |
-| **File** | `binary $file` | Binary file to be served by Bypass |
-| **Times** | `int $times` | How many times the route should be called (default: 1) |
+| Parameter       | Type             | Description                                                                                                         |
+| :-------------- | :--------------- | :------------------------------------------------------------------------------------------------------------------ |
+| **HTTP Method** | `string $method` | [HTTP Request Method](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html) (GET/POST/PUT/PATCH/DELETE)           |
+| **URI**         | `string $uri`    | URI to be served by Bypass                                                                                          |
+| **Status**      | `int $status`    | [HTTP Status Code](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) to be returned by Bypass (default: 200) |
+| **File**        | `binary $file`   | Binary file to be served by Bypass                                                                                  |
+| **Times**       | `int $times`     | How many times the route should be called (default: 1)                                                              |
+
+#### 3.3 Bypass Serve and Route Helpers
+
+Bypass comes with a variety of convenient shortcuts to the most-common-used HTTP requests.
+
+These shortcuts are called "Route Helpers" and are served automatically at a random port using `Bypass::serve()`.
+
+When serving Route Helpers, there is no need to call `Bypass::open()`.
+
+Example:
+
+```php
+
+//Create and serve routes
+$bypass = Bypass::serve(
+  Route::ok(uri: '/v1/demo/john', body: ['username' => 'john', 'name' => 'John Smith', 'total' => 1250]), //method GET, status 200
+  Route::notFound(uri: '/v1/demo/wally') //method GET, status 404
+);
+
+//Instantiates a DemoService class
+$service = new DemoService();
+$service->setBaseUrl($bypass->getBaseUrl());
+
+//Consumes the "OK (200)" route
+$responseOk = $service->getTotalByUser('john'); //200 - OK with total => 1250
+
+//Consumes the "Not Found (404)" route
+$responseNotFound = $service->getTotalByUser('wally'); //404 - Not found
+
+//Your test assertions here...
+```
+
+In the example above Bypasss serves two routes: A URL accessible by method `GET` returning a JSON body with status `200`, and a second route URL accessible by method `GET` and returning status `404`.
+
+#### Route Helpers
+
+| Route Helper              | Default Method | HTTP Status    | Body                     | Common usage                      |
+| :------------------------ | :------------- | :------------- | :----------------------- | :-------------------------------- |
+| **Route::ok()**           | GET            | 200            | optional (string\|array) | Request was successful            |
+| **Route::created()**      | POST           | 201            | optional (string\|array) | Response to a POST request which resulted in a creation |
+| **Route::badRequest()**   | POST           | 400            | optional (string\|array) | Something can't be parsed (ex: wrong parameter) |
+| **Route::unauthorized()** | GET            | 401            | optional (string\|array) | Not logged in                     |
+| **Route::forbidden()**    | GET            | 403            | optional (string\|array) | Logged in but trying to request a restricted resource (without permission) |
+| **Route::notFound()**     | GET            | 404            | optional (string\|array) | URL or resource does not exist    |
+| **Route::notAllowed()**   | GET            | 405            | optional (string\|array) | Method not allowed                |
+| **Route::validationFailed()** | POST       | 422            | optional (string\|array) | Data sent does not satisfy validation rules |
+| **Route::tooMany()**      | GET            | 429            | optional (string\|array) | Request rejected due to server limitation |
+| **Route::serverError()**  | GET            | 500            | optional (string\|array) | General indication that something is wrong on the server side |
+
+You may also adjust the helpers to your needs by passing parameters:
+  
+| Parameter       | Type             | Description                                                                                                         |
+| :-------------- | :--------------- | :------------------------------------------------------------------------------------------------------------------ |
+| **URI**         | `string $uri`    | URI to be served by Bypass                                                                                          |
+| **Body**        | `string\|array $body` | Body to be served by Bypass (optional)                                                                              |
+| **HTTP Method** | `string $method` | [HTTP Request Method](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html) (GET/POST/PUT/PATCH/DELETE)           |
+| **Times**       | `int $times`     | How many times the route should be called (default: 1)                                                              |
+
+In the example below, you can see the Helper `Route::badRequest` using method `GET` instead of its default method `POST`.
+
+```php
+Bypass::serve(
+  Route::badRequest(uri: '/v1/users?filter=foo', body: ['error' => 'Filter parameter foo is not allowed.'], method: 'GET')
+);
+```
+
+📝 Note: Custom routes can be created using a [Standard Route](#31-standard-route) in case something you need is not covered by the Helpers.
 
 ### 4. Asserting Route Calling
 
-You might need to assert that a route was called at least one or multiple times.
+You may need to assert that a route was called at least one or multiple times.
 
 The method `assertRoutes()` will return a `RouteNotCalledException` if a route was NOT called as many times as defined in the `$times` parameter.
 
@@ -191,17 +259,17 @@ If you need to assert that a route is NOT being called by your service, set the 
 
 ```php
 //Json body
-$body = '{"name": "John", "total": 1250}';
+$body = '{"username": "john", "name": "John Smith", "total": 1250}';
 
 //Defines a route which must be called two times
-$bypass->addRoute(method: 'get', uri: '/v1/demo', status: 200, body: $body, times: 2);
+$bypass->addRoute(method: 'GET', uri: '/v1/demo/john', status: 200, body: $body, times: 2);
 
 //Instantiates a DemoService class
 $service = new DemoService();
 
 //Consumes the service using the Bypass URL
 $response = $service->setBaseUrl($bypass->getBaseUrl())
-  ->getTotal();
+  ->getTotalByUser('john');
 
 $bypass->assertRoutes();
 
@@ -254,8 +322,8 @@ $bypassUrl = $bypass->getBaseUrl();
 $body = '{"games":[{"id":1, "name":"game 1","points":25},{"id":2, "name":"game 2","points":10}],"is_active":true}';
 
 //Defines a route
-$bypass->addRoute(method: 'get', uri: '/v1/score/johndoe', status: 200, body: $body);
-    
+$bypass->addRoute(method: 'GET', uri: '/v1/score/johndoe', status: 200, body: $body);
+
 //Instantiates a TotalScoreService
 $service = new TotalScoreService();
 
@@ -287,7 +355,7 @@ it('properly returns the total score by username', function () {
   $body = '{"games":[{"id":1, "name":"game 1","points":25},{"id":2, "name":"game 2","points":10}],"is_active":true}';
 
   //Defines a route
-  $bypass->addRoute(method: 'get', uri: '/v1/score/johndoe', status: 200, body: $body);
+  $bypass->addRoute(method: 'GET', uri: '/v1/score/johndoe', status: 200, body: $body);
 
   //Instantiates and consumes the service using the Bypass URL
   $service = new TotalScoreService();
@@ -309,7 +377,7 @@ it('properly gets the logo', function () {
   $file = \file_get_contents($filePath);
 
   //Defines a route
-  $bypass->addFileRoute(method: 'get', uri: $filePath, status: 200, file: $file);
+  $bypass->addFileRoute(method: 'GET', uri: $filePath, status: 200, file: $file);
 
   //Instantiates and consumes the service using the Bypass URL
   $service = new LogoService();
@@ -332,20 +400,20 @@ class BypassTest extends TestCase
   {
     //Opens a new Bypass server
     $bypass = Bypass::open();
-    
+
     //Json body
     $body = '{"games":[{"id":1,"name":"game 1","points":25},{"id":2,"name":"game 2","points":10}],"is_active":true}';
 
     //Defines a route
-    $bypass->addRoute(method: 'get', uri: '/v1/score/johndoe', status: 200, body: $body);
+    $bypass->addRoute(method: 'GET', uri: '/v1/score/johndoe', status: 200, body: $body);
 
     //Instantiates and consumes the service using the Bypass URL
     $service = new TotalScoreService();
     $response = $service
       ->setBaseUrl($bypass->getBaseUrl())
       ->getTotalScoreByUsername('johndoe');
-    
-    //Verifies that response is 35 
+
+    //Verifies that response is 35
     $this->assertSame(35, $response);
   }
 
@@ -359,7 +427,7 @@ class BypassTest extends TestCase
     $file = \file_get_contents($filePath);
 
     //Defines a route
-    $bypass->addFileRoute(method: 'get', uri: $filePath, status: 200, file: $file);
+    $bypass->addFileRoute(method: 'GET', uri: $filePath, status: 200, file: $file);
 
     //Instantiates and consumes the service using the Bypass URL
     $service = new LogoService();
@@ -376,7 +444,6 @@ class BypassTest extends TestCase
 ### Test Examples
 
 📚 See Bypass being used in complete tests with [Pest PHP](https://github.com/ciareis/bypass/blob/main/tests/BypassPestTest.php) and [PHPUnit](https://github.com/ciareis/bypass/blob/main/tests/BypassPhpUnitTest.php) for the [GithubRepoService](https://github.com/ciareis/bypass/blob/main/tests/Services/GithubRepoService.php) demo service.
-
 
 ## Credits
 
