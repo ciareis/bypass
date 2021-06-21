@@ -127,6 +127,8 @@ When running your tests, you will inform Bypass routes to Application or Service
 #### 3.1 Standard Route
 
 ```php
+use Ciareis\Bypass\Bypass;
+
 //Json body
 $body = '{"username": "john", "name": "John Smith", "total": 1250}';
 
@@ -156,6 +158,8 @@ The method `addRoute()` accepts the following parameters:
 #### 3.2 File Route
 
 ```php
+use Ciareis\Bypass\Bypass;
+
 //Reads a PDF file
 $demoFile = \file_get_contents('storage/pdfs/demo.pdf');
 
@@ -193,6 +197,8 @@ When serving Route Helpers, there is no need to call `Bypass::open()`.
 Example:
 
 ```php
+use Ciareis\Bypass\Bypass;
+use Ciareis\Bypass\Route;
 
 //Create and serve routes
 $bypass = Bypass::serve(
@@ -242,6 +248,9 @@ You may also adjust the helpers to your needs by passing parameters:
 In the example below, you can see the Helper `Route::badRequest` using method `GET` instead of its default method `POST`.
 
 ```php
+use Ciareis\Bypass\Bypass;
+use Ciareis\Bypass\Route;
+
 Bypass::serve(
   Route::badRequest(uri: '/v1/users?filter=foo', body: ['error' => 'Filter parameter foo is not allowed.'], method: 'GET')
 );
@@ -312,6 +321,8 @@ To get the score is obtained making external request to a fictitious API at `emt
 ```
 
 ```php
+use Ciareis\Bypass\Bypass;
+
 //Opens a new Bypass server
 $bypass = Bypass::open();
 
@@ -346,6 +357,9 @@ Click below to see code snippets for [Pest PHP](https://pestphp.com) and PHPUnit
 <details><summary>Pest PHP</summary>
 
 ```php
+use Ciareis\Bypass\Bypass;
+
+
 it('properly returns the total score by username', function () {
 
   //Opens a new Bypass server
@@ -394,6 +408,9 @@ it('properly gets the logo', function () {
 <details><summary>PHPUnit</summary>
 
 ```php
+use Ciareis\Bypass\Bypass;
+
+
 class BypassTest extends TestCase
 {
   public function test_total_score_by_username(): void

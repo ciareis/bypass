@@ -128,6 +128,8 @@ Ao executar seus testes, você informará as rotas do Bypass para o seu aplicati
 #### 3.1 Rota Padrão
 
 ```php
+use Ciareis\Bypass\Bypass;
+
 //Corpo de texto em formato JSON
 $body = '{"username": "john", "name": "John Smith", "total": 1250}';
 
@@ -157,6 +159,8 @@ O método `addRoute()` aceita os seguintes parâmetros:
 #### 3.2 Rota de Arquivo
 
 ```php
+use Ciareis\Bypass\Bypass;
+
 //Lendo um arquivo PDF
 $demoFile = \file_get_contents('storage/pdfs/demo.pdf');
 
@@ -194,6 +198,9 @@ Ao servirmos as rotas por meio dos assistentes, não necessitamos de chamar `Byp
 Exemplo:
 
 ```php
+use Ciareis\Bypass\Bypass;
+use Ciareis\Bypass\Route;
+
 //Criando as rotas na inicialização do servidor
 $bypass = Bypass::serve(
     Route::ok(uri: '/v1/demo/john', body: ['username' => 'john', 'name' => 'John Smith', 'total' => 1250]), //método GET, código HTTP 200
@@ -242,6 +249,9 @@ Você também pode personalizar os assistentes de rotas de acordo com as suas ne
 No exemplo abaixo, você pode ver o assistente `Route::badRequest` usando o método `GET` ao invés do método `POST`.
 
 ```php
+use Ciareis\Bypass\Bypass;
+use Ciareis\Bypass\Route;
+
 Bypass::serve(
     Route::badRequest(uri: '/v1/users?filter=foo', body: ['error' => 'O parâmetro filter de valor foo não existe.'], method: 'GET')
 );
@@ -312,6 +322,8 @@ Para obter a pontuação, este serviço deve consumir uma API fictícia hospedad
 ```
 
 ```php
+use Ciareis\Bypass\Bypass;
+
 //Abre uma nova instância do Bypass Server
 $bypass = Bypass::open();
 
@@ -346,6 +358,8 @@ Clique abaixo para visualizar trechos de códigos utilizando [Pest PHP](https://
 <details><summary>Pest PHP</summary>
 
 ```php
+use Ciareis\Bypass\Bypass;
+
 it('properly returns the total score by username', function () {
 
     //Abre uma nova instância do Bypass Server
@@ -394,6 +408,8 @@ it('properly gets the logo', function () {
 <details><summary>PHPUnit</summary>
 
 ```php
+use Ciareis\Bypass\Bypass;
+
 class BypassTest extends TestCase
 {
     public function test_total_score_by_username(): void
