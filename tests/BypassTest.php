@@ -2,6 +2,7 @@
 
 use Ciareis\Bypass\Bypass;
 use Ciareis\Bypass\Route;
+use Ciareis\Bypass\RouteNotCalledException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\RequestException;
 
@@ -25,7 +26,7 @@ test('Route::ok returns 200 + body', function () {
     );
 
     $response = Http::get($bypass . $uri);
-    
+
     expect($response->json())->name->toBe('Leandro Henrique');
     expect($response->status())->toBeInt()->ToBe(200);
     expect($response->successful())->toBeTrue();
@@ -41,7 +42,7 @@ test('Route::created returns 201 + body', function () {
     );
 
     $response = Http::post($bypass . $uri);
-    
+
     expect($response->json())->result->toBe('User successfully created');
 
     expect($response->status())->toBeInt()->ToBe(201);
@@ -60,7 +61,7 @@ test('Route::badRequest returns 400 + body', function () {
     $response = Http::get($bypass . $uri);
     expect($response->json())
         ->error->toBe('Filter parameter foo does not exist.');
-    
+
     $response->throw();
 })->throws(RequestException::class, 'HTTP request returned status code 400');
 
@@ -153,3 +154,59 @@ test('Route::validationFailed returns 422 + body', function () {
 
     $request->throw();
 })->throws(RequestException::class, 'HTTP request returned status code 422');
+
+test("Bypass->assertRotues no called /v1/login when it is first argument", function () {
+    $body = "teste";
+    $bypass = Bypass::serve(
+        Route::ok(uri: '/v1/phone/teste', body: $body),
+        Route::notFound(uri: '/v1/login', body: ['fruta' => 'banana']),
+    );
+
+    $response = Http::get($bypass->getBaseUrl('/v1/phone/teste'));
+
+    expect($response->body())->toEqual($body);
+
+    $bypass->assertRoutes();
+})->throws(RouteNotCalledException::class, "Bypass expected route '/v1/login' with method 'GET' to be called 1 times(s). Found 0 calls(s) instead.");
+
+test("Bypass->assertRotues no called /v1/login when it is second argument", function () {
+    $body = "teste";
+    $bypass = Bypass::serve(
+        Route::notFound(uri: '/v1/login', body: ['fruta' => 'banana']),
+        Route::ok(uri: '/v1/phone/teste', body: $body),
+    );
+
+    $response = Http::get($bypass->getBaseUrl('/v1/phone/teste'));
+
+    expect($response->body())->toEqual($body);
+
+    $bypass->assertRoutes();
+})->throws(RouteNotCalledException::class, "Bypass expected route '/v1/login' with method 'GET' to be called 1 times(s). Found 0 calls(s) instead.");
+
+test("Bypass->assertRotues no called /v1/phone/teste when it is first argument", function () {
+    $body = ['fruta' => 'banana'];
+    $bypass = Bypass::serve(
+        Route::ok(uri: '/v1/phone/teste', body: 'teste'),
+        Route::notFound(uri: '/v1/login', body: $body),
+    );
+
+    $response = Http::get($bypass->getBaseUrl('/v1/login'));
+    expect($response->json())->toHaveKeys(['fruta']);
+    expect($response->json())->toEqual($body);
+
+    $bypass->assertRoutes();
+})->throws(RouteNotCalledException::class, "Bypass expected route '/v1/phone/teste' with method 'GET' to be called 1 times(s). Found 0 calls(s) instead.");
+
+test("Bypass->assertRotues no called /v1/phone/teste when it is second argument", function () {
+    $body = ['fruta' => 'banana'];
+    $bypass = Bypass::serve(
+        Route::notFound(uri: '/v1/login', body: $body),
+        Route::ok(uri: '/v1/phone/teste', body: 'teste'),
+    );
+
+    $response = Http::get($bypass->getBaseUrl('/v1/login'));
+    expect($response->json())->toHaveKeys(['fruta']);
+    expect($response->json())->toEqual($body);
+
+    $bypass->assertRoutes();
+})->throws(RouteNotCalledException::class, "Bypass expected route '/v1/phone/teste' with method 'GET' to be called 1 times(s). Found 0 calls(s) instead.");
