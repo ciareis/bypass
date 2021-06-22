@@ -54,7 +54,7 @@ class BypassPhpUnitTest extends TestCase
 
         // execute
         $service = new GithubRepoService();
-        $response = $service->setBaseUrl((string) $bypass)
+        $response = $service->setBaseUrl($bypass->getBaseUrl())
             ->getTotalStargazersByUser("emtudo");
 
         // asserts
@@ -71,7 +71,7 @@ class BypassPhpUnitTest extends TestCase
 
         // execute
         $service = new GithubRepoService();
-        $response = $service->setBaseUrl((string) $bypass)
+        $response = $service->setBaseUrl($bypass->getBaseUrl())
             ->getTotalStargazersByUser("emtudo");
 
         // asserts
