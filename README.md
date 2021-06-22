@@ -28,7 +28,7 @@
 
 <p align="center">
     <a href="https://github.com/ciareis/bypass/actions/workflows/php.yml">
-        <img src="https://github.com/ciareis/bypass/actions/workflows/php.yml/badge.svg?branch=main" alt="PHP Composer" style="max-width:100%;" />
+        <img src="https://github.com/ciareis/bypass/actions/workflows/php.yml/badge.svg?branch=main" alt="Tests" style="max-width:100%;" />
     </a>
     <a href="https://packagist.org/packages/ciareis/bypass" rel="nofollow">
         <img src="https://camo.githubusercontent.com/3024b39f77b85e517975221737deb700ebcdd481ede11352490b7e1fb5070563/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f762f7461672f636961726569732f627970617373" alt="GitHub tag (latest by date)" data-canonical-src="https://img.shields.io/github/v/tag/ciareis/bypass" style="max-width:100%;" />
