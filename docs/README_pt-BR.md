@@ -71,6 +71,10 @@ composer require --dev ciareis/bypass
 
 -------
 
+## Vídeo demonstrativo
+
+[Testando nota fácil.io com Laravel e Bypass: Meu próprio sandbox](https://www.youtube.com/watch?v=28ZK-T2qlOg)
+
 ## Escrevendo Testes
 
 ### Conteúdo
