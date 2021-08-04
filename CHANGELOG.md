@@ -1,6 +1,11 @@
 # Release Notes
 
-## [Unreleased](https://github.com/ciareis/bypass/compare/v0.7.0...main)
+## [Unreleased](https://github.com/ciareis/bypass/compare/v1.0.0...main)
+
+## [v1.0.0 (2021-08-04)](https://github.com/ciareis/bypass/archive/refs/tags/v1.0.0.zip)
+
+- improves doc
+- added more tests
 
 ## [v0.7.0 (2021-06-17)](https://github.com/ciareis/bypass/archive/refs/tags/v0.7.0.zip)
 
