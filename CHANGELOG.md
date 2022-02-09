@@ -1,6 +1,10 @@
 # Release Notes
 
-## [Unreleased](https://github.com/ciareis/bypass/compare/v1.0.0...main)
+## [Unreleased](https://github.com/ciareis/bypass/compare/v1.0.1...main)
+
+## [v1.0.1 (2022-02-09)](https://github.com/ciareis/bypass/archive/refs/tags/v1.0.1.zip)
+
+- added support to laravel 9
 
 ## [v1.0.0 (2021-08-04)](https://github.com/ciareis/bypass/archive/refs/tags/v1.0.0.zip)
 
