@@ -47,5 +47,10 @@
                 "Ciareis\\Bypass\\BypassServiceProvider"
             ]
         }
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     }
 }
