@@ -186,6 +186,8 @@ class Bypass
             'uri' => $uri,
             'method' => $params['method'],
             'times' => $times,
+            'status' => $params['status'],
+            'body' => $params['content'] ?? null,
         ];
 
         $response = Http::withHeaders([
