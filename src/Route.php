@@ -297,4 +297,9 @@ class Route
             times: $times
         );
     }
+
+    public function toArray()
+    {
+        return get_object_vars($this);
+    }
 }
