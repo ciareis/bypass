@@ -18,7 +18,7 @@ jobs:
       run: composer validate --strict
 
     - name: Cache Composer packages
-      id: composer-cache2
+      id: composer-cache
       uses: actions/cache@v2
       with:
         path: vendor
@@ -29,4 +29,4 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
     - name: tests
-      run: vendor/bin/pest -p --colors=always --compact
+      run: vendor/bin/pest
