@@ -44,7 +44,7 @@
     </a>
 </p>
 
--------
+---
 
 ## About
 
@@ -52,12 +52,13 @@
   <tr>
     <td>
       <p>Bypass for PHP provides a quick way to create a custom HTTP Server to return predefined responses to client requests.</p>
-      <p>This is useful in tests when your application make requests to external services, and you need to simulate different situations like returning specific data or unexpected server errors.</p>
+      <p>This is useful in tests when your application makes requests to external services, and you need to simulate different situations like returning specific data or unexpected server errors.</p>
+      <p>Just open a Bypass server and configure your application/service to reach Bypass instead of the real-world API end point.</p>
     </td>
   </tr>
 </table>
 
--------
+---
 
 ## Installation
 
@@ -69,7 +70,7 @@ To install via [composer](https://getcomposer.org), run the following command:
 composer require --dev ciareis/bypass
 ```
 
--------
+---
 
 ## Video demo
 
@@ -82,35 +83,35 @@ composer require --dev ciareis/bypass
 - [Open Bypass Server](#1-open-a-bypass-server)
 - [Bypass URL and Port](#2-bypass-url-and-port)
 - [Routes](#3-routes)
-    - [Standard Route](#31-standard-route)
-    - [File Route](#32-file-route)
-    - [Bypass Serve and Route Helpers](#33-bypass-serve-and-route-helpers)
+  - [Standard Route](#31-standard-route)
+  - [File Route](#32-file-route)
+  - [Bypass Serve and Route Helpers](#33-bypass-serve-and-route-helpers)
 - [Assert Route](#4-asserting-route-calling)
 - [Stop or shut down](#5-stop-or-shut-down)
 
-📝 Note: If you wish to view full codes, head to the [Examples](#examples) section.
+🔥 Check out full code examples [here](#examples) section.
 
 ### 1. Open a Bypass Server
 
 To write a test, first open a Bypass server:
 
 ```php
-//Opens a new Bypass server
+//Open a new Bypass server
 $bypass = Bypass::open();
 ```
 
 Bypass will always run at `http://localhost` listening to a random port number.
 
-If needed, a port can be specified passing it as an argument `(int) $port`:
+To specify a custom port, just pass it in the argument `(int) $port`.
 
 ```php
-//Opens a new Bypass using port 8081
+//Open a new Bypass using port 8081
 $bypass = Bypass::open(8081);
 ```
 
 ### 2. Bypass URL and Port
 
-The Bypass server URL can be retrieved with `getBaseUrl()`:
+You can retrieve the Bypass server URL using `getBaseUrl()`.
 
 ```php
 $bypassUrl = $bypass->getBaseUrl(); //http://localhost:16819
@@ -124,9 +125,9 @@ $bypassPort = $bypass->getPort(); //16819
 
 ### 3. Routes
 
-Bypass serves two types of routes: The `Standard Route`, which can return a text body content and the `File Route`, which returns a binary file.
+Bypass provides two types of routes: The `Standard Route` to return a text body content and the `File Route`, which returns a binary file.
 
-When running your tests, you will inform Bypass routes to Application or Service, making it access Bypass URLs instead of the real-world URLs.
+When running your test suit, you should pass the URL created with Bypass to your service. In this way, you will make the service you are testing reach Bypass instead of reaching the real-world API end point.
 
 #### 3.1 Standard Route
 
@@ -142,7 +143,7 @@ $bypass->addRoute(method: 'GET', uri: '/v1/demo/john', status: 200, body: $body)
 //Instantiates a DemoService class
 $service = new DemoService();
 
-//Consumes the service using the Bypass URL
+//Configure your service to access Bypass URL
 $response = $service->setBaseUrl($bypass->getBaseUrl())
   ->getTotalByUser('john');
 
@@ -173,7 +174,7 @@ $bypass->addFileRoute(method: 'GET', uri: '/v1/myfile', status: 200, file: $demo
 //Instantiates a DemoService class
 $service = new DemoService();
 
-//Consumes the service using the Bypass URL
+//Configure your service to access Bypass URL
 $response = $service->setBaseUrl($bypass->getBaseUrl())
   ->getPdf();
 
@@ -192,13 +193,11 @@ The method `addFileRoute()` accepts the following parameters:
 
 #### 3.3 Bypass Serve and Route Helpers
 
-Bypass comes with a variety of convenient shortcuts to the most-common-used HTTP requests.
+Bypass provides you with convenient shortcuts to the most-common-used HTTP requests.
 
-These shortcuts are called "Route Helpers" and are served automatically at a random port using `Bypass::serve()`.
+These shortcuts are called "Route Helpers" and are served automatically at a random port using `Bypass::serve()` without the need to call `Bypass::open()`.
 
-When serving Route Helpers, there is no need to call `Bypass::open()`.
-
-Example:
+In the next example, Bypasss serves two routes: A URL accessible by method `GET` returning a JSON body with status `200`, and a second route URL accessible by method `GET` and returning status `404`.
 
 ```php
 use Ciareis\Bypass\Bypass;
@@ -223,31 +222,31 @@ $responseNotFound = $service->getTotalByUser('wally'); //404 - Not found
 //Your test assertions here...
 ```
 
-In the example above Bypasss serves two routes: A URL accessible by method `GET` returning a JSON body with status `200`, and a second route URL accessible by method `GET` and returning status `404`.
-
 #### Route Helpers
 
-| Route Helper              | Default Method | HTTP Status    | Body                     | Common usage                      |
-| :------------------------ | :------------- | :------------- | :----------------------- | :-------------------------------- |
-| **Route::ok()**           | GET            | 200            | optional (string\|array) | Request was successful            |
-| **Route::created()**      | POST           | 201            | optional (string\|array) | Response to a POST request which resulted in a creation |
-| **Route::badRequest()**   | POST           | 400            | optional (string\|array) | Something can't be parsed (ex: wrong parameter) |
-| **Route::unauthorized()** | GET            | 401            | optional (string\|array) | Not logged in                     |
-| **Route::forbidden()**    | GET            | 403            | optional (string\|array) | Logged in but trying to request a restricted resource (without permission) |
-| **Route::notFound()**     | GET            | 404            | optional (string\|array) | URL or resource does not exist    |
-| **Route::notAllowed()**   | GET            | 405            | optional (string\|array) | Method not allowed                |
-| **Route::validationFailed()** | POST       | 422            | optional (string\|array) | Data sent does not satisfy validation rules |
-| **Route::tooMany()**      | GET            | 429            | optional (string\|array) | Request rejected due to server limitation |
-| **Route::serverError()**  | GET            | 500            | optional (string\|array) | General indication that something is wrong on the server side |
+You may find below the list of Route Helpers.
 
-You may also adjust the helpers to your needs by passing parameters:
-  
-| Parameter       | Type             | Description                                                                                                         |
-| :-------------- | :--------------- | :------------------------------------------------------------------------------------------------------------------ |
-| **URI**         | `string $uri`    | URI to be served by Bypass                                                                                          |
-| **Body**        | `string\|array $body` | Body to be served by Bypass (optional)                                                                              |
-| **HTTP Method** | `string $method` | [HTTP Request Method](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html) (GET/POST/PUT/PATCH/DELETE)           |
-| **Times**       | `int $times`     | How many times the route should be called (default: 1)                                                              |
+| Route Helper                  | Default Method | HTTP Status | Body                     | Common usage                                                               |
+| :---------------------------- | :------------- | :---------- | :----------------------- | :------------------------------------------------------------------------- |
+| **Route::ok()**               | GET            | 200         | optional (string\|array) | Request was successful                                                     |
+| **Route::created()**          | POST           | 201         | optional (string\|array) | Response to a POST request which resulted in a creation                    |
+| **Route::badRequest()**       | POST           | 400         | optional (string\|array) | Something can't be parsed (ex: wrong parameter)                            |
+| **Route::unauthorized()**     | GET            | 401         | optional (string\|array) | Not logged in                                                              |
+| **Route::forbidden()**        | GET            | 403         | optional (string\|array) | Logged in but trying to request a restricted resource (without permission) |
+| **Route::notFound()**         | GET            | 404         | optional (string\|array) | URL or resource does not exist                                             |
+| **Route::notAllowed()**       | GET            | 405         | optional (string\|array) | Method not allowed                                                         |
+| **Route::validationFailed()** | POST           | 422         | optional (string\|array) | Data sent does not satisfy validation rules                                |
+| **Route::tooMany()**          | GET            | 429         | optional (string\|array) | Request rejected due to server limitation                                  |
+| **Route::serverError()**      | GET            | 500         | optional (string\|array) | General indication that something is wrong on the server side              |
+
+You may also adjust the helpers to your needs by passing arguments:
+
+| Parameter       | Type                  | Description                                                                                               |
+| :-------------- | :-------------------- | :-------------------------------------------------------------------------------------------------------- |
+| **URI**         | `string $uri`         | URI to be served by Bypass                                                                                |
+| **Body**        | `string\|array $body` | Body to be served by Bypass (optional)                                                                    |
+| **HTTP Method** | `string $method`      | [HTTP Request Method](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html) (GET/POST/PUT/PATCH/DELETE) |
+| **Times**       | `int $times`          | How many times the route should be called (default: 1)                                                    |
 
 In the example below, you can see the Helper `Route::badRequest` using method `GET` instead of its default method `POST`.
 
@@ -264,7 +263,7 @@ Bypass::serve(
 
 ### 4. Asserting Route Calling
 
-You may need to assert that a route was called at least one or multiple times.
+Sometimes you may need to assert that a route was called at least one or multiple times.
 
 The method `assertRoutes()` will return a `RouteNotCalledException` if a route was NOT called as many times as defined in the `$times` parameter.
 
@@ -305,8 +304,9 @@ To shut down:
 
 ### Use case
 
-To better illustrate Bypass usage, imagine you need to write a test for a service called `TotalScoreService`. This service calculates the total game score of a given username.
-To get the score is obtained making external request to a fictitious API at `emtudo-games.com/v1/score/::USERNAME::`. The API returns HTTP Status `200` and a JSON body with a list of games:
+To better illustrate Bypass usage, imagine you have to write a test for a service that calculates the total game score of a given username.
+
+The score is obtained by making an external request to a fictitious API at `emtudo-games.com/v1/score/::USERNAME::`. The API returns HTTP Status `200` and a JSON body with a list of games:
 
 ```json
 {
@@ -342,15 +342,15 @@ $bypass->addRoute(method: 'GET', uri: '/v1/score/johndoe', status: 200, body: $b
 //Instantiates a TotalScoreService
 $service = new TotalScoreService();
 
-//Consumes the service using the Bypass URL
+//Configure your service to access Bypass URL
 $response = $serivce
   ->setBaseUrl($bypassUrl) // set the URL to the Bypass URL
   ->getTotalScoreByUsername('johndoe'); //returns 35
 
-//Pest PHP verify that response is 35
+//Pest PHP verifies that response is 35
 expect($response)->toBe(35);
 
-//PHPUnit verify that response is 35
+//PHPUnit verifies that response is 35
 $this->assertSame($response, 35);
 ```
 
@@ -375,7 +375,7 @@ it('properly returns the total score by username', function () {
   //Defines a route
   $bypass->addRoute(method: 'GET', uri: '/v1/score/johndoe', status: 200, body: $body);
 
-  //Instantiates and consumes the service using the Bypass URL
+  //Configure your service to access Bypass URL
   $service = new TotalScoreService();
   $response = $service
     ->setBaseUrl($bypass->getBaseUrl())
@@ -397,7 +397,7 @@ it('properly gets the logo', function () {
   //Defines a route
   $bypass->addFileRoute(method: 'GET', uri: $filePath, status: 200, file: $file);
 
-  //Instantiates and consumes the service using the Bypass URL
+  //Configure your service to access Bypass URL
   $service = new LogoService();
   $response = $service->setBaseUrl($bypass->getBaseUrl())
     ->getLogo();
@@ -428,7 +428,7 @@ class BypassTest extends TestCase
     //Defines a route
     $bypass->addRoute(method: 'GET', uri: '/v1/score/johndoe', status: 200, body: $body);
 
-    //Instantiates and consumes the service using the Bypass URL
+    //Configure your service to access Bypass URL
     $service = new TotalScoreService();
     $response = $service
       ->setBaseUrl($bypass->getBaseUrl())
@@ -450,7 +450,7 @@ class BypassTest extends TestCase
     //Defines a route
     $bypass->addFileRoute(method: 'GET', uri: $filePath, status: 200, file: $file);
 
-    //Instantiates and consumes the service using the Bypass URL
+    //Configure your service to access Bypass URL
     $service = new LogoService();
     $response = $service->setBaseUrl($bypass->getBaseUrl())
       ->getLogo();
