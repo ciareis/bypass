@@ -24,7 +24,7 @@ function getSessionName()
     return sys_get_temp_dir() . DIRECTORY_SEPARATOR . "session_name_{$_SERVER['SERVER_PORT']}";
 }
 
-function getRoute(string $route, string $method = null)
+function getRoute(string $route, ?string $method = null)
 {
     $file = getFilename($route, $method);
 
