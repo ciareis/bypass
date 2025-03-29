@@ -3,7 +3,6 @@
 namespace Ciareis\Bypass;
 
 use RuntimeException;
-use Symfony\Component\Process\Process;
 
 class Bypass
 {
