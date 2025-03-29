@@ -109,14 +109,12 @@ class Bypass
             $port,
             escapeshellarg(__DIR__ . DIRECTORY_SEPARATOR . 'server.php')
         );
-    
         $descriptors = [
             0 => ['pipe', 'r'],
             1 => ['pipe', 'w'],
             2 => ['pipe', 'w'],
         ];
         $this->process = proc_open($command, $descriptors, $pipes);
-    
         if (!is_resource($this->process)) {
             throw new RuntimeException('Failed to start PHP built-in server.');
         }
@@ -159,14 +157,11 @@ class Bypass
         register_shutdown_function(function () use ($wrapper_pid) {
             if ($wrapper_pid) {
                 if (stripos(PHP_OS_FAMILY, 'Windows') !== false) {
-                    // Windows já trata inexistência com /F /T
                     exec("taskkill /F /T /PID {$wrapper_pid} >nul 2>&1");
                 } else {
-                    // Verifica se o wrapper ainda existe antes de matar
                     exec("ps -p {$wrapper_pid}", $output, $code);
         
                     if ($code === 0) {
-                        // Mata filhos
                         exec("pgrep -P {$wrapper_pid}", $child_pids);
                         foreach ($child_pids as $pid) {
                             if ($pid) {
@@ -174,13 +169,11 @@ class Bypass
                             }
                         }
         
-                        // Mata o próprio wrapper
                         exec("kill -9 {$wrapper_pid} > /dev/null 2>&1");
                     }
                 }
             }
         });
-        
     
         return $this;
     }
