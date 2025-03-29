@@ -1,6 +1,16 @@
 # Release Notes
 
-## [Unreleased](https://github.com/ciareis/bypass/compare/v1.0.1...main)
+## [Unreleased](https://github.com/ciareis/bypass/compare/v2.0.1...main)
+
+## [v2.0.1 (2025-03-20)](https://github.com/ciareis/bypass/archive/refs/tags/v2.0.1.zip)
+
+- Instead of using the Laravel Http facade, this PR uses PHP's file_get_contents() with the HTTP stream wrapper and a stream context to make requests to the local test server.
+
+thanks for @ramsey
+
+## [v2.0.0 (2025-02-10)](https://github.com/ciareis/bypass/archive/refs/tags/v2.0.0.zip)
+
+- added support to laravel 12
 
 ## [v1.0.1 (2022-02-09)](https://github.com/ciareis/bypass/archive/refs/tags/v1.0.1.zip)
 
