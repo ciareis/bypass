@@ -1,8 +1,16 @@
 # Release Notes
 
-## [Unreleased](https://github.com/ciareis/bypass/compare/v2.0.1...main)
+## [Unreleased](https://github.com/ciareis/bypass/compare/v2.0.2...main)
 
-## [v2.0.1 (2025-03-20)](https://github.com/ciareis/bypass/archive/refs/tags/v2.0.1.zip)
+## [v2.0.2 (2025-03-29)](https://github.com/ciareis/bypass/archive/refs/tags/v2.0.2.zip)
+remove laravel depends
+
+Add .gitattributes and ignore .phpunit.cache/
+
+@ramsey
+remove Process class
+
+## [v2.0.1 (2025-03-28)](https://github.com/ciareis/bypass/archive/refs/tags/v2.0.1.zip)
 
 - Instead of using the Laravel Http facade, this PR uses PHP's file_get_contents() with the HTTP stream wrapper and a stream context to make requests to the local test server.
 
