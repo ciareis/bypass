@@ -61,23 +61,6 @@ class BypassPhpUnitTest extends TestCase
         $this->assertSame($response, 'Server unavailable.');
     }
 
-    public function test_returns_server_down(): void
-    {
-        // prepare
-        $bypass = Bypass::open();
-        $path = '/users/emtudo/repos';
-        $bypass->addRoute(method: 'get', uri: $path, status: 503);
-        $bypass->down();
-
-        // execute
-        $service = new GithubRepoService();
-        $response = $service->setBaseUrl($bypass->getBaseUrl())
-            ->getTotalStargazersByUser("emtudo");
-
-        // asserts
-        $this->assertSame($response, 'Server down.');
-    }
-
     public function test_returns_route_not_found(): void
     {
         $bypass = Bypass::open();
@@ -102,14 +85,15 @@ class BypassPhpUnitTest extends TestCase
         $bypass->assertRoutes();
     }
 
-    public function test_returns_exceptions_when_server_down(): void
+    public function test_returns_error_500_when_server_down(): void
     {
         $bypass = Bypass::open();
         $bypass->down();
 
-        $this->expectException(\Illuminate\Http\Client\ConnectionException::class);
+        $response = Http::get($bypass->getBaseUrl('/no-route'));
 
-        Http::get($bypass->getBaseUrl('/no-route'));
+        $this->assertSame(500, $response->status());
+        $this->assertSame('Bypass route /no-route and method GET not found.', $response->body());
     }
 
     public function test_gets_logo()

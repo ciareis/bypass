@@ -2,6 +2,7 @@
 
 namespace Ciareis\Bypass;
 
+use RuntimeException;
 use Symfony\Component\Process\Process;
 
 class Bypass
@@ -63,14 +64,28 @@ class Bypass
 
     public function down(): self
     {
-        if ($this->process) {
-            $this->process->stop();
-            $this->process = null;
+        if (!is_resource($this->process)) {
+            return $this;
         }
+        $status = proc_get_status($this->process);
+        $pid = $status['pid'] ?? null;
+
+        if ($pid) {
+            if (stripos(PHP_OS_FAMILY, 'Windows') !== false) {
+                exec("taskkill /F /T /PID {$pid}");
+            } else {
+                exec("kill -9 {$pid}");
+            }
+        }
+
+        proc_terminate($this->process);
+        proc_close($this->process);
+        $this->process = null;
 
         return $this;
     }
-
+    
+    
     public function getPort(): int
     {
         return $this->port;
@@ -87,40 +102,96 @@ class Bypass
 
     public function handle(?int $port = null): self
     {
-        $params = [PHP_BINARY, '-S', "localhost:{$port}",  __DIR__ . DIRECTORY_SEPARATOR . 'server.php'];
-
-        $this->process = new Process($params);
-        $this->process->start();
-
-        // waits until the given anonymous function returns true
-        $this->process->waitUntil(
-            function ($type, $output) {
-                $pattern = '/\(.*?localhost:(?<port>\d+)\) started/';
-
-                $matches = [];
-
-                if (!preg_match($pattern, $output, $matches)) {
-                    return false;
-                }
-
-                $this->port = $matches['port'];
-
-                return true;
-            }
+        $port = $port ?? 0;
+        $command = sprintf(
+            '%s -S localhost:%d %s',
+            PHP_BINARY,
+            $port,
+            escapeshellarg(__DIR__ . DIRECTORY_SEPARATOR . 'server.php')
         );
-
-        $this->stop();
-
+    
+        $descriptors = [
+            0 => ['pipe', 'r'],
+            1 => ['pipe', 'w'],
+            2 => ['pipe', 'w'],
+        ];
+        $this->process = proc_open($command, $descriptors, $pipes);
+    
+        if (!is_resource($this->process)) {
+            throw new RuntimeException('Failed to start PHP built-in server.');
+        }
+        stream_set_blocking($pipes[2], false);
+        $buffer = '';
+        $pattern = '/Development Server \(http:\/\/localhost:(?<port>\d+)\) started/';
+        $start = time();
+        $timeout = 5;
+    
+        while (true) {
+            $chunk = fread($pipes[2], 1024);
+            if ($chunk !== false && strlen($chunk)) {
+                $buffer .= $chunk;
+                if (preg_match($pattern, $buffer, $matches)) {
+                    $this->port = (int)$matches['port'];
+                    break;
+                }
+            }
+    
+            if ((time() - $start) > $timeout) {
+                proc_terminate($this->process);
+                proc_close($this->process);
+                throw new RuntimeException("Server did not start within {$timeout} seconds.");
+            }
+    
+            usleep(50);
+        }
+    
+        // kill process
+        pcntl_async_signals(true);
+        pcntl_signal(SIGINT, fn() => $this->down());
+        pcntl_signal(SIGTERM, fn() => $this->down());
+    
+        static $process_registry = [];
+        $process_registry[] = $this->process;
+    
+        $status = proc_get_status($this->process);
+        $wrapper_pid = $status['pid'] ?? null;
+    
+        register_shutdown_function(function () use ($wrapper_pid) {
+            if ($wrapper_pid) {
+                if (stripos(PHP_OS_FAMILY, 'Windows') !== false) {
+                    // Windows já trata inexistência com /F /T
+                    exec("taskkill /F /T /PID {$wrapper_pid} >nul 2>&1");
+                } else {
+                    // Verifica se o wrapper ainda existe antes de matar
+                    exec("ps -p {$wrapper_pid}", $output, $code);
+        
+                    if ($code === 0) {
+                        // Mata filhos
+                        exec("pgrep -P {$wrapper_pid}", $child_pids);
+                        foreach ($child_pids as $pid) {
+                            if ($pid) {
+                                exec("kill -9 {$pid} > /dev/null 2>&1");
+                            }
+                        }
+        
+                        // Mata o próprio wrapper
+                        exec("kill -9 {$wrapper_pid} > /dev/null 2>&1");
+                    }
+                }
+            }
+        });
+        
+    
         return $this;
     }
-
+    
     public function addRoute(string $method, string $uri, int $status = 200, null|string|array $body = null, int $times = 1): self
     {
         $body = is_array($body) ? json_encode($body) : $body;
 
         $this->addRouteParams($uri, [
             'method' => \strtoupper($method),
-            'content' => $body,
+            'content' => $body, 
             'status' => $status,
         ], $times);
 

@@ -63,24 +63,6 @@ it('returns server unavailable', function () {
     expect($response)->toEqual('Server unavailable.');
 });
 
-it('returns server down', function () {
-    // prepare
-    $bypass = Bypass::open();
-
-    $path = '/users/emtudo/repos';
-
-    $bypass->addRoute(method: 'get', uri: $path, status: 503);
-    $bypass->down();
-
-    // execute
-    $service = new GithubRepoService();
-    $response = $service->setBaseUrl($bypass)
-      ->getTotalStargazersByUser("emtudo");
-
-    expect($response)->toEqual('Server down.');
-});
-
-
 it('returns route not found', function () {
     // prepare
     $bypass = Bypass::open();
@@ -111,13 +93,17 @@ it("properly gets the logo", function () {
     expect($response)->toEqual($file);
 });
 
-it('returns exceptions when server down', function () {
+it('returns error 500 when server down', function () {
     // prepare
     $bypass = Bypass::open();
     $bypass->down();
 
-    Http::get($bypass->getBaseUrl('/no-route'));
-})->throws(Illuminate\Http\Client\ConnectionException::class);
+    $response = Http::get($bypass->getBaseUrl('/no-route'));
+
+    // asserts
+    expect($response->status())->toEqual(500);
+    expect($response->body())->toEqual('Bypass route /no-route and method GET not found.');
+});
 
 function getBody()
 {
