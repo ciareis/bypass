@@ -2,7 +2,6 @@
 
 namespace Ciareis\Bypass;
 
-use Illuminate\Support\Facades\Http;
 use Symfony\Component\Process\Process;
 
 class Bypass
@@ -51,10 +50,13 @@ class Bypass
     {
         $url = $this->getBaseUrl("___api_faker_clear_router");
 
-        Http::withHeaders([
-            'Content-Type' => 'application/json'
-        ])
-        ->put($url, []);
+        \file_get_contents(filename: $url, context: \stream_context_create([
+            'http' => [
+                'method' => 'PUT',
+                'header' => 'Content-Type: application/json',
+                'content' => '{}'
+            ],
+        ]));
 
         return $this;
     }
@@ -150,11 +152,11 @@ class Bypass
             $method = $route['method'];
             $path = "{$url}?route={$uri}&method={$method}";
 
-            $response = Http::get($path);
+            $response = \file_get_contents($path);
 
-            $routes[$route['uri']] = $response->body();
+            $routes[$route['uri']] = $response;
 
-            $currentTimes = $response->json();
+            $currentTimes = \json_decode($response, true);
             $expectedTimes = $route['times'];
             if ($currentTimes === $expectedTimes) {
                 continue;
@@ -190,14 +192,20 @@ class Bypass
             'body' => $params['content'] ?? null,
         ];
 
-        $response = Http::withHeaders([
-            'Content-Type' => 'application/json'
-        ])
-        ->put($url, $params);
+        $response = \file_get_contents(filename: $url, context: \stream_context_create([
+            'http' => [
+                'method' => 'PUT',
+                'header' => 'Content-Type: application/json',
+                'content' => json_encode($params),
+            ],
+        ]));
+
+        \preg_match('/^HTTP\/.* (\d{3})/', $http_response_header[0] ?? '', $matches);
+        $status = $matches[1] ?? '';
 
         return [
-            'body' => $response->body(),
-            'status' => $response->status(),
+            'body' => $response,
+            'status' => $status,
         ];
     }
 
