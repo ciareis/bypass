@@ -61,7 +61,7 @@
 
 ## Instalação
 
-📌 O Bypass requer o uso do PHP 8.0 ou superior.
+📌 O Bypass requer o uso do PHP 8.2 ou superior.
 
 Para instalar o Bypass através do [composer](https://getcomposer.org), execute o seguinte comando:
 
