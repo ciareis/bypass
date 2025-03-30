@@ -1,6 +1,11 @@
 # Release Notes
 
-## [Unreleased](https://github.com/ciareis/bypass/compare/v2.1.0...main)
+## [Unreleased](https://github.com/ciareis/bypass/compare/v2.1.1...main)
+
+## [v2.1.1 (2025-03-30)](https://github.com/ciareis/bypass/archive/refs/tags/v2.1.1.zip)
+
+- refactor of routes
+- fix paramter with null
 
 ## [v2.1.0 (2025-03-29)](https://github.com/ciareis/bypass/archive/refs/tags/v2.1.0.zip)
 
