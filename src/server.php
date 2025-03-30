@@ -43,10 +43,6 @@ if ($route = currentRoute()) {
     }
 
     http_response_code($route['status']);
-    $headers = $route['headers'];
-    foreach ($headers as $name => $value) {
-        header("$name: $value");
-    }
     setRoute($route['uri'], $route['method'], $route);
 
     if (($route['file'] !== null)) {
@@ -54,6 +50,7 @@ if ($route = currentRoute()) {
 
         exit;
     }
+
     echo $route['content'];
 
     exit;
