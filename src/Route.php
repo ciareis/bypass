@@ -15,6 +15,9 @@ class Route
         public int $times = 1,
         public array $headers = [],
     ) {
+        if (!\str_starts_with($uri, '/')) {
+            $this->uri = "/{$uri}";
+        }
     }
 
     public function body(

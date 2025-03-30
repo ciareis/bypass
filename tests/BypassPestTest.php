@@ -43,7 +43,8 @@ it('returns route not called exception', function () {
 
     $bypass->addRoute(method: 'get', uri: $path, status: 503);
     $bypass->assertRoutes();
-})->throws(RouteNotCalledException::class, "Bypass expected route '/users/emtudo/repos' with method 'GET' to be called 1 times(s). Found 0 calls(s) instead.");
+})
+->throws(RouteNotCalledException::class, "Bypass expected route '/users/emtudo/repos' with method 'GET' to be called 1 times(s). Found 0 calls(s) instead.");
 
 
 it('returns server unavailable', function () {

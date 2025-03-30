@@ -180,16 +180,24 @@ class Bypass
     /**
      * @param array<string, string|string[]> $headers
      */
-    public function addRoute(string $method, string $uri, int $status = 200, null|string|array $body = null, int $times = 1, array $headers = []): self
-    {
+    public function addRoute(
+        string $method,
+        string $uri,
+        int $status = 200,
+        null|string|array $body = null,
+        int $times = 1,
+        array $headers = []
+    ): self {
         $body = is_array($body) ? json_encode($body) : $body;
 
-        $this->addRouteParams($uri, [
-            'method' => \strtoupper($method),
-            'content' => $body, 
-            'status' => $status,
-            'headers' => $headers,
-        ], $times);
+        $this->addRouteParams(new Route(
+            method: strtoupper($method),
+            uri: $uri,
+            body: $body, 
+            status: $status,
+            times: $times,
+            headers: $headers,
+        ));
 
         return $this;
     }
@@ -197,21 +205,31 @@ class Bypass
     /**
      * @param array<string, string|string[]> $headers
      */
-    public function addFileRoute(string $method, string $uri, int $status = 200, string $file = null, int $times = 1, array $headers = []): self
-    {
-        $this->addRouteParams($uri, [
-            'method' => \strtoupper($method),
-            'file' => base64_encode($file),
-            'status' => $status,
-            'headers' => $headers,
-        ], $times);
+    public function addFileRoute(
+        string $method,
+        string $uri,
+        int $status = 200,
+        ?string $file = null,
+        int $times = 1,
+        array $headers = []
+    ): self {
+        $this->addRouteParams(new RouteFile(
+            method: strtoupper($method),
+            uri: $uri,
+            file: $file,
+            status: $status,
+            times: $times,
+            headers: $headers,
+        ));
 
         return $this;
     }
 
     public function getRoutes(): array
     {
-        return $this->routes;
+        return array_map(function (Route | RouteFile $route) {
+            return $route->toArray();
+        }, $this->routes);
     }
 
     public function assertRoutes(): void
@@ -219,16 +237,14 @@ class Bypass
         $url = $this->getBaseUrl("___api_faker_router_index");
         $routes = [];
         foreach ($this->routes as $route) {
-            $uri = $route['uri'];
-            $method = $route['method'];
+            $uri = $route->uri;
+            $method = $route->method;
             $path = "{$url}?route={$uri}&method={$method}";
-
             $response = \file_get_contents($path);
-
-            $routes[$route['uri']] = $response;
+            $routes[$route->uri] = $response;
 
             $currentTimes = \json_decode($response, true);
-            $expectedTimes = $route['times'];
+            $expectedTimes = $route->times;
             if ($currentTimes === $expectedTimes) {
                 continue;
             }
@@ -237,32 +253,29 @@ class Bypass
         }
     }
 
-    public function expect(string $method, string $uri, int $status = 200, null|string|array $body = null, int $times = 1): self
-    {
-        return $this->addRoute($method, $uri, $status, $body, $times);
+    public function expect(
+        string $method,
+        string $uri,
+        int $status = 200,
+        null|string|array $body = null,
+        int $times = 1,
+        array $headers = []
+    ): self {
+        return $this->addRoute($method, $uri, $status, $body, $times, $headers);
     }
 
-    protected function addRouteParams(string $uri, array $params, int $times = 1): array
+    protected function addRouteParams(Route|RouteFile $route): array
     {
         if (!$this->port || !$this->process) {
             $this->handle();
         }
         $url = $this->getBaseUrl("___api_faker_add_router");
 
-        if (!\str_starts_with($uri, '/')) {
-            $uri = "/{$uri}";
+        $this->routes[] = $route;
+        $params = $route->toArray();
+        if ($route instanceof RouteFile) {
+            $params['file'] = base64_encode($params['file']);
         }
-
-        $params['uri'] = $uri;
-
-        $this->routes[] = [
-            'uri' => $uri,
-            'method' => $params['method'],
-            'times' => $times,
-            'status' => $params['status'],
-            'body' => $params['content'] ?? null,
-            'headers' => $params['headers'] ?? [],
-        ];
 
         $response = \file_get_contents(filename: $url, context: \stream_context_create([
             'http' => [
