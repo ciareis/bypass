@@ -38,14 +38,14 @@ function getRoute(string $route, ?string $method = null)
 function setRoute(string $route, string $method, array $value)
 {
     $file = getFilename($route, $method);
-
     $content = [
         'uri' => $route,
         'method' => $method,
         'status' => $value['status'],
         'content' => $value['content'] ?? null,
         'file' => $value['file'] ?? null,
-        'count' => isset($value['count']) ? $value['count'] + 1 : 0
+        'count' => isset($value['count']) ? $value['count'] + 1 : 0,
+        'headers' => $value['headers'] ?? [],
     ];
 
     writeFile($file, $content);

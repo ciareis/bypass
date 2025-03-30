@@ -211,7 +211,7 @@ test("Bypass->assertRotues no called /v1/phone/teste when it is second argument"
     $bypass->assertRoutes();
 })->throws(RouteNotCalledException::class, "Bypass expected route '/v1/phone/teste' with method 'GET' to be called 1 times(s). Found 0 calls(s) instead.");
 
-test("methods body, status, method", function () {
+test("methods body, status, method and headers", function () {
     // prepare
     $body = 'teste';
     $path = '/users/emtudo/repos';
@@ -231,6 +231,7 @@ test("methods body, status, method", function () {
             'status' => 404,
             'body' => $body,
             'times' => 2,
+            'headers' => []
         ]
     ]);
 });

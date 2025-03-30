@@ -52,7 +52,7 @@ class Bypass
 
         \file_get_contents(filename: $url, context: \stream_context_create([
             'http' => [
-                'method' => 'PUT',
+                'method' => 'DELETE',
                 'header' => 'Content-Type: application/json',
                 'content' => '{}'
             ],
@@ -177,25 +177,39 @@ class Bypass
         return $this;
     }
     
-    public function addRoute(string $method, string $uri, int $status = 200, null|string|array $body = null, int $times = 1): self
-    {
+    public function addRoute(
+        string $method,
+        string $uri,
+        int $status = 200,
+        null|string|array $body = null,
+        int $times = 1,
+        array $headers = []
+    ): self {
         $body = is_array($body) ? json_encode($body) : $body;
 
         $this->addRouteParams($uri, [
             'method' => \strtoupper($method),
             'content' => $body, 
             'status' => $status,
+            'headers' => $headers,
         ], $times);
 
         return $this;
     }
 
-    public function addFileRoute(string $method, string $uri, int $status = 200, string $file = null, int $times = 1): self
-    {
+    public function addFileRoute(
+        string $method,
+        string $uri,
+        int $status = 200,
+        ?string $file = null,
+        int $times = 1,
+        array $headers = []
+    ): self {
         $this->addRouteParams($uri, [
             'method' => \strtoupper($method),
             'file' => base64_encode($file),
             'status' => $status,
+            'headers' => $headers,
         ], $times);
 
         return $this;
@@ -244,7 +258,6 @@ class Bypass
         if (!\str_starts_with($uri, '/')) {
             $uri = "/{$uri}";
         }
-
         $params['uri'] = $uri;
 
         $this->routes[] = [
@@ -253,11 +266,12 @@ class Bypass
             'times' => $times,
             'status' => $params['status'],
             'body' => $params['content'] ?? null,
+            'headers' => $params['headers'] ?? [],
         ];
 
         $response = \file_get_contents(filename: $url, context: \stream_context_create([
             'http' => [
-                'method' => 'PUT',
+                'method' => 'POST',
                 'header' => 'Content-Type: application/json',
                 'content' => json_encode($params),
             ],

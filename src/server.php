@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === "GET" && $_SERVER['PHP_SELF'] === '/___api_fa
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === "PUT" && $_SERVER['REQUEST_URI'] === '/___api_faker_clear_router') {
+if ($_SERVER['REQUEST_METHOD'] === "DELETE" && $_SERVER['REQUEST_URI'] === '/___api_faker_clear_router') {
     $sessionName = getSessionName();
 
     foreach (glob($sessionName . "_*.tmp") as $file) {
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === "PUT" && $_SERVER['REQUEST_URI'] === '/___api
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === "PUT" && $_SERVER['REQUEST_URI'] === '/___api_faker_add_router') {
+if ($_SERVER['REQUEST_METHOD'] === "POST" && $_SERVER['REQUEST_URI'] === '/___api_faker_add_router') {
     $inputs = file_get_contents("php://input");
     $router = json_decode($inputs, true);
 
@@ -34,8 +34,11 @@ if ($_SERVER['REQUEST_METHOD'] === "PUT" && $_SERVER['REQUEST_URI'] === '/___api
 
 if ($route = currentRoute()) {
     $route = json_decode($route, true);
-
     http_response_code($route['status']);
+    $headers = $route['headers'];
+    foreach ($headers as $name => $value) {
+        header("$name: $value");
+    }
     setRoute($route['uri'], $route['method'], $route);
 
     if (($route['file'] !== null)) {
@@ -43,7 +46,6 @@ if ($route = currentRoute()) {
 
         exit;
     }
-
     echo $route['content'];
 
     exit;

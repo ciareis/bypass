@@ -105,6 +105,29 @@ it('returns error 500 when server down', function () {
     expect($response->body())->toEqual('Bypass route /no-route and method GET not found.');
 });
 
+it('headers are returned', function () {
+    // prepare
+    $headers = [
+        'X-Bypass' => 'Bypass',
+        'X-Bypass-Header' => 'Bypass',
+    ];
+    $bypass = Bypass::open();
+    $bypass->addRoute(method: 'get', uri: '/headers', status: 200, headers: $headers);
+
+    // action
+    $response = Http::get($bypass->getBaseUrl('/headers'));
+
+    // asserts
+    expect($response->headers())
+        ->toHaveKey('X-Bypass')
+        ->toHaveKey('X-Bypass-Header')
+        ->toMatchArray([
+            'X-Bypass' => ['Bypass'],
+            'X-Bypass-Header' => ['Bypass'],
+        ]);
+});
+
+
 function getBody()
 {
     return [

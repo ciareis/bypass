@@ -114,6 +114,28 @@ class BypassPhpUnitTest extends TestCase
         $this->assertSame($response, $file);
     }
 
+
+    public function test_headers_are_returned()
+    {
+        // prepare
+        $headers = [
+            'X-Bypass' => 'Bypass',
+            'X-Bypass-Header' => 'Bypass',
+        ];
+        $bypass = Bypass::open();
+        $bypass->addRoute(method: 'get', uri: '/headers', status: 200, headers: $headers);
+
+        // action
+        $response = Http::get($bypass->getBaseUrl('/headers'));
+
+        // asserts
+        $headers = $response->headers();
+        $this->assertArrayHasKey('X-Bypass', $headers);
+        $this->assertArrayHasKey('X-Bypass-Header', $headers);
+        $this->assertEquals(['Bypass'], $headers['X-Bypass']);
+        $this->assertEquals(['Bypass'], $headers['X-Bypass-Header']);
+    }
+
     protected function getBody()
     {
         return [

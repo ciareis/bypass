@@ -9,7 +9,8 @@ class Route
         public string $uri,
         public int $status,
         public null|string|array $body = null,
-        public int $times = 1
+        public int $times = 1,
+        public array $headers = [],
     ) {
     }
 
@@ -62,14 +63,16 @@ class Route
         string $uri,
         null|string|array $body = null,
         string $method = 'POST',
-        int $times = 1
+        int $times = 1,
+        array $headers = []
     ) {
         return new static(
             method: $method,
             uri: $uri,
             body: $body,
             status: 400,
-            times: $times
+            times: $times,
+            headers: $headers
         );
     }
 
@@ -77,14 +80,16 @@ class Route
         string $uri,
         null|string|array $body = null,
         string $method = 'GET',
-        int $times = 1
+        int $times = 1,
+        array $headers = []
     ) {
         return new static(
             method: $method,
             uri: $uri,
             body: $body,
             status: 401,
-            times: $times
+            times: $times,
+            headers: $headers
         );
     }
 
@@ -92,28 +97,32 @@ class Route
         string $uri,
         null|string|array $body = null,
         string $method = 'GET',
-        int $times = 1
+        int $times = 1,
+        array $headers = []
     ) {
         return new static(
             method: $method,
             uri: $uri,
             body: $body,
             status: 403,
-            times: $times
+            times: $times,
+            headers: $headers
         );
     }
 
     public static function created(
         string $uri,
         null|string|array $body = null,
-        int $times = 1
+        int $times = 1,
+        array $headers = []
     ) {
         return new static(
             method: "POST",
             uri: $uri,
             body: $body,
             status: 201,
-            times: $times
+            times: $times,
+            headers: $headers
         );
     }
 
@@ -121,14 +130,16 @@ class Route
         string $uri,
         null|string|array $body = null,
         string $method = 'GET',
-        int $times = 1
+        int $times = 1,
+        array $headers = []
     ) {
         return new static(
             method: $method,
             uri: $uri,
             body: $body,
             status: 404,
-            times: $times
+            times: $times,
+            headers: $headers
         );
     }
 
@@ -136,14 +147,16 @@ class Route
         string $uri,
         null|string|array $body = null,
         string $method = 'GET',
-        int $times = 1
+        int $times = 1,
+        array $headers = []
     ) {
         return new static(
             method: $method,
             uri: $uri,
             body: $body,
             status: 405,
-            times: $times
+            times: $times,
+            headers: $headers
         );
     }
 
@@ -151,14 +164,16 @@ class Route
         string $uri,
         null|string|array $body = null,
         string $method = 'GET',
-        int $times = 1
+        int $times = 1,
+        array $headers = []
     ) {
         return new static(
             method: $method,
             uri: $uri,
             body: $body,
             status: 429,
-            times: $times
+            times: $times,
+            headers: $headers
         );
     }
 
@@ -166,14 +181,16 @@ class Route
         string $uri,
         null|string|array $body = null,
         string $method = 'GET',
-        int $times = 1
+        int $times = 1,
+        array $headers = []
     ) {
         return new static(
             method: $method,
             uri: $uri,
             body: $body,
             status: 500,
-            times: $times
+            times: $times,
+            headers: $headers
         );
     }
 
@@ -181,14 +198,16 @@ class Route
         string $uri,
         null|string|array $body = null,
         string $method = 'POST',
-        int $times = 1
+        int $times = 1,
+        array $headers = []
     ) {
         return new static(
             method: $method,
             uri: $uri,
             body: $body,
             status: 422,
-            times: $times
+            times: $times,
+            headers: $headers
         );
     }
 
@@ -197,14 +216,16 @@ class Route
         string $file,
         string $method = 'GET',
         int $status = 200,
-        int $times = 1
+        int $times = 1,
+        array $headers = []
     ) {
         return new RouteFile(
             method: $method,
             uri: $uri,
             file: $file,
             status: $status,
-            times: $times
+            times: $times,
+            headers: $headers
         );
     }
 
@@ -212,14 +233,16 @@ class Route
         string $uri,
         null|string|array $body = null,
         int $status = 200,
-        int $times = 1
+        int $times = 1,
+        array $headers = []
     ) {
         return new static(
             method: "GET",
             uri: $uri,
             body: $body,
             status: $status,
-            times: $times
+            times: $times,
+            headers: $headers
         );
     }
 
@@ -227,14 +250,16 @@ class Route
         string $uri,
         string $file,
         int $status = 200,
-        int $times = 1
+        int $times = 1,
+        array $headers = []
     ) {
         return new RouteFile(
             method: "GET",
             uri: $uri,
             file: $file,
             status: $status,
-            times: $times
+            times: $times,
+            headers: $headers
         );
     }
 
@@ -242,14 +267,16 @@ class Route
         string $uri,
         null|string|array $body = null,
         int $status = 200,
-        int $times = 1
+        int $times = 1,
+        array $headers = []
     ) {
         return new static(
             method: "POST",
             uri: $uri,
             body: $body,
             status: $status,
-            times: $times
+            times: $times,
+            headers: $headers
         );
     }
 
@@ -257,14 +284,16 @@ class Route
         string $uri,
         null|string|array $body = null,
         int $status = 200,
-        int $times = 1
+        int $times = 1,
+        array $headers = []
     ) {
         return new static(
             method: "PUT",
             uri: $uri,
             body: $body,
             status: $status,
-            times: $times
+            times: $times,
+            headers: $headers
         );
     }
 
@@ -272,14 +301,16 @@ class Route
         string $uri,
         null|string|array $body = null,
         int $status = 204,
-        int $times = 1
+        int $times = 1,
+        array $headers = []
     ) {
         return new static(
             method: "DELETE",
             uri: $uri,
             body: $body,
             status: $status,
-            times: $times
+            times: $times,
+            headers: $headers
         );
     }
 
@@ -287,14 +318,16 @@ class Route
         string $uri,
         null|string|array $body = null,
         int $status = 200,
-        int $times = 1
+        int $times = 1,
+        array $headers = []
     ) {
         return new static(
             method: "PATCH",
             uri: $uri,
             body: $body,
             status: $status,
-            times: $times
+            times: $times,
+            headers: $headers
         );
     }
 
