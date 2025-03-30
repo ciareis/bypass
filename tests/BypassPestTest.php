@@ -10,7 +10,6 @@
 */
 
 use Ciareis\Bypass\Bypass;
-use Ciareis\Bypass\Route;
 use Illuminate\Support\Facades\Http;
 use Tests\Services\GithubRepoService;
 use Tests\Services\LogoService;

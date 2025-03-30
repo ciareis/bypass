@@ -1,14 +1,17 @@
 # Release Notes
 
-## [Unreleased](https://github.com/ciareis/bypass/compare/v2.0.2...main)
+## [Unreleased](https://github.com/ciareis/bypass/compare/v2.1.0...main)
+
+## [v2.1.0 (2025-03-29)](https://github.com/ciareis/bypass/archive/refs/tags/v2.1.0.zip)
+
+- add headers to faker by @ramsey
 
 ## [v2.0.2 (2025-03-29)](https://github.com/ciareis/bypass/archive/refs/tags/v2.0.2.zip)
-remove laravel depends
+- remove laravel depends
 
-Add .gitattributes and ignore .phpunit.cache/
+- Add .gitattributes and ignore .phpunit.cache/ by @ramsey
 
-@ramsey
-remove Process class
+- remove Process class
 
 ## [v2.0.1 (2025-03-28)](https://github.com/ciareis/bypass/archive/refs/tags/v2.0.1.zip)
 
