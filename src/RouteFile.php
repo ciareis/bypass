@@ -4,6 +4,9 @@ namespace Ciareis\Bypass;
 
 class RouteFile
 {
+    /**
+     * @param array<string, string|string[]> $headers
+     */
     public function __construct(
         public string $method,
         public string $uri,

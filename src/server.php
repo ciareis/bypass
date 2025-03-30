@@ -34,6 +34,14 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && $_SERVER['REQUEST_URI'] === '/___ap
 
 if ($route = currentRoute()) {
     $route = json_decode($route, true);
+
+    foreach ($route['headers'] ?? [] as $header => $headerLines) {
+        $headerLines = (array) $headerLines;
+        foreach ($headerLines as $headerLine) {
+            header(header: "{$header}: {$headerLine}", replace: false);
+        }
+    }
+
     http_response_code($route['status']);
     $headers = $route['headers'];
     foreach ($headers as $name => $value) {

@@ -84,7 +84,6 @@ class Bypass
         return $this;
     }
     
-    
     public function getPort(): int
     {
         return $this->port;
@@ -176,15 +175,12 @@ class Bypass
     
         return $this;
     }
-    
-    public function addRoute(
-        string $method,
-        string $uri,
-        int $status = 200,
-        null|string|array $body = null,
-        int $times = 1,
-        array $headers = []
-    ): self {
+
+    /**
+     * @param array<string, string|string[]> $headers
+     */
+    public function addRoute(string $method, string $uri, int $status = 200, null|string|array $body = null, int $times = 1, array $headers = []): self
+    {
         $body = is_array($body) ? json_encode($body) : $body;
 
         $this->addRouteParams($uri, [
@@ -197,14 +193,11 @@ class Bypass
         return $this;
     }
 
-    public function addFileRoute(
-        string $method,
-        string $uri,
-        int $status = 200,
-        ?string $file = null,
-        int $times = 1,
-        array $headers = []
-    ): self {
+    /**
+     * @param array<string, string|string[]> $headers
+     */
+    public function addFileRoute(string $method, string $uri, int $status = 200, string $file = null, int $times = 1, array $headers = []): self
+    {
         $this->addRouteParams($uri, [
             'method' => \strtoupper($method),
             'file' => base64_encode($file),
