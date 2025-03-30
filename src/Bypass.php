@@ -48,11 +48,11 @@ class Bypass
 
     public function stop(): self
     {
-        $url = $this->getBaseUrl("___api_faker_clear_router");
+        $url = $this->getBaseUrl("___api_faker_router");
 
         \file_get_contents(filename: $url, context: \stream_context_create([
             'http' => [
-                'method' => 'PUT',
+                'method' => 'DELETE',
                 'header' => 'Content-Type: application/json',
                 'content' => '{}'
             ],
@@ -68,23 +68,13 @@ class Bypass
         }
         $status = proc_get_status($this->process);
         $pid = $status['pid'] ?? null;
-
         if ($pid) {
-            if (stripos(PHP_OS_FAMILY, 'Windows') !== false) {
-                exec("taskkill /F /T /PID {$pid}");
-            } else {
-                exec("kill -9 {$pid}");
-            }
+            $this->killPid($pid);
         }
-
-        proc_terminate($this->process);
-        proc_close($this->process);
-        $this->process = null;
 
         return $this;
     }
-    
-    
+
     public function getPort(): int
     {
         return $this->port;
@@ -122,7 +112,7 @@ class Bypass
         $pattern = '/Development Server \(http:\/\/localhost:(?<port>\d+)\) started/';
         $start = time();
         $timeout = 5;
-    
+
         while (true) {
             $chunk = fread($pipes[2], 1024);
             if ($chunk !== false && strlen($chunk)) {
@@ -132,34 +122,34 @@ class Bypass
                     break;
                 }
             }
-    
+
             if ((time() - $start) > $timeout) {
                 proc_terminate($this->process);
                 proc_close($this->process);
                 throw new RuntimeException("Server did not start within {$timeout} seconds.");
             }
-    
+
             usleep(50);
         }
-    
+
         // kill process
         pcntl_async_signals(true);
         pcntl_signal(SIGINT, fn() => $this->down());
         pcntl_signal(SIGTERM, fn() => $this->down());
-    
+
         static $process_registry = [];
         $process_registry[] = $this->process;
-    
+
         $status = proc_get_status($this->process);
         $wrapper_pid = $status['pid'] ?? null;
-    
+
         register_shutdown_function(function () use ($wrapper_pid) {
             if ($wrapper_pid) {
                 if (stripos(PHP_OS_FAMILY, 'Windows') !== false) {
                     exec("taskkill /F /T /PID {$wrapper_pid} >nul 2>&1");
                 } else {
                     exec("ps -p {$wrapper_pid}", $output, $code);
-        
+
                     if ($code === 0) {
                         exec("pgrep -P {$wrapper_pid}", $child_pids);
                         foreach ($child_pids as $pid) {
@@ -167,13 +157,13 @@ class Bypass
                                 exec("kill -9 {$pid} > /dev/null 2>&1");
                             }
                         }
-        
+
                         exec("kill -9 {$wrapper_pid} > /dev/null 2>&1");
                     }
                 }
             }
         });
-    
+
         return $this;
     }
 
@@ -190,10 +180,10 @@ class Bypass
     ): self {
         $body = is_array($body) ? json_encode($body) : $body;
 
-        $this->addRouteParams(new Route(
+        $this->registerRoute(new Route(
             method: strtoupper($method),
             uri: $uri,
-            body: $body, 
+            body: $body,
             status: $status,
             times: $times,
             headers: $headers,
@@ -213,7 +203,7 @@ class Bypass
         int $times = 1,
         array $headers = []
     ): self {
-        $this->addRouteParams(new RouteFile(
+        $this->registerRoute(new RouteFile(
             method: strtoupper($method),
             uri: $uri,
             file: $file,
@@ -234,7 +224,7 @@ class Bypass
 
     public function assertRoutes(): void
     {
-        $url = $this->getBaseUrl("___api_faker_router_index");
+        $url = $this->getBaseUrl("___api_faker_router");
         $routes = [];
         foreach ($this->routes as $route) {
             $uri = $route->uri;
@@ -242,7 +232,6 @@ class Bypass
             $path = "{$url}?route={$uri}&method={$method}";
             $response = \file_get_contents($path);
             $routes[$route->uri] = $response;
-
             $currentTimes = \json_decode($response, true);
             $expectedTimes = $route->times;
             if ($currentTimes === $expectedTimes) {
@@ -264,27 +253,24 @@ class Bypass
         return $this->addRoute($method, $uri, $status, $body, $times, $headers);
     }
 
-    protected function addRouteParams(Route|RouteFile $route): array
+    protected function registerRoute(Route|RouteFile $route): array
     {
         if (!$this->port || !$this->process) {
             $this->handle();
         }
-        $url = $this->getBaseUrl("___api_faker_add_router");
-
+        $url = $this->getBaseUrl("___api_faker_router");
         $this->routes[] = $route;
         $params = $route->toArray();
         if ($route instanceof RouteFile) {
             $params['file'] = base64_encode($params['file']);
         }
-
         $response = \file_get_contents(filename: $url, context: \stream_context_create([
             'http' => [
-                'method' => 'PUT',
+                'method' => 'POST',
                 'header' => 'Content-Type: application/json',
                 'content' => json_encode($params),
             ],
         ]));
-
         \preg_match('/^HTTP\/.* (\d{3})/', $http_response_header[0] ?? '', $matches);
         $status = $matches[1] ?? '';
 
@@ -297,5 +283,14 @@ class Bypass
     public function __toString()
     {
         return $this->getBaseUrl();
+    }
+
+    private function killPid(int $pid)
+    {
+        if (stripos(PHP_OS_FAMILY, 'Windows') !== false) {
+            exec("taskkill /F /T /PID {$pid}");
+        } else {
+            exec("kill -9 {$pid}");
+        }
     }
 }

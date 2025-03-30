@@ -2,7 +2,7 @@
 
 include_once("lib/functions.php");
 
-if ($_SERVER['REQUEST_METHOD'] === "GET" && $_SERVER['PHP_SELF'] === '/___api_faker_router_index') {
+if ($_SERVER['REQUEST_METHOD'] === "GET" && $_SERVER['PHP_SELF'] === '/___api_faker_router') {
     $route = getRoute($_GET['route'], $_GET['method']);
     $route = json_decode($route, true);
 
@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === "GET" && $_SERVER['PHP_SELF'] === '/___api_fa
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === "PUT" && $_SERVER['REQUEST_URI'] === '/___api_faker_clear_router') {
+if ($_SERVER['REQUEST_METHOD'] === "DELETE" && $_SERVER['REQUEST_URI'] === '/___api_faker_router') {
     $sessionName = getSessionName();
 
     foreach (glob($sessionName . "_*.tmp") as $file) {
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === "PUT" && $_SERVER['REQUEST_URI'] === '/___api
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === "PUT" && $_SERVER['REQUEST_URI'] === '/___api_faker_add_router') {
+if ($_SERVER['REQUEST_METHOD'] === "POST" && $_SERVER['REQUEST_URI'] === '/___api_faker_router') {
     $inputs = file_get_contents("php://input");
     $router = json_decode($inputs, true);
 
