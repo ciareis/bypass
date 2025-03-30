@@ -3,6 +3,7 @@
 ## [Unreleased](https://github.com/ciareis/bypass/compare/v2.1.1...main)
 
 - Refactored to maintain REST semantics in the fake server.
+- Update docs with headers
 
 ## [v2.1.1 (2025-03-30)](https://github.com/ciareis/bypass/archive/refs/tags/v2.1.1.zip)
 
