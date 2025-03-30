@@ -159,6 +159,7 @@ O método `addRoute()` aceita os seguintes parâmetros:
 | **Status** | `int $status` | [Código de Status HTTP](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) a ser retornado pelo Bypass (padrão: 200) |
 | **Body** | `string\|array $body` | Corpo de texto (JSON) a ser servido pelo Bypass (opcional) |
 | **Times** | `int $times` | Quantidade de vezes em que a rota deve ser acessada (padrão: 1) |
+| **Headers**| `array $headers`      | Cabeçalhos a ser servido pelo Bypass (opcional) |
 
 #### 3.2 Rota de Arquivo
 
@@ -190,6 +191,7 @@ O método `addFileRoute()` aceita os seguintes parâmetros:
 | **Status** | `int $status` | [Código de Status HTTP](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) a ser retornado pelo Bypass (padrão: 200) |
 | **File** | `binary $file` | Arquivo binário a ser servidor pelo Bypass |
 | **Times** | `int $times` | Quantidade de vezes em que a rota deve ser acessada (padrão: 1) |
+| **Headers**| `array $headers`      | Cabeçalhos a ser servido pelo Bypass (opcional) |
 
 #### 3.3 Método Serve() do Bypass
 
@@ -249,6 +251,7 @@ Você também pode personalizar os assistentes de rotas de acordo com as suas ne
 | **Body**        | `string\|array $body` | Corpo de texto (JSON) a ser servido pelo Bypass (opcional)                                                                              |
 | **HTTP Method** | `string $method` | [Método de Requisição HTTP](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html) (GET/POST/PUT/PATCH/DELETE)           |
 | **Times**       | `int $times`     | Quantidade de vezes em que a rota deve ser acessada (padrão: 1)                                                              |
+| **Headers**| `array $headers`      | Cabeçalhos a ser servido pelo Bypass (opcional) |
 
 No exemplo abaixo, você pode ver o assistente `Route::badRequest` usando o método `GET` ao invés do método `POST`.
 

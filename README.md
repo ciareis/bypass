@@ -159,6 +159,8 @@ The method `addRoute()` accepts the following parameters:
 | **Status**      | `int $status`         | [HTTP Status Code](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) to be returned by Bypass (default: 200) |
 | **Body**        | `string\|array $body` | Body to be served by Bypass (optional)                                                                              |
 | **Times**       | `int $times`          | How many times the route should be called (default: 1)                                                              |
+| **Headers**     | `array $headers`      | Header to be served by Bypass (optional) |
+
 
 #### 3.2 File Route
 
@@ -190,6 +192,7 @@ The method `addFileRoute()` accepts the following parameters:
 | **Status**      | `int $status`    | [HTTP Status Code](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) to be returned by Bypass (default: 200) |
 | **File**        | `binary $file`   | Binary file to be served by Bypass                                                                                  |
 | **Times**       | `int $times`     | How many times the route should be called (default: 1)                                                              |
+| **Headers**     | `array $headers`      | Header to be served by Bypass (optional) |
 
 #### 3.3 Bypass Serve and Route Helpers
 
@@ -247,6 +250,7 @@ You may also adjust the helpers to your needs by passing arguments:
 | **Body**        | `string\|array $body` | Body to be served by Bypass (optional)                                                                    |
 | **HTTP Method** | `string $method`      | [HTTP Request Method](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html) (GET/POST/PUT/PATCH/DELETE) |
 | **Times**       | `int $times`          | How many times the route should be called (default: 1)                                                    |
+| **Headers**     | `array $headers`      | Header to be served by Bypass (optional) |
 
 In the example below, you can see the Helper `Route::badRequest` using method `GET` instead of its default method `POST`.
 
