@@ -11,7 +11,6 @@ if ($_SERVER['REQUEST_METHOD'] === "GET" && $_SERVER['PHP_SELF'] === '/___api_fa
     exit;
 }
 
-
 if ($_SERVER['REQUEST_METHOD'] === "PUT" && $_SERVER['REQUEST_URI'] === '/___api_faker_clear_router') {
     $sessionName = getSessionName();
 
@@ -21,7 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] === "PUT" && $_SERVER['REQUEST_URI'] === '/___api
     echo "ok.";
     exit;
 }
-
 
 if ($_SERVER['REQUEST_METHOD'] === "PUT" && $_SERVER['REQUEST_URI'] === '/___api_faker_add_router') {
     $inputs = file_get_contents("php://input");
