@@ -231,6 +231,7 @@ test("methods body, status, method", function () {
             'status' => 404,
             'body' => $body,
             'times' => 2,
+            'headers' => [],
         ]
     ]);
 });

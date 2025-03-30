@@ -176,8 +176,11 @@ class Bypass
     
         return $this;
     }
-    
-    public function addRoute(string $method, string $uri, int $status = 200, null|string|array $body = null, int $times = 1): self
+
+    /**
+     * @param array<string, string|string[]> $headers
+     */
+    public function addRoute(string $method, string $uri, int $status = 200, null|string|array $body = null, int $times = 1, array $headers = []): self
     {
         $body = is_array($body) ? json_encode($body) : $body;
 
@@ -185,17 +188,22 @@ class Bypass
             'method' => \strtoupper($method),
             'content' => $body, 
             'status' => $status,
+            'headers' => $headers,
         ], $times);
 
         return $this;
     }
 
-    public function addFileRoute(string $method, string $uri, int $status = 200, string $file = null, int $times = 1): self
+    /**
+     * @param array<string, string|string[]> $headers
+     */
+    public function addFileRoute(string $method, string $uri, int $status = 200, string $file = null, int $times = 1, array $headers = []): self
     {
         $this->addRouteParams($uri, [
             'method' => \strtoupper($method),
             'file' => base64_encode($file),
             'status' => $status,
+            'headers' => $headers,
         ], $times);
 
         return $this;
@@ -253,6 +261,7 @@ class Bypass
             'times' => $times,
             'status' => $params['status'],
             'body' => $params['content'] ?? null,
+            'headers' => $params['headers'] ?? [],
         ];
 
         $response = \file_get_contents(filename: $url, context: \stream_context_create([
