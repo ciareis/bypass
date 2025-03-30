@@ -31,16 +31,16 @@
         <img src="https://github.com/ciareis/bypass/actions/workflows/php.yml/badge.svg?branch=main" alt="Testes" style="max-width:100%;" />
     </a>
     <a href="https://packagist.org/packages/ciareis/bypass" rel="nofollow">
-        <img src="https://camo.githubusercontent.com/3024b39f77b85e517975221737deb700ebcdd481ede11352490b7e1fb5070563/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f762f7461672f636961726569732f627970617373" alt="GitHub tag (último por data)" data-canonical-src="https://img.shields.io/github/v/tag/ciareis/bypass" style="max-width:100%;" />
+        <img src="https://img.shields.io/github/v/tag/ciareis/bypass" alt="GitHub tag (último por data)" data-canonical-src="https://img.shields.io/github/v/tag/ciareis/bypass" style="max-width:100%;" />
     </a>
     <a href="https://packagist.org/packages/ciareis/bypass" rel="nofollow">
-        <img src="https://camo.githubusercontent.com/b690ad8b572d1f06800efc1689310f60fb40054685cfe5b2c5ab0c92035ae92d/68747470733a2f2f696d672e736869656c64732e696f2f7061636b61676973742f64742f636961726569732f627970617373" alt="Downloads no Packagist" data-canonical-src="https://img.shields.io/packagist/dt/ciareis/bypass" style="max-width:100%;" />
+        <img src="https://img.shields.io/packagist/dt/ciareis/bypass" alt="Downloads no Packagist" data-canonical-src="https://img.shields.io/packagist/dt/ciareis/bypass" style="max-width:100%;" />
     </a>
     <a href="https://github.com/ciareis/bypass/blob/main/LICENSE.md">
-        <img src="https://camo.githubusercontent.com/29b248e7925f4fc4c0c03ae49ddaf7cb4077610f49b9b23a9cf77ba92ac06ac1/68747470733a2f2f696d672e736869656c64732e696f2f7061636b61676973742f6c2f636961726569732f627970617373" alt="Licença no Packagist" data-canonical-src="https://img.shields.io/packagist/l/ciareis/bypass" style="max-width:100%;" />
+        <img src="https://img.shields.io/packagist/l/ciareis/bypass"" alt="Licença no Packagist" data-canonical-src="https://img.shields.io/packagist/l/ciareis/bypass" style="max-width:100%;" />
     </a>
     <a href="https://github.com/ciareis/bypass/commits/main">
-        <img src="https://camo.githubusercontent.com/6b2c8b26963424aa8c2a5427227f13b9a6fa9d4ca7e81e6ce117027c133fbd8c/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6173742d636f6d6d69742f636961726569732f6279706173732e737667" alt="Última Atualização" data-canonical-src="https://img.shields.io/github/last-commit/ciareis/bypass.svg" style="max-width:100%;" />
+        <img src="https://img.shields.io/github/last-commit/ciareis/bypass" alt="Última Atualização" data-canonical-src="https://img.shields.io/github/last-commit/ciareis/bypass.svg" style="max-width:100%;" />
     </a>
 </p>
 
