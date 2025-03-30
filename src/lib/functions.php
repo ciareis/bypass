@@ -45,7 +45,8 @@ function setRoute(string $route, string $method, array $value)
         'status' => $value['status'],
         'content' => $value['content'] ?? null,
         'file' => $value['file'] ?? null,
-        'count' => isset($value['count']) ? $value['count'] + 1 : 0
+        'count' => isset($value['count']) ? $value['count'] + 1 : 0,
+        'headers' => $value['headers'] ?? [],
     ];
 
     writeFile($file, $content);
