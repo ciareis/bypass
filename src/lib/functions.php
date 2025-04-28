@@ -43,7 +43,7 @@ function setRoute(string $route, string $method, array $value)
         'uri' => $route,
         'method' => $method,
         'status' => $value['status'],
-        'content' => $value['body'] ?? null,
+        'body' => $value['body'] ?? null,
         'file' => $value['file'] ?? null,
         'count' => isset($value['count'])
             ? $value['count'] + 1

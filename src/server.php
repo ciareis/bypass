@@ -51,7 +51,7 @@ if ($route = currentRoute()) {
         exit;
     }
 
-    echo $route['content'];
+    echo $route['body'];
 
     exit;
 }

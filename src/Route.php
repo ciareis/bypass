@@ -27,7 +27,7 @@ class Route
 
         return $this;
     }
-    
+
     public function method(
         string $method
     ) {
