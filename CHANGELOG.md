@@ -1,13 +1,13 @@
 # Release Notes
 
-## [Unreleased](https://github.com/ciareis/bypass/compare/v2.1.2...main)
+## [Unreleased](https://github.com/ciareis/bypass/compare/v2.1.3...main)
+
+- added test to multi call
+
+## [v2.1.2 (2025-04-28)](https://github.com/ciareis/bypass/archive/refs/tags/v2.1.2.zip)
 
 - Refactored to maintain REST semantics in the fake server.
-- FIX call same route
-
-## [v2.1.1 (2025-03-30)](https://github.com/ciareis/bypass/archive/refs/tags/v2.1.1.zip)
-
-- Refactored to maintain REST semantics in the fake server.
+- FIX multi call
 
 ## [v2.1.1 (2025-03-30)](https://github.com/ciareis/bypass/archive/refs/tags/v2.1.1.zip)
 
