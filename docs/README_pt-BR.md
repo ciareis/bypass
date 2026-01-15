@@ -7,9 +7,13 @@
 
 <p align="center">
     <a href="#sobre">Sobre</a> |
+    <a href="#requisitos">Requisitos</a> |
     <a href="#instalação">Instalação</a> |
     <a href="#escrevendo-testes">Escrevendo Testes</a> |
+    <a href="#referência-da-api">Referência da API</a> |
     <a href="#exemplos">Exemplos</a> |
+    <a href="#solução-de-problemas">Solução de Problemas</a> |
+    <a href="#contribuindo">Contribuindo</a> |
     <a href="#créditos">Créditos</a> |
     <a href="#inspiração">Inspiração</a>
 </p>
@@ -59,9 +63,18 @@
 
 -------
 
-## Instalação
+## Requisitos
 
-📌 O Bypass requer o uso do PHP 8.2 ou superior.
+- **PHP**: 8.2 ou superior (testado até PHP 8.5)
+- **Composer**: Para gerenciamento de dependências
+
+### Problemas Conhecidos
+
+- **PHP 8.5**: Você pode ver avisos de deprecação das dependências de teste (Pest/PHPUnit) relacionados a `ReflectionMethod::setAccessible()`. Esses avisos são inofensivos e vêm dos próprios frameworks de teste, não do Bypass. Eles serão resolvidos quando as dependências forem atualizadas para suportar completamente o PHP 8.5.
+
+-------
+
+## Instalação
 
 Para instalar o Bypass através do [composer](https://getcomposer.org), execute o seguinte comando:
 
@@ -109,6 +122,13 @@ Caso seja necessário, a porta pode ser especificada passando um valor para o ar
 $bypass = Bypass::open(8081);
 ```
 
+**Método alternativo**: Você também pode usar `Bypass::up()` que é um alias para `Bypass::open()`:
+
+```php
+//Mesmo que Bypass::open()
+$bypass = Bypass::up();
+```
+
 ### 2. Endereço e Porta do Bypass
 
 O endereço(URL) e porta do servidor pode ser recuperados usando o método `getBaseUrl()`:
@@ -154,7 +174,7 @@ O método `addRoute()` aceita os seguintes parâmetros:
 
 | Parâmetro | Tipo     | Descrição                  |
 | :-------- | :------- | :------------------------- |
-| **HTTP Method** | `int $method` | [Método de Requisição HTTP](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html) (GET/POST/PUT/PATCH/DELETE) |
+| **HTTP Method** | `string $method` | [Método de Requisição HTTP](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html) (GET/POST/PUT/PATCH/DELETE) |
 | **URI** | `string $uri` | URI a ser servido pelo Bypass |
 | **Status** | `int $status` | [Código de Status HTTP](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) a ser retornado pelo Bypass (padrão: 200) |
 | **Body** | `string\|array $body` | Corpo de texto (JSON) a ser servido pelo Bypass (opcional) |
@@ -186,7 +206,7 @@ O método `addFileRoute()` aceita os seguintes parâmetros:
 
 | Parâmetro | Tipo     | Descrição                |
 | :-------- | :------- | :------------------------- |
-| **HTTP Method** | `int $method` | [Método de Requisição HTTP](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html) (GET/POST/PUT/PATCH/DELETE) |
+| **HTTP Method** | `string $method` | [Método de Requisição HTTP](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html) (GET/POST/PUT/PATCH/DELETE) |
 | **URI** | `string $uri` | URI a ser servido pelo Bypass |
 | **Status** | `int $status` | [Código de Status HTTP](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) a ser retornado pelo Bypass (padrão: 200) |
 | **File** | `binary $file` | Arquivo binário a ser servidor pelo Bypass |
@@ -304,6 +324,67 @@ Para interromper:
 
 Para encerrar:
 `$bypass->down();`
+
+## Referência da API
+
+### Métodos
+
+#### Métodos Estáticos
+
+- **`Bypass::open(?int $port = null): self`**  
+  Abre uma nova instância do servidor Bypass. Se nenhuma porta for especificada, uma porta aleatória será usada.
+
+- **`Bypass::up(?int $port = null): self`**  
+  Alias para `open()`. Abre uma nova instância do servidor Bypass.
+
+- **`Bypass::serve(...$routes): self`**  
+  Cria e serve múltiplas rotas de uma vez. Aceita objetos `Route`, objetos `RouteFile` ou arrays.
+
+#### Métodos de Instância
+
+- **`addRoute(string $method, string $uri, int $status = 200, string|array|null $body = null, int $times = 1, array $headers = []): self`**  
+  Adiciona uma rota padrão que retorna conteúdo de texto/JSON.
+
+- **`expect(string $method, string $uri, int $status = 200, string|array|null $body = null, int $times = 1, array $headers = []): self`**  
+  Alias para `addRoute()`. Adiciona uma rota padrão que retorna conteúdo de texto/JSON.
+
+- **`addFileRoute(string $method, string $uri, int $status = 200, ?string $file = null, int $times = 1, array $headers = []): self`**  
+  Adiciona uma rota de arquivo que retorna conteúdo binário.
+
+- **`getRoutes(): array`**  
+  Retorna todas as rotas registradas como um array de configurações de rotas.
+
+- **`assertRoutes(): void`**  
+  Verifica se todas as rotas registradas foram chamadas o número esperado de vezes. Lança `RouteNotCalledException` se alguma rota não foi chamada conforme esperado.
+
+- **`getBaseUrl(?string $path = null): string`**  
+  Retorna a URL base do servidor Bypass. Opcionalmente anexa um caminho.
+
+- **`getPort(): int`**  
+  Retorna o número da porta em que o servidor Bypass está escutando.
+
+- **`stop(): self`**  
+  Interrompe o servidor Bypass limpando todas as rotas. O processo do servidor permanece em execução.
+
+- **`down(): self`**  
+  Encerra completamente o processo do servidor Bypass.
+
+### Exceções
+
+#### `RouteNotCalledException`
+
+Lançada quando `assertRoutes()` é chamado e uma rota não foi chamada o número esperado de vezes.
+
+```php
+use Ciareis\Bypass\RouteNotCalledException;
+
+try {
+    $bypass->assertRoutes();
+} catch (RouteNotCalledException $e) {
+    // Tratar a exceção
+    // Formato da mensagem: "Bypass expected route '/path' with method 'GET' to be called X times(s). Found Y calls(s) instead."
+}
+```
 
 ## Exemplos
 
@@ -468,6 +549,148 @@ class BypassTest extends TestCase
 ### Exemplos de Testes
 
 📚 Veja exemplos completos de utilização do Bypass em testes com [Pest PHP](https://github.com/ciareis/bypass/blob/main/tests/BypassPestTest.php) e [PHPUnit](https://github.com/ciareis/bypass/blob/main/tests/BypassPhpUnitTest.php) para o exemplo de serviço [GithubRepoService](https://github.com/ciareis/bypass/blob/main/tests/Services/GithubRepoService.php).
+
+### Exemplos Avançados
+
+#### Usando Cabeçalhos Personalizados
+
+```php
+use Ciareis\Bypass\Bypass;
+
+$bypass = Bypass::open();
+
+$bypass->addRoute(
+    method: 'GET',
+    uri: '/v1/api/data',
+    status: 200,
+    body: ['data' => 'exemplo'],
+    headers: [
+        'X-Custom-Header' => 'valor',
+        'X-Another-Header' => ['valor1', 'valor2'], // Múltiplos valores
+    ]
+);
+```
+
+#### Múltiplas Chamadas de Rota
+
+```php
+use Ciareis\Bypass\Bypass;
+
+$bypass = Bypass::open();
+
+// A rota deve ser chamada exatamente 3 vezes
+$bypass->addRoute(
+    method: 'GET',
+    uri: '/v1/api/data',
+    status: 200,
+    body: ['data' => 'exemplo'],
+    times: 3
+);
+
+$service = new ApiService();
+$service->setBaseUrl($bypass->getBaseUrl());
+
+// Chama a rota 3 vezes
+$service->fetchData();
+$service->fetchData();
+$service->fetchData();
+
+// Isso passará
+$bypass->assertRoutes();
+```
+
+#### Tratamento de Exceções
+
+```php
+use Ciareis\Bypass\Bypass;
+use Ciareis\Bypass\RouteNotCalledException;
+
+$bypass = Bypass::open();
+$bypass->addRoute(method: 'GET', uri: '/v1/api/data', status: 200);
+
+$service = new ApiService();
+$service->setBaseUrl($bypass->getBaseUrl());
+
+// Não chama a rota
+
+try {
+    $bypass->assertRoutes();
+    $this->fail('Esperava RouteNotCalledException');
+} catch (RouteNotCalledException $e) {
+    $this->assertStringContainsString("expected route '/v1/api/data'", $e->getMessage());
+}
+```
+
+## Solução de Problemas
+
+### Problemas Comuns
+
+#### Porta Já em Uso
+
+Se você especificar uma porta que já está em uso, o Bypass falhará ao iniciar. Use uma porta aleatória (padrão) ou garanta que a porta esteja disponível:
+
+```php
+// Use porta aleatória (recomendado)
+$bypass = Bypass::open();
+
+// Ou especifique uma porta e trate erros
+try {
+    $bypass = Bypass::open(8080);
+} catch (RuntimeException $e) {
+    // A porta pode estar em uso, tente outra
+    $bypass = Bypass::open(8081);
+}
+```
+
+#### Timeout do Servidor
+
+O Bypass tem um timeout padrão de 5 segundos para a inicialização do servidor. Se seu sistema estiver lento, o servidor pode não iniciar a tempo. Isso é raro, mas pode acontecer em ambientes de CI.
+
+#### Erros de Rota Não Encontrada
+
+Se você estiver recebendo erros de "rota não encontrada", certifique-se de que:
+- A URI corresponde exatamente (incluindo parâmetros de consulta)
+- O método HTTP corresponde (GET, POST, etc.)
+- A rota foi adicionada antes de fazer a requisição
+- O serviço está usando a URL correta do Bypass
+
+#### Obter Todas as Rotas Registradas
+
+Você pode inspecionar todas as rotas registradas para depuração:
+
+```php
+$bypass = Bypass::open();
+$bypass->addRoute(method: 'GET', uri: '/v1/api/data', status: 200);
+
+$routes = $bypass->getRoutes();
+// Retorna array com configurações de rotas
+```
+
+## Contribuindo
+
+Aceitamos contribuições! Aqui está como você pode ajudar:
+
+1. **Faça um fork do repositório**
+2. **Crie uma branch de feature**: `git checkout -b feature/feature-incrivel`
+3. **Faça suas alterações** seguindo o estilo de código existente
+4. **Adicione testes** para nova funcionalidade
+5. **Certifique-se de que todos os testes passam**: `vendor/bin/pest`
+6. **Faça commit das suas alterações**: `git commit -m 'Adiciona feature incrível'`
+7. **Faça push para a branch**: `git push origin feature/feature-incrivel`
+8. **Abra um Pull Request**
+
+### Estilo de Código
+
+- Siga os padrões de codificação PSR-12
+- Use type hints sempre que possível
+- Adicione comentários PHPDoc para métodos públicos
+- Escreva testes para novas funcionalidades
+
+### Testes
+
+- Execute testes com: `vendor/bin/pest`
+- Certifique-se de que todos os testes passam antes de enviar um PR
+- Adicione testes para qualquer nova funcionalidade
 
 ## Créditos
 

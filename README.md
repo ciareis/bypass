@@ -7,9 +7,13 @@
 
 <p align="center">
     <a href="#about">About</a> |
+    <a href="#requirements">Requirements</a> |
     <a href="#installation">Installation</a> |
     <a href="#writing-tests">Writing Tests</a> |
+    <a href="#api-reference">API Reference</a> |
     <a href="#examples">Examples</a> |
+    <a href="#troubleshooting">Troubleshooting</a> |
+    <a href="#contributing">Contributing</a> |
     <a href="#credits">Credits</a> |
     <a href="#inspired">Inspired</a>
 </p>
@@ -60,9 +64,18 @@
 
 ---
 
-## Installation
+## Requirements
 
-📌 Bypass requires PHP 8.2+.
+- **PHP**: 8.2 or higher (tested up to PHP 8.5)
+- **Composer**: For dependency management
+
+### Known Issues
+
+- **PHP 8.5**: You may see deprecation warnings from testing dependencies (Pest/PHPUnit) related to `ReflectionMethod::setAccessible()`. These warnings are harmless and come from the testing frameworks themselves, not from Bypass. They will be resolved when the dependencies are updated to support PHP 8.5 fully.
+
+---
+
+## Installation
 
 To install via [composer](https://getcomposer.org), run the following command:
 
@@ -107,6 +120,13 @@ To specify a custom port, just pass it in the argument `(int) $port`.
 ```php
 //Open a new Bypass using port 8081
 $bypass = Bypass::open(8081);
+```
+
+**Alternative method**: You can also use `Bypass::up()` which is an alias for `Bypass::open()`:
+
+```php
+//Same as Bypass::open()
+$bypass = Bypass::up();
 ```
 
 ### 2. Bypass URL and Port
@@ -304,6 +324,67 @@ To stop:
 To shut down:
 `$bypass->down();`
 
+## API Reference
+
+### Methods
+
+#### Static Methods
+
+- **`Bypass::open(?int $port = null): self`**  
+  Opens a new Bypass server instance. If no port is specified, a random port will be used.
+
+- **`Bypass::up(?int $port = null): self`**  
+  Alias for `open()`. Opens a new Bypass server instance.
+
+- **`Bypass::serve(...$routes): self`**  
+  Creates and serves multiple routes at once. Accepts `Route` objects, `RouteFile` objects, or arrays.
+
+#### Instance Methods
+
+- **`addRoute(string $method, string $uri, int $status = 200, string|array|null $body = null, int $times = 1, array $headers = []): self`**  
+  Adds a standard route that returns text/JSON content.
+
+- **`expect(string $method, string $uri, int $status = 200, string|array|null $body = null, int $times = 1, array $headers = []): self`**  
+  Alias for `addRoute()`. Adds a standard route that returns text/JSON content.
+
+- **`addFileRoute(string $method, string $uri, int $status = 200, ?string $file = null, int $times = 1, array $headers = []): self`**  
+  Adds a file route that returns binary file content.
+
+- **`getRoutes(): array`**  
+  Returns all registered routes as an array of route configurations.
+
+- **`assertRoutes(): void`**  
+  Asserts that all registered routes were called the expected number of times. Throws `RouteNotCalledException` if any route was not called as expected.
+
+- **`getBaseUrl(?string $path = null): string`**  
+  Returns the base URL of the Bypass server. Optionally appends a path.
+
+- **`getPort(): int`**  
+  Returns the port number the Bypass server is listening on.
+
+- **`stop(): self`**  
+  Stops the Bypass server by clearing all routes. The server process remains running.
+
+- **`down(): self`**  
+  Shuts down the Bypass server process completely.
+
+### Exceptions
+
+#### `RouteNotCalledException`
+
+Thrown when `assertRoutes()` is called and a route was not called the expected number of times.
+
+```php
+use Ciareis\Bypass\RouteNotCalledException;
+
+try {
+    $bypass->assertRoutes();
+} catch (RouteNotCalledException $e) {
+    // Handle the exception
+    // Message format: "Bypass expected route '/path' with method 'GET' to be called X times(s). Found Y calls(s) instead."
+}
+```
+
 ## Examples
 
 ### Use case
@@ -347,7 +428,7 @@ $bypass->addRoute(method: 'GET', uri: '/v1/score/johndoe', status: 200, body: $b
 $service = new TotalScoreService();
 
 //Configure your service to access Bypass URL
-$response = $serivce
+$response = $service
   ->setBaseUrl($bypassUrl) // set the URL to the Bypass URL
   ->getTotalScoreByUsername('johndoe'); //returns 35
 
@@ -469,6 +550,148 @@ class BypassTest extends TestCase
 ### Test Examples
 
 📚 See Bypass being used in complete tests with [Pest PHP](https://github.com/ciareis/bypass/blob/main/tests/BypassPestTest.php) and [PHPUnit](https://github.com/ciareis/bypass/blob/main/tests/BypassPhpUnitTest.php) for the [GithubRepoService](https://github.com/ciareis/bypass/blob/main/tests/Services/GithubRepoService.php) demo service.
+
+### Advanced Examples
+
+#### Using Custom Headers
+
+```php
+use Ciareis\Bypass\Bypass;
+
+$bypass = Bypass::open();
+
+$bypass->addRoute(
+    method: 'GET',
+    uri: '/v1/api/data',
+    status: 200,
+    body: ['data' => 'example'],
+    headers: [
+        'X-Custom-Header' => 'value',
+        'X-Another-Header' => ['value1', 'value2'], // Multiple values
+    ]
+);
+```
+
+#### Multiple Route Calls
+
+```php
+use Ciareis\Bypass\Bypass;
+
+$bypass = Bypass::open();
+
+// Route must be called exactly 3 times
+$bypass->addRoute(
+    method: 'GET',
+    uri: '/v1/api/data',
+    status: 200,
+    body: ['data' => 'example'],
+    times: 3
+);
+
+$service = new ApiService();
+$service->setBaseUrl($bypass->getBaseUrl());
+
+// Call the route 3 times
+$service->fetchData();
+$service->fetchData();
+$service->fetchData();
+
+// This will pass
+$bypass->assertRoutes();
+```
+
+#### Handling Exceptions
+
+```php
+use Ciareis\Bypass\Bypass;
+use Ciareis\Bypass\RouteNotCalledException;
+
+$bypass = Bypass::open();
+$bypass->addRoute(method: 'GET', uri: '/v1/api/data', status: 200);
+
+$service = new ApiService();
+$service->setBaseUrl($bypass->getBaseUrl());
+
+// Don't call the route
+
+try {
+    $bypass->assertRoutes();
+    $this->fail('Expected RouteNotCalledException');
+} catch (RouteNotCalledException $e) {
+    $this->assertStringContainsString("expected route '/v1/api/data'", $e->getMessage());
+}
+```
+
+## Troubleshooting
+
+### Common Issues
+
+#### Port Already in Use
+
+If you specify a port that's already in use, Bypass will fail to start. Use a random port (default) or ensure the port is available:
+
+```php
+// Use random port (recommended)
+$bypass = Bypass::open();
+
+// Or specify a port and handle errors
+try {
+    $bypass = Bypass::open(8080);
+} catch (RuntimeException $e) {
+    // Port might be in use, try another
+    $bypass = Bypass::open(8081);
+}
+```
+
+#### Server Timeout
+
+Bypass has a default timeout of 5 seconds for server startup. If your system is slow, the server might not start in time. This is rare but can happen in CI environments.
+
+#### Route Not Found Errors
+
+If you're getting "route not found" errors, ensure:
+- The URI matches exactly (including query parameters)
+- The HTTP method matches (GET, POST, etc.)
+- The route was added before making the request
+- The service is using the correct Bypass URL
+
+#### Getting All Registered Routes
+
+You can inspect all registered routes for debugging:
+
+```php
+$bypass = Bypass::open();
+$bypass->addRoute(method: 'GET', uri: '/v1/api/data', status: 200);
+
+$routes = $bypass->getRoutes();
+// Returns array with route configurations
+```
+
+## Contributing
+
+We welcome contributions! Here's how you can help:
+
+1. **Fork the repository**
+2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
+3. **Make your changes** following the existing code style
+4. **Add tests** for new functionality
+5. **Ensure all tests pass**: `vendor/bin/pest`
+6. **Commit your changes**: `git commit -m 'Add amazing feature'`
+7. **Push to the branch**: `git push origin feature/amazing-feature`
+8. **Open a Pull Request**
+
+### Code Style
+
+- Follow PSR-12 coding standards
+- Use type hints where possible
+- Add PHPDoc comments for public methods
+- Write tests for new features
+
+### Testing
+
+- Run tests with: `vendor/bin/pest`
+- Ensure all tests pass before submitting a PR
+- Add tests for any new functionality
 
 ## Credits
 
