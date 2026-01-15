@@ -66,12 +66,12 @@
 
 ## Requirements
 
-- **PHP**: 8.2 or higher (tested up to PHP 8.5)
+- **PHP**: 8.2 or higher (tested up to PHP 8.4)
 - **Composer**: For dependency management
 
 ### Known Issues
 
-- **PHP 8.5**: You may see deprecation warnings from testing dependencies (Pest/PHPUnit) related to `ReflectionMethod::setAccessible()`. These warnings are harmless and come from the testing frameworks themselves, not from Bypass. They will be resolved when the dependencies are updated to support PHP 8.5 fully.
+- **PHP 8.4**: You may see deprecation warnings from testing dependencies (Pest/PHPUnit) related to `ReflectionMethod::setAccessible()`. These warnings are harmless and come from the testing frameworks themselves, not from Bypass. They will be resolved when the dependencies are updated to support PHP 8.4 fully.
 
 ---
 
