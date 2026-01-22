@@ -22,7 +22,7 @@
         "php": "^8.2"
     },
     "require-dev": {
-        "laravel/framework": "^9.0|^10.0|^11.0|^12.0",
+        "laravel/framework": "^10.48.29|^11.0|^12.0",
         "orchestra/testbench": "^7.0|^8.0|^9.0|^10.0",
         "phpunit/phpunit": "^11|^12",
         "guzzlehttp/guzzle": "^7.5",
