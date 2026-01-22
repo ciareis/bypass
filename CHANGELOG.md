@@ -7,6 +7,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v3.0.0] - 2026-01-22
+
+### Added
+- Comprehensive PHPDoc documentation for all public methods
+- Input validation for all public methods:
+  - HTTP method validation (GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS)
+  - HTTP status code validation (100-599)
+  - URI validation (non-empty)
+  - File content validation for file routes
+  - Port range validation (1-65535)
+- Class constants for magic values:
+  - `DEFAULT_TIMEOUT` for server startup timeout
+  - `BUFFER_SIZE` for reading server output
+  - `API_ROUTER_PATH` for internal API router
+  - `POLLING_INTERVAL` for server startup polling
+  - `VALID_HTTP_METHODS` for HTTP method validation
+  - `MIN_STATUS_CODE` and `MAX_STATUS_CODE` for status code validation
+  - `MIN_PORT` and `MAX_PORT` for port validation
+- Enhanced error handling in `killPid()` method with PID validation and return code checking
+- Runtime exceptions when port is not set in `getPort()` and `getBaseUrl()` methods
+
+### Changed
+- **BREAKING**: `addRoute()` and `addFileRoute()` now throw `RuntimeException` for invalid inputs:
+  - Invalid HTTP methods
+  - Invalid HTTP status codes (outside 100-599 range)
+  - Empty URIs
+  - Empty file content (for file routes)
+- **BREAKING**: `getPort()` and `getBaseUrl()` now throw `RuntimeException` if server port is not set
+- Improved type hints: `protected ?int $port = null` and `protected array $routes = []`
+- Replaced hardcoded values with class constants throughout the codebase
+- Enhanced `killPid()` method with better error handling and PID sanitization
+- Improved `register_shutdown_function` with PID validation and sanitization
+
+### Removed
+- Removed unused `$process_registry` static variable
+- Removed unused `$routes` variable in `assertRoutes()` method
+
+### Fixed
+- Improved command injection prevention by sanitizing PIDs in `exec()` calls
+- Better error handling in process cleanup functions
+
+## [Unreleased]
+
 ### Added
 - Comprehensive API reference documentation
 - Troubleshooting section with common issues and solutions
@@ -233,7 +276,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Route management
 - Support for standard and file routes
 
-[Unreleased]: https://github.com/ciareis/bypass/compare/v2.1.2...main
+[Unreleased]: https://github.com/ciareis/bypass/compare/v3.0.0...main
+[v3.0.0]: https://github.com/ciareis/bypass/compare/v2.1.2...v3.0.0
 [v2.1.2]: https://github.com/ciareis/bypass/compare/v2.1.1...v2.1.2
 [v2.1.1]: https://github.com/ciareis/bypass/compare/v2.1.0...v2.1.1
 [v2.1.0]: https://github.com/ciareis/bypass/compare/v2.0.2...v2.1.0
